@@ -48,11 +48,11 @@ Export photos at roughly 2× their displayed size (1600–2400 px on the long ed
 Set `SURVEY_URLS.china` and `SURVEY_URLS.international` in `src/config/site.ts`. While a URL is empty, the Community
 page shows "Coming soon / 即将开放" in place of that button.
 
-## Deploying to GitHub Pages (not yet set up)
+## Deploying to GitHub Pages
 
-The site is built for `https://vegalh.github.io/myrootmap/` with `npm run build:pages`. To deploy, add a GitHub Actions
-workflow that runs that command with Node 22+ and publishes `dist/` using `actions/upload-pages-artifact` and
-`actions/deploy-pages`, then set Settings › Pages › Source to "GitHub Actions".
+Every push to `main` builds the site with `npm run build:pages` and publishes it to
+`https://vegalh.github.io/myrootmap/` (`.github/workflows/deploy.yml`). Settings › Pages › Source must be set to
+"GitHub Actions". A deploy can also be started by hand from the Actions tab.
 
 For a custom domain later: set `site` in `astro.config.mjs` to the domain, build with `npm run build` (root base path),
 and add a `public/CNAME` file.
