@@ -2,7 +2,7 @@
 import Logo from './Logo.astro';
 import LangSwitch from './LangSwitch.astro';
 import { localePath, pagePath, t, type Lang } from '../i18n';
-import { APP_LOGIN_URL, APP_URL } from '../config/site';
+import { APP_URL } from '../config/site';
 
 interface Props {
   lang: Lang;
@@ -51,7 +51,6 @@ const isCurrent = (path: string) => (path === '/' ? current === '/' : current ==
       </nav>
       <div class="site-header__actions">
         <LangSwitch lang={lang} alternates={alternates} />
-        <a class="site-header__login" href={APP_LOGIN_URL}>{copy.nav.login}</a>
         <a class="btn btn--small" href={APP_URL}>{copy.nav.getStarted}</a>
       </div>
     </div>
@@ -102,16 +101,14 @@ const isCurrent = (path: string) => (path === '/' ? current === '/' : current ==
     flex-shrink: 0;
   }
 
-  .site-nav a,
-  .site-header__login {
+  .site-nav a {
     color: var(--ink-soft);
     font-size: var(--step--1);
     font-weight: 600;
     text-decoration: none;
     transition: color 0.2s var(--ease);
   }
-  .site-nav a:hover,
-  .site-header__login:hover {
+  .site-nav a:hover {
     color: var(--green-700);
   }
   .site-nav a[aria-current='page'] {
