@@ -1,0 +1,208 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Screenshot from '../components/Screenshot.astro';
+import { t, type Lang } from '../i18n';
+import { APP_URL } from '../config/site';
+import { SCREENSHOTS } from '../config/images';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.features;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead}>
+    <div class="btn-row intro-actions">
+      <a class="btn" href={APP_URL}>{page.cta.button}</a>
+    </div>
+    <p class="muted small">{page.demoNote}</p>
+  </PageIntro>
+
+  <section class="section features" aria-label={page.title}>
+    <div class="container">
+      <ol class="feature-list" role="list">
+        {
+          page.items.map((item, i) => (
+            <li class="feature" id={item.id}>
+              <div class="feature__media">
+                <Screenshot src={SCREENSHOTS[item.id]} alt={item.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
+              </div>
+              <div class="feature__text">
+                <p class="feature__num" aria-hidden="true">{pad(i + 1)}</p>
+                <h2>{item.title}</h2>
+                <dl>
+                  <div>
+                    <dt>{page.whatLabel}</dt>
+                    <dd>{item.what}</dd>
+                  </div>
+                  <div>
+                    <dt>{page.whyLabel}</dt>
+                    <dd>{item.why}</dd>
+                  </div>
+                </dl>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--cream" aria-labelledby="also-title">
+    <div class="container">
+      <h2 id="also-title" class="also__title">{page.also.title}</h2>
+      <ul class="also" role="list">
+        {
+          page.also.items.map((item) => (
+            <li>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--forest section--tight" aria-labelledby="features-cta">
+    <div class="container cta">
+      <div>
+        <h2 id="features-cta">{page.cta.title}</h2>
+        <p>{page.cta.body}</p>
+      </div>
+      <a class="btn btn--light" href={APP_URL}>{page.cta.button}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro-actions {
+    margin-top: var(--space-2);
+  }
+  .feature-list {
+    display: grid;
+    gap: clamp(4rem, 3rem + 4vw, 7rem);
+  }
+  .feature {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+    scroll-margin-top: calc(var(--header-h) + 2rem);
+  }
+  .feature__media {
+    display: grid;
+    place-items: center;
+    padding: clamp(2rem, 1.5rem + 3vw, 3.5rem) var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--sage-100);
+  }
+  .feature:nth-child(3n + 2) .feature__media {
+    background: var(--cream-100);
+  }
+  .feature:nth-child(3n) .feature__media {
+    background: var(--bluegray-100);
+  }
+  .feature__media :global(.shot) {
+    max-width: 15.5rem;
+  }
+  .feature__num {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--terracotta-700);
+  }
+  .feature__text h2 {
+    margin-top: var(--space-2);
+    font-size: var(--step-4);
+  }
+  .feature__text dl {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+    max-width: 32rem;
+  }
+  dt {
+    margin-bottom: var(--space-1);
+    color: var(--muted);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  :lang(zh) dt {
+    letter-spacing: 0.04em;
+  }
+  dd {
+    color: var(--ink-soft);
+  }
+  dl > div:first-child dd {
+    color: var(--ink);
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+  @media (min-width: 56em) {
+    .feature {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+    }
+    .feature:nth-child(even) .feature__media {
+      order: 2;
+    }
+  }
+
+  .also__title {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-7);
+  }
+  .also {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .also li {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line-strong);
+  }
+  .also h3 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-2);
+  }
+  .also p {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  @media (min-width: 48em) {
+    .also {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .also {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .cta h2 {
+    font-size: var(--step-3);
+  }
+  .cta p {
+    margin-top: var(--space-2);
+    color: rgba(248, 241, 230, 0.85);
+  }
+  @media (min-width: 56em) {
+    .cta {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+</style>

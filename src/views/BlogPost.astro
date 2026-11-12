@@ -1,0 +1,120 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import { formatDate, localePath, t, type Lang } from '../i18n';
+import { getTranslation, postUrl, type Post } from '../lib/content';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const lang = post.data.lang as Lang;
+const other: Lang = lang === 'en' ? 'zh' : 'en';
+const copy = t(lang);
+const { title, description, category, date, cover, coverAlt, draft } = post.data;
+const { Content } = await render(post);
+const translation = await getTranslation(post);
+const alternates = { [lang]: postUrl(post), [other]: translation ? postUrl(translation) : localePath(other, '/blog') };
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  alternates={alternates}
+  translated={translation ? [lang, other] : [lang]}
+  ogType="article"
+  noindex={draft}
+>
+  <article class="post">
+    <header class="post__header">
+      <div class="container container--narrow">
+        <a class="post__back" href={localePath(lang, '/blog')}>← {copy.blog.back}</a>
+        <p class="post__meta">
+          <span class="tag">{copy.categories.blog[category]}</span>
+          {draft && <span class="tag tag--draft">{copy.blog.draftBadge}</span>}
+        </p>
+        <h1>{title}</h1>
+        <p class="lead">{description}</p>
+        <p class="post__date">
+          {date ? <time datetime={date.toISOString()}>{formatDate(date, lang)}</time> : copy.blog.undated}
+          {translation && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <a href={postUrl(translation)} lang={t(other).meta.htmlLang}>{copy.blog.otherLanguage}</a>
+            </>
+          )}
+        </p>
+      </div>
+    </header>
+
+    {
+      cover && (
+        <div class="container post__cover">
+          <Figure image={{ src: cover, ratio: '16 / 9', folder: 'blog' }} alt={coverAlt} placeholder={copy.common.imagePlaceholder} eager />
+        </div>
+      )
+    }
+
+    <div class="container container--narrow post__body">
+      {draft && <p class="draft-note">{copy.blog.draftNotice}</p>}
+      <div class="prose">
+        <Content />
+      </div>
+      <p class="post__end"><a class="text-link" href={localePath(lang, '/blog')}>{copy.blog.back}</a></p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post__header {
+    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem) var(--space-7);
+    background: linear-gradient(to bottom, var(--cream-100), var(--paper));
+  }
+  .post__header .container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .post__back {
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .post__back:hover {
+    color: var(--green-700);
+  }
+  .post__meta {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  h1 {
+    font-size: var(--step-4);
+  }
+  .post__date {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .post__date a {
+    color: var(--green-500);
+  }
+  .post__cover {
+    max-width: calc(60rem + var(--gutter) * 2);
+    margin-bottom: var(--space-7);
+  }
+  .post__body {
+    padding-bottom: var(--section-y);
+  }
+  .draft-note {
+    margin-bottom: var(--space-6);
+  }
+  .post__end {
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+</style>

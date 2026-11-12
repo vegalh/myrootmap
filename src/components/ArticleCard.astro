@@ -1,0 +1,96 @@
+---
+import Figure from './Figure.astro';
+import { formatDate, t, type Lang } from '../i18n';
+import { postUrl, type Post } from '../lib/content';
+
+interface Props {
+  post: Post;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+}
+const { post, lang, headingLevel = 'h3' } = Astro.props;
+const copy = t(lang);
+const { title, description, category, date, cover, coverAlt, draft } = post.data;
+const href = postUrl(post);
+const Heading = headingLevel;
+---
+
+<article class="article-card">
+  <a href={href} class="article-card__media" tabindex="-1" aria-hidden="true">
+    <Figure image={{ src: cover ?? '', ratio: '3 / 2', folder: 'blog' }} alt={coverAlt} placeholder={copy.common.imagePlaceholder} />
+  </a>
+  <div class="article-card__body">
+    <p class="article-card__meta">
+      <span class="tag">{copy.categories.blog[category]}</span>
+      {draft && <span class="tag tag--draft">{copy.common.draft}</span>}
+    </p>
+    <Heading class="article-card__title"><a href={href}>{title}</a></Heading>
+    <p class="article-card__desc">{description}</p>
+    <p class="article-card__foot">
+      {date ? <time datetime={date.toISOString()}>{formatDate(date, lang)}</time> : <span>{copy.blog.undated}</span>}
+      <a href={href} class="text-link" aria-label={`${copy.common.readArticle}: ${title}`}>{copy.common.readArticle}</a>
+    </p>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    height: 100%;
+  }
+  .article-card__media {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+  .article-card__media :global(img) {
+    transition: transform 0.6s var(--ease);
+  }
+  .article-card:hover .article-card__media :global(img) {
+    transform: scale(1.025);
+  }
+  .article-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+  }
+  .article-card__meta {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .article-card__title {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  :global(:lang(zh)) .article-card__title {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .article-card__title a {
+    text-decoration: none;
+  }
+  .article-card__title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .article-card__desc {
+    color: var(--ink-soft);
+  }
+  .article-card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-3);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+</style>

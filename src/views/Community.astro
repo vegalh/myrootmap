@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import { t, type Lang } from '../i18n';
+import { SURVEY_URLS } from '../config/site';
+import { IMAGES } from '../config/images';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.community;
+
+// The two surveys. An empty URL (src/config/site.ts) shows "Coming soon" instead of a button that goes nowhere.
+const options = [
+  { key: 'china', lang: 'zh-CN', url: SURVEY_URLS.china, ...page.survey.china },
+  { key: 'international', lang: 'en', url: SURVEY_URLS.international, ...page.survey.international },
+];
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <section class="intro">
+    <div class="container intro__grid">
+      <div class="intro__text">
+        <p class="eyebrow">{page.eyebrow}</p>
+        <h1>{page.heading}</h1>
+        <span class="tag tag--gold">{page.status}</span>
+        <div class="intro__body">
+          {page.paragraphs.map((p, i) => <p class={i === 0 ? 'lead' : undefined}>{p}</p>)}
+        </div>
+      </div>
+      <Figure image={IMAGES.communityHero} alt={page.imageAlt} placeholder={copy.common.imagePlaceholder} eager />
+    </div>
+  </section>
+
+  <section class="section section--sage survey" aria-labelledby="survey-title">
+    <div class="container">
+      <h2 id="survey-title">{page.survey.title}</h2>
+      <p class="survey__intro">{page.survey.intro}</p>
+      <ul class="survey__options" role="list">
+        {
+          options.map((option) => (
+            <li class="option" lang={option.key === 'china' ? 'zh-CN' : 'en'}>
+              <h3>{option.region}</h3>
+              <p>{option.body}</p>
+              {option.url ? (
+                <a class="btn" href={option.url} target="_blank" rel="noopener">
+                  {option.button}
+                  <span aria-hidden="true">↗</span>
+                  <span class="visually-hidden"> ({copy.common.newWindow})</span>
+                </a>
+              ) : (
+                <span class="btn" data-disabled>
+                  <span class="visually-hidden">{option.button}: </span>
+                  {page.survey.comingSoon}
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <aside class="privacy" aria-labelledby="privacy-title">
+        <h3 id="privacy-title">{page.privacy.title}</h3>
+        <p>{page.privacy.body}</p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem);
+    background: linear-gradient(to bottom, var(--cream-100), var(--paper));
+  }
+  .intro__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .intro__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  h1 {
+    font-size: var(--step-5);
+    line-height: 1.05;
+  }
+  :lang(zh) h1 {
+    line-height: 1.25;
+  }
+  .intro__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 34rem;
+    margin-top: var(--space-3);
+    color: var(--ink-soft);
+  }
+  .intro__body .lead {
+    color: var(--ink);
+  }
+  @media (min-width: 56em) {
+    .intro__grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--space-9);
+    }
+  }
+
+  .survey h2 {
+    font-size: var(--step-4);
+  }
+  .survey__intro {
+    margin-top: var(--space-3);
+    color: var(--ink-soft);
+  }
+  .survey__options {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-7);
+  }
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--line);
+  }
+  .option h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  .option[lang='zh-CN'] h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .option p {
+    color: var(--ink-soft);
+  }
+  .option .btn {
+    margin-top: auto;
+  }
+  .option p + .btn {
+    margin-top: var(--space-4);
+  }
+  @media (min-width: 48em) {
+    .survey__options {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .privacy {
+    max-width: 44rem;
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--sage-300);
+  }
+  .privacy h3 {
+    font-size: var(--step-0);
+    margin-bottom: var(--space-2);
+  }
+  .privacy p {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+</style>

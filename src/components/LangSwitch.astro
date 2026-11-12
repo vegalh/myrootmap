@@ -1,0 +1,57 @@
+---
+// EN / 中文. Links to the same page in the other language; pages without a translation pass their own targets.
+import { LANGS, t, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  alternates: Record<Lang, string>;
+}
+const { lang, alternates } = Astro.props;
+const labels: Record<Lang, string> = { en: 'EN', zh: '中文' };
+---
+
+<div class="lang-switch" role="group" aria-label={t(lang).nav.switchLanguage}>
+  {
+    LANGS.map((l, i) => (
+      <>
+        {i > 0 && <span class="lang-switch__sep" aria-hidden="true">/</span>}
+        <a
+          href={alternates[l]}
+          lang={t(l).meta.htmlLang}
+          hreflang={t(l).meta.htmlLang}
+          aria-current={l === lang ? 'true' : undefined}
+          aria-label={l === lang ? undefined : t(l).meta.languageName}
+        >
+          {labels[l]}
+        </a>
+      </>
+    ))
+  }
+</div>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  a {
+    padding: 0.35rem 0.2rem;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1.5px solid transparent;
+  }
+  a:hover {
+    color: var(--green-700);
+  }
+  a[aria-current='true'] {
+    color: var(--green-700);
+    border-bottom-color: var(--terracotta-500);
+  }
+  .lang-switch__sep {
+    color: var(--line-strong);
+    font-weight: 400;
+  }
+</style>

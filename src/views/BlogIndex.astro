@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { t, type Lang } from '../i18n';
+import { getPosts } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.blog;
+const posts = await getPosts(lang);
+const categories = [...new Set(posts.map((post) => post.data.category))];
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead} />
+
+  <section class="section section--tight blog">
+    <div class="container">
+      {
+        posts.length === 0 ? (
+          <EmptyState body={page.empty} />
+        ) : (
+          <>
+            {categories.length > 1 && (
+              <div class="filters" role="group" aria-label={page.filterLabel} data-filters hidden>
+                <button type="button" aria-pressed="true" data-filter="">{page.all}</button>
+                {categories.map((cat) => (
+                  <button type="button" aria-pressed="false" data-filter={cat}>
+                    {copy.categories.blog[cat]}
+                  </button>
+                ))}
+              </div>
+            )}
+            <ul class="grid" role="list">
+              {posts.map((post) => (
+                <li data-category={post.data.category}>
+                  <ArticleCard post={post} lang={lang} headingLevel="h2" />
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Category filter: an enhancement only; without JavaScript every article is listed.
+  const group = document.querySelector<HTMLElement>('[data-filters]');
+  if (group) {
+    group.hidden = false;
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('button')];
+    const items = [...document.querySelectorAll<HTMLElement>('[data-category]')];
+    group.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest('button');
+      if (!button) return;
+      const filter = button.dataset.filter;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      items.forEach((item) => (item.hidden = Boolean(filter) && item.dataset.category !== filter));
+    });
+  }
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-7);
+  }
+  .filters button {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .filters button:hover {
+    border-color: var(--green-500);
+  }
+  .filters button[aria-pressed='true'] {
+    background: var(--green-700);
+    border-color: var(--green-700);
+    color: #fff;
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-8) var(--space-6);
+  }
+  @media (min-width: 48em) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

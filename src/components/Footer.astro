@@ -1,0 +1,116 @@
+---
+import Logo from './Logo.astro';
+import { localePath, t, type Lang } from '../i18n';
+import { APP_LOGIN_URL, APP_URL } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const explore = [
+  { path: '/philosophy', label: copy.nav.philosophy },
+  { path: '/features', label: copy.nav.features },
+  { path: '/blog', label: copy.nav.blog },
+  { path: '/resources', label: copy.nav.resources },
+  { path: '/community', label: copy.nav.community },
+];
+const more = [
+  { href: APP_URL, label: copy.footer.openApp },
+  { href: APP_LOGIN_URL, label: copy.nav.login },
+  { href: localePath(lang, '/about'), label: copy.footer.about },
+  { href: localePath(lang, '/privacy'), label: copy.footer.privacy },
+  { href: localePath(lang, '/contact'), label: copy.footer.contact },
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a href={localePath(lang)} aria-label={copy.nav.homeLink}><Logo /></a>
+        <p>{copy.footer.tagline}</p>
+      </div>
+      <nav aria-label={copy.footer.footerNav} class="site-footer__nav">
+        <div>
+          <h2>{copy.footer.explore}</h2>
+          <ul role="list">
+            {explore.map((item) => <li><a href={localePath(lang, item.path)}>{item.label}</a></li>)}
+          </ul>
+        </div>
+        <div>
+          <h2>{copy.footer.rootmap}</h2>
+          <ul role="list">
+            {more.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <p class="site-footer__legal">© {new Date().getFullYear()} {copy.footer.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-8) var(--space-6);
+    background: var(--cream-100);
+    border-top: 1px solid var(--line);
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .site-footer__brand a {
+    text-decoration: none;
+  }
+  .site-footer__brand p {
+    margin-top: var(--space-4);
+    max-width: 22rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .site-footer__nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+  h2 {
+    margin-bottom: var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  :global(:lang(zh)) h2 {
+    font-family: var(--font-sans-zh);
+    letter-spacing: 0.06em;
+  }
+  li + li {
+    margin-top: var(--space-2);
+  }
+  .site-footer__nav a {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+  .site-footer__nav a:hover {
+    color: var(--green-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .site-footer__legal {
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: var(--step--2);
+  }
+  @media (min-width: 48em) {
+    .site-footer__grid {
+      grid-template-columns: 1.4fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

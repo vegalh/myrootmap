@@ -1,0 +1,469 @@
+/* RootMap website design system.
+   Colors start from the RootMap app (RootMapMVP src/index.css): brand green #4b7c63, deep green #2f4d3d,
+   terracotta #d98b62, cream #fbf2e4 and warm brown text #3b2a1a. The website refines them into a calmer,
+   more editorial palette with more white space. Text colors are chosen to meet WCAG AA on every background
+   they are used on (ratios noted beside them). */
+
+:root {
+  color-scheme: light;
+
+  /* Greens */
+  --green-800: #233a2e; /* deepest: final call-to-action band */
+  --green-700: #2f4d3d; /* headings, the app's deep green; 9.8:1 on paper */
+  --green-600: #3d6650; /* button hover */
+  --green-500: #4b7c63; /* RootMap green, buttons and links; 4.9:1 on paper, white text on it 5.0:1 */
+  --sage-300: #c9d6c6;
+  --sage-200: #dfe7db;
+  --sage-100: #eef2ea;
+
+  /* Neutrals */
+  --paper: #fdfaf5; /* default page background, a natural off-white */
+  --white: #fffdf9;
+  --cream-200: #f3e8d7;
+  --cream-100: #f8f1e6; /* the app's cream, lightened */
+  --line: #e7dccb;
+  --line-strong: #d8c9b3;
+  --ink: #2b2520; /* body text; 14.6:1 on paper */
+  --ink-soft: #5a4d41; /* secondary text; 7.9:1 on paper, 7.1:1 on cream-100 */
+  --muted: #6e6152; /* captions and metadata; 5.6:1 on paper, 5.0:1 on cream-100 */
+
+  /* Accents: used sparingly */
+  --terracotta-500: #d98b62; /* the app's terracotta: decoration only */
+  --terracotta-700: #9f5332; /* text in terracotta; 5.4:1 on paper */
+  --gold-400: #e2b85c; /* decoration only */
+  --gold-100: #f8edd2;
+  --bluegray-100: #e6ecee;
+  --bluegray-600: #50656f; /* 5.9:1 on paper */
+
+  /* Typography */
+  --font-serif: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Nunito Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif-zh: 'Fraunces Variable', 'Songti SC', 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+  --font-sans-zh: 'Nunito Sans Variable', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+
+  --step--2: 0.8125rem;
+  --step--1: 0.9375rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: clamp(1.4rem, 1.25rem + 0.6vw, 1.75rem);
+  --step-3: clamp(1.8rem, 1.45rem + 1.5vw, 2.6rem);
+  --step-4: clamp(2.2rem, 1.6rem + 2.6vw, 3.6rem);
+  --step-5: clamp(2.6rem, 1.8rem + 3.8vw, 4.75rem);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --section-y: clamp(4rem, 2.5rem + 6vw, 8rem);
+  --gutter: clamp(1rem, 0.5rem + 3vw, 2.5rem);
+
+  --container: 76rem;
+  --container-narrow: 44rem;
+
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 2px rgba(43, 37, 32, 0.06), 0 4px 16px rgba(43, 37, 32, 0.05);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --header-h: 4.5rem;
+}
+
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+body {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+a {
+  color: inherit;
+}
+button {
+  font: inherit;
+  color: inherit;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--green-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Headings: the serif is kept for major headings; smaller headings use the sans. */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--green-700);
+  line-height: 1.15;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.display,
+h1,
+h2 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  font-variation-settings: 'SOFT' 50;
+}
+h3,
+h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.005em;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* Simplified Chinese: system Chinese fonts (no web font, so pages load quickly in mainland China), Songti for
+   display headings, no Latin letter-spacing, and a taller line height. */
+:lang(zh) body,
+body:lang(zh) {
+  font-family: var(--font-sans-zh);
+  line-height: 1.85;
+}
+:lang(zh) .display,
+:lang(zh) h1,
+:lang(zh) h2 {
+  font-family: var(--font-serif-zh);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+:lang(zh) h3,
+:lang(zh) h4 {
+  font-family: var(--font-sans-zh);
+  letter-spacing: 0;
+}
+
+/* Layout */
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--narrow {
+  max-width: calc(var(--container-narrow) + var(--gutter) * 2);
+}
+.section {
+  padding-block: var(--section-y);
+}
+.section--tight {
+  padding-block: calc(var(--section-y) * 0.65);
+}
+.section--cream {
+  background: var(--cream-100);
+}
+.section--sage {
+  background: var(--sage-100);
+}
+.section--forest {
+  background: var(--green-800);
+  color: var(--cream-100);
+}
+.section--forest :is(h1, h2, h3) {
+  color: var(--white);
+}
+.section + .section:not([class*='section--']) {
+  border-top: 1px solid var(--line);
+}
+
+/* Text styles */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--terracotta-700);
+}
+.eyebrow::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: currentColor;
+}
+:lang(zh) .eyebrow {
+  font-family: var(--font-sans-zh);
+  letter-spacing: 0.08em;
+  font-size: var(--step--1);
+}
+.section--forest .eyebrow {
+  color: var(--gold-400);
+}
+.lead {
+  font-size: var(--step-1);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: var(--step--1);
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Buttons */
+.btn {
+  --btn-bg: var(--green-500);
+  --btn-fg: #fff;
+  --btn-border: var(--green-500);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.875rem;
+  padding: 0.7rem 1.35rem;
+  border: 1.5px solid var(--btn-border);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: inherit;
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+.btn:hover {
+  --btn-bg: var(--green-600);
+  --btn-border: var(--green-600);
+}
+.btn--secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--green-700);
+  --btn-border: var(--line-strong);
+}
+.btn--secondary:hover {
+  --btn-bg: var(--sage-100);
+  --btn-border: var(--green-500);
+}
+.btn--light {
+  --btn-bg: var(--cream-100);
+  --btn-fg: var(--green-800);
+  --btn-border: var(--cream-100);
+}
+.btn--light:hover {
+  --btn-bg: var(--white);
+  --btn-border: var(--white);
+}
+.btn--small {
+  min-height: 2.5rem;
+  padding: 0.5rem 1.05rem;
+}
+.btn[data-disabled] {
+  --btn-bg: var(--cream-200);
+  --btn-fg: var(--muted);
+  --btn-border: var(--cream-200);
+  cursor: default;
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* A text link with an arrow, for "Read more"-style links */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--green-500);
+  font-weight: 700;
+  font-size: var(--step--1);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--sage-300);
+  padding-bottom: 2px;
+  transition: border-color 0.2s var(--ease);
+}
+.text-link:hover {
+  border-color: var(--green-500);
+}
+.text-link::after {
+  content: '→';
+  transition: transform 0.2s var(--ease);
+}
+.text-link:hover::after {
+  transform: translateX(3px);
+}
+.section--forest .text-link {
+  color: var(--cream-100);
+  border-color: rgba(248, 241, 230, 0.35);
+}
+
+/* Small labels: categories, statuses */
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--sage-100);
+  color: var(--green-700);
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.tag--gold {
+  background: var(--gold-100);
+  color: #6d4f12;
+}
+.tag--draft {
+  background: var(--bluegray-100);
+  color: var(--bluegray-600);
+}
+
+/* Long-form text (articles, simple pages) */
+.prose {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--ink);
+}
+:lang(zh) .prose {
+  line-height: 1.95;
+}
+.prose > * + * {
+  margin-top: 1.25em;
+}
+.prose h2 {
+  margin-top: 2.2em;
+  font-size: var(--step-2);
+}
+.prose h3 {
+  margin-top: 1.8em;
+  font-size: var(--step-1);
+}
+.prose a {
+  color: var(--green-500);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose li::marker {
+  color: var(--terracotta-500);
+}
+.prose blockquote {
+  padding-left: 1.25em;
+  border-left: 2px solid var(--terracotta-500);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--green-700);
+}
+:lang(zh) .prose blockquote {
+  font-family: var(--font-serif-zh);
+}
+.prose code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--cream-200);
+  font-size: 0.88em;
+}
+.prose pre {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  background: var(--cream-100) !important;
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+.prose pre code {
+  padding: 0;
+  background: none;
+}
+.prose img {
+  border-radius: var(--radius);
+}
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* A labelled note that marks unfinished content, so drafts are never mistaken for published text */
+.draft-note {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-4) var(--space-5);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

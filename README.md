@@ -1,2 +1,58 @@
-# myrootmap
-website for rootmap system
+# RootMap website
+
+The official website for RootMap: educational philosophy, features, blog, resources and the future community.
+It is a separate project from the RootMap app ([RootMapMVP](https://github.com/vegalh/RootMapMVP)) and only links to it.
+
+Built with [Astro](https://astro.build) as a static site. English is the default language; Simplified Chinese lives under `/zh/`.
+
+## Run locally
+
+Requires Node.js 22.12 or later.
+
+```bash
+npm install
+npm run dev          # http://localhost:4321 (shows draft articles)
+npm run build        # production build into dist/ (root base path)
+npm run build:pages  # production build for GitHub Pages, served at /myrootmap/
+npm run preview      # serve the last build
+npm run check        # type-check
+```
+
+`astro dev` runs in the background; stop it with `npx astro dev stop`.
+
+## Where things live
+
+| What | Where |
+|---|---|
+| All page text, both languages | `src/i18n/en.ts`, `src/i18n/zh.ts` |
+| App links, survey links, draft visibility | `src/config/site.ts` |
+| Photograph and illustration slots | `src/config/images.ts` (files go in `public/images/<folder>/`) |
+| App screenshots | `public/images/features/app/` (from RootMapMVP `docs/screenshots`) |
+| Blog articles | `src/content/blog/en/`, `src/content/blog/zh/` (see `src/content/README.md`) |
+| Resources | `src/content/resources/` (see `src/content/README.md`) |
+| Design tokens and shared styles | `src/styles/global.css` |
+| Shared components | `src/components/` |
+| Page layouts (one per page, language-neutral) | `src/views/` |
+| Routes (thin files that pick a language) | `src/pages/`, `src/pages/zh/` |
+
+## Adding images
+
+1. Put the file in the folder named in `src/config/images.ts`, e.g. `public/images/hero/home.jpg`.
+2. Set that slot's `src`, e.g. `homeHero: { src: '/images/hero/home.jpg', ... }`.
+3. Write or adjust its alt text in `src/i18n/en.ts` and `src/i18n/zh.ts`.
+
+Export photos at roughly 2× their displayed size (1600–2400 px on the long edge) as JPEG or WebP, under ~400 KB.
+
+## Community surveys
+
+Set `SURVEY_URLS.china` and `SURVEY_URLS.international` in `src/config/site.ts`. While a URL is empty, the Community
+page shows "Coming soon / 即将开放" in place of that button.
+
+## Deploying to GitHub Pages (not yet set up)
+
+The site is built for `https://vegalh.github.io/myrootmap/` with `npm run build:pages`. To deploy, add a GitHub Actions
+workflow that runs that command with Node 22+ and publishes `dist/` using `actions/upload-pages-artifact` and
+`actions/deploy-pages`, then set Settings › Pages › Source to "GitHub Actions".
+
+For a custom domain later: set `site` in `astro.config.mjs` to the domain, build with `npm run build` (root base path),
+and add a `public/CNAME` file.

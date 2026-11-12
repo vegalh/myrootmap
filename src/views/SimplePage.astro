@@ -1,0 +1,35 @@
+---
+// About, Privacy and Contact: short pages whose real content has not been written yet.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { t, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  page: 'about' | 'privacy' | 'contact';
+}
+const { lang, page } = Astro.props;
+const copy = t(lang).pages[page];
+---
+
+<BaseLayout lang={lang} title={copy.title}>
+  <PageIntro eyebrow={t(lang).footer[page]} title={copy.heading} />
+  <section class="section section--tight">
+    <div class="container container--narrow">
+      <p class="draft-note"><span class="tag tag--draft">{t(lang).common.draft}</span> {copy.draft}</p>
+      {
+        copy.body.length > 0 && (
+          <div class="prose">
+            {copy.body.map((p) => <p>{p}</p>)}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prose {
+    margin-top: var(--space-6);
+  }
+</style>

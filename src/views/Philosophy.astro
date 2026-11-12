@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Figure from '../components/Figure.astro';
+import { localePath, t, type Lang } from '../i18n';
+import { APP_URL } from '../config/site';
+import { IMAGES } from '../config/images';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.philosophy;
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Photographs placed after particular sections (see src/config/images.ts).
+const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
+  'real-experiences': IMAGES.philosophyRealExperiences,
+  independence: IMAGES.philosophyIndependence,
+};
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead} />
+
+  <div class="container">
+    <Figure image={IMAGES.philosophyHero} alt={page.heroImageAlt} placeholder={copy.common.imagePlaceholder} eager />
+  </div>
+
+  <section class="section">
+    <div class="container essay">
+      <nav class="essay__toc" aria-labelledby="toc-label">
+        <p id="toc-label" class="essay__toc-label">{page.contentsLabel}</p>
+        <ol role="list">
+          {page.sections.map((s, i) => (
+            <li>
+              <a href={`#${s.id}`}><span aria-hidden="true">{pad(i + 1)}</span> {s.title}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="essay__body">
+        {
+          page.sections.map((s, i) => (
+            <section class="essay__section" aria-labelledby={s.id}>
+              <p class="essay__num" aria-hidden="true">{pad(i + 1)}</p>
+              <h2 id={s.id}>{s.title}</h2>
+              <div class="essay__text">
+                {s.paragraphs.map((p) => <p>{p}</p>)}
+              </div>
+              {s.note ? (
+                <aside class="essay__note">
+                  <p>{s.note}</p>
+                </aside>
+              ) : (
+                <aside class="draft-note essay__slot">
+                  <strong>{copy.common.authorNote}</strong>
+                  <span>{copy.common.authorNoteHint}</span>
+                </aside>
+              )}
+              {sectionImages[s.id] && (
+                <Figure class="essay__figure" image={sectionImages[s.id]} alt="" placeholder={copy.common.imagePlaceholder} />
+              )}
+            </section>
+          ))
+        }
+
+        <aside class="evidence">
+          <h2>{page.evidence.title}</h2>
+          <p>{page.evidence.body}</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sage section--tight">
+    <div class="container cta">
+      <h2>{page.cta.title}</h2>
+      <div class="btn-row">
+        <a class="btn" href={APP_URL}>{page.cta.app}</a>
+        <a class="btn btn--secondary" href={localePath(lang, '/features')}>{page.cta.features}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .essay {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .essay__toc {
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--line);
+  }
+  .essay__toc-label {
+    margin-bottom: var(--space-3);
+    color: var(--muted);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .essay__toc li + li {
+    margin-top: var(--space-2);
+  }
+  .essay__toc a {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+  .essay__toc a:hover {
+    color: var(--green-700);
+  }
+  .essay__toc span {
+    display: inline-block;
+    width: 1.8rem;
+    font-family: var(--font-serif);
+    color: var(--terracotta-700);
+  }
+
+  .essay__body {
+    max-width: 42rem;
+  }
+  .essay__section + .essay__section {
+    margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+  }
+  .essay__num {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--terracotta-700);
+  }
+  .essay__section h2 {
+    margin-top: var(--space-2);
+    font-size: var(--step-3);
+  }
+  .essay__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+  :lang(zh) .essay__text {
+    line-height: 1.95;
+  }
+  .essay__text p:first-child {
+    color: var(--ink);
+  }
+  .essay__text p + p {
+    color: var(--ink-soft);
+  }
+  .essay__note {
+    margin-top: var(--space-5);
+    padding-left: var(--space-5);
+    border-left: 2px solid var(--terracotta-500);
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--green-700);
+  }
+  .essay__slot {
+    margin-top: var(--space-5);
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .essay__figure {
+    margin-top: var(--space-6);
+    max-width: 30rem;
+  }
+
+  .evidence {
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    background: var(--cream-100);
+  }
+  .evidence h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-3);
+  }
+  .evidence p {
+    color: var(--ink-soft);
+  }
+
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .cta h2 {
+    font-size: var(--step-3);
+  }
+
+  @media (min-width: 64em) {
+    .essay {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      gap: var(--space-9);
+    }
+    .essay__toc {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+      border-bottom: 0;
+    }
+    .cta {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+</style>

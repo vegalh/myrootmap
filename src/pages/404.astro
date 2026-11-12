@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { localePath, t } from '../i18n';
+
+// GitHub Pages serves this for any missing address. It is bilingual because the visitor's language is unknown.
+const en = t('en').pages.notFound;
+const zh = t('zh').pages.notFound;
+---
+
+<BaseLayout lang="en" title={en.title} noindex alternates={{ en: localePath('en'), zh: localePath('zh') }}>
+  <section class="section">
+    <div class="container container--narrow not-found">
+      <p class="eyebrow">404</p>
+      <h1>{en.heading}</h1>
+      <p class="lead">{en.body}</p>
+      <a class="btn" href={localePath('en')}>{en.home}</a>
+      <hr />
+      <div lang="zh-CN">
+        <h2>{zh.heading}</h2>
+        <p>{zh.body}</p>
+        <a class="text-link" href={localePath('zh')}>{zh.home}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  h1 {
+    font-size: var(--step-4);
+  }
+  h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-2);
+  }
+  hr {
+    width: 100%;
+    margin-block: var(--space-6);
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+  [lang='zh-CN'] p {
+    margin-bottom: var(--space-3);
+    color: var(--ink-soft);
+  }
+</style>

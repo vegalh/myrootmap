@@ -1,0 +1,84 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/nunito-sans';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { LANGS, localePath, pagePath, t, type Lang } from '../i18n';
+import { SITE_NAME } from '../config/site';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description?: string;
+  // The same page in each language. Defaults to the same path under each language prefix; pages that exist in only
+  // one language (such as an untranslated article) pass their own.
+  alternates?: Partial<Record<Lang, string>>;
+  // Languages the page really exists in, for search engines (hreflang). Defaults to all.
+  translated?: Lang[];
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  fullTitle?: boolean;
+}
+
+const { lang, title, description, alternates = {}, translated = [...LANGS], ogType = 'website', noindex = false, fullTitle = false } = Astro.props;
+const copy = t(lang);
+const path = pagePath(Astro.url.pathname);
+const links = Object.fromEntries(LANGS.map((l) => [l, alternates[l] ?? localePath(l, path)])) as Record<Lang, string>;
+const pageTitle = fullTitle ? title : `${title} · ${SITE_NAME}`;
+const metaDescription = description ?? copy.meta.siteDescription;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={copy.meta.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonical} />
+    {translated.map((l) => <link rel="alternate" hreflang={t(l).meta.htmlLang} href={new URL(links[l], Astro.site)} />)}
+    {translated.includes('en') && <link rel="alternate" hreflang="x-default" href={new URL(links.en, Astro.site)} />}
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
+    <meta name="theme-color" content="#fdfaf5" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{copy.nav.skip}</a>
+    <Header lang={lang} alternates={links} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--green-700);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus {
+    transform: none;
+  }
+  main:focus {
+    outline: none;
+  }
+</style>

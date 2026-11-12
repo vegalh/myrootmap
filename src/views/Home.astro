@@ -1,0 +1,499 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import Screenshot from '../components/Screenshot.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { localePath, t, type Lang } from '../i18n';
+import { APP_URL } from '../config/site';
+import { IMAGES, SCREENSHOTS } from '../config/images';
+import { getPublishedPosts } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const home = copy.home;
+const posts = await getPublishedPosts(lang, 3);
+const resourceCategories = Object.values(copy.categories.resources);
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<BaseLayout lang={lang} title={home.title} fullTitle>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow">{home.hero.eyebrow}</p>
+        <h1 class="hero__title display">{home.hero.title}</h1>
+        <p class="lead hero__lead">{home.hero.body}</p>
+        <div class="btn-row">
+          <a class="btn" href={APP_URL}>{home.hero.primary}</a>
+          <a class="btn btn--secondary" href={localePath(lang, '/features')}>{home.hero.secondary}</a>
+        </div>
+      </div>
+      <Figure class="hero__media" image={IMAGES.homeHero} alt={home.hero.imageAlt} placeholder={copy.common.imagePlaceholder} eager />
+    </div>
+  </section>
+
+  <!-- Why RootMap exists -->
+  <section class="section why" aria-labelledby="why-title">
+    <div class="container">
+      <div class="why__grid">
+        <SectionHeader eyebrow={home.why.eyebrow} title={home.why.title} id="why-title" />
+        <div class="why__text">
+          {home.why.paragraphs.map((p, i) => <p class={i === 0 ? 'why__first' : undefined}>{p}</p>)}
+        </div>
+      </div>
+      <h3 class="visually-hidden">{home.why.principlesLabel}</h3>
+      <ol class="principles" role="list">
+        {
+          home.why.principles.map((principle, i) => (
+            <li>
+              <span class="principles__num" aria-hidden="true">{pad(i + 1)}</span>
+              <h4>{principle.title}</h4>
+              <p>{principle.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- How RootMap works -->
+  <section class="section section--sage how" aria-labelledby="how-title">
+    <div class="container">
+      <div class="how__head">
+        <SectionHeader eyebrow={home.how.eyebrow} title={home.how.title} intro={home.how.intro} id="how-title" />
+      </div>
+      <ol class="how__steps" role="list">
+        {
+          home.how.steps.map((step, i) => (
+            <li class="how__step">
+              <Screenshot src={SCREENSHOTS[step.id]} alt={step.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
+              <div class="how__copy">
+                <p class="how__num" aria-hidden="true">{pad(i + 1)}</p>
+                <h3>{step.title}</h3>
+                <p class="how__lead">{step.lead}</p>
+                <p class="how__body">{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="how__foot">
+        <a class="text-link" href={localePath(lang, '/features')}>{home.how.link}</a>
+        <p class="muted small">{home.how.demoNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Educational philosophy -->
+  <section class="section philosophy" aria-labelledby="philosophy-title">
+    <div class="container">
+      <p class="eyebrow">{home.philosophy.eyebrow}</p>
+      <h2 class="philosophy__title" id="philosophy-title">{home.philosophy.title}</h2>
+      <div class="philosophy__grid">
+        <div class="philosophy__intro">
+          <p class="lead">{home.philosophy.body}</p>
+          <a class="text-link" href={localePath(lang, '/philosophy')}>{home.philosophy.link}</a>
+        </div>
+        <dl class="themes">
+          {
+            home.philosophy.themes.map((theme) => (
+              <div>
+                <dt>{theme.title}</dt>
+                <dd>{theme.body}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- From the blog -->
+  <section class="section section--cream" aria-labelledby="blog-title">
+    <div class="container">
+      <div class="row-head">
+        <SectionHeader eyebrow={home.blog.eyebrow} title={home.blog.title} intro={home.blog.intro} id="blog-title" />
+        {posts.length > 0 && <a class="text-link" href={localePath(lang, '/blog')}>{copy.common.viewAllArticles}</a>}
+      </div>
+      {
+        posts.length > 0 ? (
+          <ul class="article-grid" role="list">
+            {posts.map((post) => (
+              <li>
+                <ArticleCard post={post} lang={lang} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyState body={home.blog.empty}>
+            <a class="text-link" href={localePath(lang, '/blog')}>{copy.common.viewAllArticles}</a>
+          </EmptyState>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Educational resources -->
+  <section class="section resources" aria-labelledby="resources-title">
+    <div class="container resources__grid">
+      <SectionHeader eyebrow={home.resources.eyebrow} title={home.resources.title} intro={home.resources.intro} id="resources-title">
+        <p class="muted small">{home.resources.note}</p>
+        <a class="btn btn--secondary" href={localePath(lang, '/resources')}>{home.resources.link}</a>
+      </SectionHeader>
+      <ul class="resource-cats" role="list">
+        {
+          resourceCategories.map((cat) => (
+            <li>
+              <h3>{cat.title}</h3>
+              <p>{cat.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section class="section section--sage community" aria-labelledby="community-title">
+    <div class="container community__grid">
+      <Figure image={IMAGES.homeCommunity} alt={home.community.imageAlt} placeholder={copy.common.imagePlaceholder} />
+      <div class="community__text">
+        <SectionHeader eyebrow={home.community.eyebrow} title={home.community.title} id="community-title">
+          <span class="tag tag--gold">{home.community.status}</span>
+        </SectionHeader>
+        {home.community.paragraphs.map((p) => <p>{p}</p>)}
+        <a class="btn" href={localePath(lang, '/community')}>{home.community.cta}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final call to action -->
+  <section class="section section--forest final" aria-labelledby="final-title">
+    <div class="container final__inner">
+      <h2 id="final-title" class="final__title">{home.final.title}</h2>
+      <p>{home.final.body}</p>
+      <a class="btn btn--light" href={APP_URL}>{home.final.button}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    padding-block: clamp(2.5rem, 1rem + 5vw, 5.5rem) clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  }
+  .hero__grid {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 3vw, 5rem);
+    align-items: center;
+  }
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .hero__title {
+    font-size: var(--step-5);
+    line-height: 1.04;
+    white-space: pre-line;
+  }
+  :lang(zh) .hero__title {
+    line-height: 1.22;
+  }
+  .hero__lead {
+    max-width: 34rem;
+  }
+  .hero__text .btn-row {
+    margin-top: var(--space-3);
+  }
+  @media (min-width: 56em) {
+    .hero__grid {
+      grid-template-columns: 1.08fr 0.92fr;
+    }
+  }
+
+  /* Why */
+  .why__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .why__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 36rem;
+    color: var(--ink-soft);
+  }
+  .why__first {
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .principles {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: clamp(3rem, 2rem + 4vw, 5.5rem);
+  }
+  .principles li {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line-strong);
+  }
+  .principles__num {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--terracotta-700);
+  }
+  .principles h4 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  :lang(zh) .principles h4 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .principles p {
+    color: var(--ink-soft);
+  }
+  @media (min-width: 56em) {
+    .why__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+    .why__text {
+      padding-top: 2.4rem;
+    }
+    .principles {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-7);
+    }
+  }
+
+  /* How */
+  .how__head {
+    margin-bottom: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+  .how__steps {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .how__step {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: center;
+  }
+  .how__copy {
+    max-width: 22rem;
+    text-align: center;
+  }
+  .how__num {
+    font-family: var(--font-serif);
+    color: var(--terracotta-700);
+  }
+  .how__copy h3 {
+    margin-bottom: var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 500;
+  }
+  :lang(zh) .how__copy h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .how__lead {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .how__body {
+    margin-top: var(--space-2);
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .how__foot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+    text-align: center;
+  }
+  @media (min-width: 56em) {
+    .how__steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .how__step:nth-child(2) {
+      margin-top: var(--space-8);
+    }
+  }
+
+  /* Philosophy */
+  .philosophy__title {
+    max-width: 22ch;
+    margin-top: var(--space-4);
+    font-size: var(--step-4);
+  }
+  :lang(zh) .philosophy__title {
+    max-width: 20em;
+  }
+  .philosophy__grid {
+    display: grid;
+    gap: var(--space-7);
+    margin-top: var(--space-7);
+  }
+  .philosophy__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .themes > div {
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .themes > div:first-child {
+    border-top: 1px solid var(--line);
+  }
+  .themes dt {
+    position: relative;
+    padding-left: 1.25rem;
+    color: var(--green-700);
+    font-weight: 700;
+  }
+  .themes dt::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--terracotta-500);
+  }
+  .themes dd {
+    padding-left: 1.25rem;
+    color: var(--ink-soft);
+  }
+  @media (min-width: 56em) {
+    .philosophy__grid {
+      grid-template-columns: 5fr 6fr;
+      gap: var(--space-9);
+    }
+  }
+
+  /* Blog */
+  .row-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5);
+    margin-bottom: var(--space-7);
+  }
+  .article-grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+  @media (min-width: 48em) {
+    .article-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .article-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  /* Resources */
+  .resources__grid {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .resources__grid :global(.btn) {
+    margin-top: var(--space-2);
+  }
+  .resource-cats {
+    display: grid;
+    border-top: 1px solid var(--line-strong);
+  }
+  .resource-cats li {
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .resource-cats h3 {
+    font-size: var(--step-1);
+  }
+  .resource-cats p {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  @media (min-width: 56em) {
+    .resources__grid {
+      grid-template-columns: 5fr 6fr;
+      gap: var(--space-9);
+      align-items: start;
+    }
+    .resource-cats {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-6);
+    }
+  }
+
+  /* Community */
+  .community__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .community__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .community__text > p {
+    max-width: 34rem;
+    color: var(--ink-soft);
+  }
+  .community__text .btn {
+    margin-top: var(--space-3);
+  }
+  @media (min-width: 56em) {
+    .community__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+    }
+  }
+
+  /* Final */
+  .final__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+    text-align: center;
+  }
+  .final__title {
+    max-width: 18ch;
+    font-size: var(--step-4);
+  }
+  .final p {
+    color: rgba(248, 241, 230, 0.85);
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ResourceItem from '../components/ResourceItem.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { t, type Lang } from '../i18n';
+import { getResources } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.resources;
+const resources = await getResources();
+const categories = Object.entries(copy.categories.resources) as [keyof typeof copy.categories.resources, { title: string; body: string }][];
+const byCategory = categories
+  .map(([key, cat]) => ({ key, ...cat, items: resources.filter((r) => r.data.category === key) }))
+  .filter((group) => group.items.length > 0);
+const count = (n: number) => (n === 1 ? page.countOne : page.countMany.replace('{n}', String(n)));
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead} />
+
+  <section class="section section--tight">
+    <div class="container">
+      {
+        resources.length === 0 ? (
+          <div class="empty">
+            <EmptyState title={page.empty.title} body={page.empty.body} />
+            <h2 class="cats__title">{page.categoriesLabel}</h2>
+            <ul class="cats" role="list">
+              {categories.map(([, cat]) => (
+                <li>
+                  <h3>{cat.title}</h3>
+                  <p>{cat.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div class="library">
+            <nav class="library__nav" aria-label={page.categoriesLabel}>
+              <ul role="list">
+                {byCategory.map((group) => (
+                  <li>
+                    <a href={`#${group.key}`}>
+                      {group.title} <span>{group.items.length}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div class="library__groups">
+              {byCategory.map((group) => (
+                <section class="group" aria-labelledby={group.key}>
+                  <header class="group__head">
+                    <h2 id={group.key}>{group.title}</h2>
+                    <p>
+                      {group.body} <span class="muted">· {count(group.items.length)}</span>
+                    </p>
+                  </header>
+                  <ul class="group__items" role="list">
+                    {group.items.map((resource) => (
+                      <ResourceItem resource={resource} lang={lang} />
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cats__title {
+    margin: var(--space-8) 0 var(--space-5);
+    font-size: var(--step-2);
+  }
+  .cats {
+    display: grid;
+    border-top: 1px solid var(--line-strong);
+  }
+  .cats li {
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .cats h3 {
+    font-size: var(--step-1);
+  }
+  .cats p {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  @media (min-width: 48em) {
+    .cats {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--space-6);
+    }
+  }
+  @media (min-width: 64em) {
+    .cats {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .library {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .library__nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .library__nav a {
+    display: inline-flex;
+    gap: var(--space-2);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .library__nav a:hover {
+    border-color: var(--green-500);
+    color: var(--green-700);
+  }
+  .library__nav span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .group + .group {
+    margin-top: var(--space-8);
+  }
+  .group__head {
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .group__head h2 {
+    font-size: var(--step-3);
+  }
+  .group__head p {
+    margin-top: var(--space-2);
+    color: var(--ink-soft);
+  }
+  .group__items {
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 48em) {
+    .group__items {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .library {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+    .library__nav {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+    .library__nav ul {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
