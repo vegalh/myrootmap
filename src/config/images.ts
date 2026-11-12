@@ -15,10 +15,15 @@ export type ImageSlot = {
 };
 
 export const IMAGES = {
-  // Home: the hero, a portrait photograph or illustration (about 1200 × 1500 px or larger)
+  // Home, chapter 1 (Introduction): the main photograph, portrait (about 1600 × 2000 px or larger).
+  // On phones the same image is cropped to 5:4 from the centre, so keep the subject near the middle.
   homeHero: { src: '', ratio: '4 / 5', folder: 'hero' },
-  // Home: the community section, landscape (about 1600 × 1200 px)
-  homeCommunity: { src: '', ratio: '4 / 3', folder: 'community' },
+  // Home, chapter 2 (The way we see childhood): a wide photograph (about 2100 × 1400 px) …
+  homeChildhoodMain: { src: '', ratio: '3 / 2', folder: 'philosophy' },
+  // … and a smaller detail, portrait (about 1200 × 1500 px), such as hands at work.
+  homeChildhoodDetail: { src: '', ratio: '4 / 5', folder: 'philosophy' },
+  // Home, chapter 5 (Grow with us): portrait (about 1200 × 1500 px); cropped to 3:2 on phones.
+  homeCommunity: { src: '', ratio: '4 / 5', folder: 'community' },
   // Our Philosophy: a wide image under the page title (about 2000 × 900 px)
   philosophyHero: { src: '', ratio: '21 / 9', folder: 'philosophy' },
   // Our Philosophy: one image beside the "Learning through real experiences" and "independence" sections (portrait)
@@ -38,7 +43,7 @@ export const SCREENSHOTS: Record<string, string> = {
   week: '/images/features/app/my-week.jpg',
   children: '/images/features/app/child-profile.jpg',
   routine: '',
-  // Home page "How RootMap works"
+  // Home page, chapter 3 (RootMap in everyday life)
   experience: '/images/features/app/today.jpg',
   remember: '/images/features/app/moments.jpg',
 };

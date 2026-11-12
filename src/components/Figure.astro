@@ -1,6 +1,8 @@
 ---
 // A photograph or illustration slot. With an image it renders a responsive, cropped <img>; without one it renders a
 // quiet, clearly labelled placeholder of the same shape, so layouts look finished before final images arrive.
+// A page can art-direct a slot from its own CSS through custom properties on the figure: --figure-ratio (for example a
+// different crop on phones), --figure-radius, --figure-placeholder-bg and --figure-placeholder-ink.
 import { url } from '../i18n';
 import type { ImageSlot } from '../config/images';
 
@@ -13,7 +15,7 @@ interface Props {
   class?: string;
 }
 const { image: slot, alt, placeholder, caption, eager = false, class: className } = Astro.props;
-const style = `aspect-ratio: ${slot.ratio};${slot.position ? ` object-position: ${slot.position};` : ''}`;
+const style = `aspect-ratio: var(--figure-ratio, ${slot.ratio});${slot.position ? ` object-position: ${slot.position};` : ''}`;
 ---
 
 <figure class:list={['figure', className]}>
@@ -28,7 +30,7 @@ const style = `aspect-ratio: ${slot.ratio};${slot.position ? ` object-position: 
         fetchpriority={eager ? 'high' : undefined}
       />
     ) : (
-      <div class="figure__placeholder" style={`aspect-ratio: ${slot.ratio}`} aria-hidden="true">
+      <div class="figure__placeholder" style={`aspect-ratio: var(--figure-ratio, ${slot.ratio})`} aria-hidden="true">
         <svg class="figure__mark" viewBox="0 0 46 46" fill="none">
           <path d="M23 39V19M23 26l-8-7M23 23l8-9M23 30l11-7M17 39h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
           <circle cx="13" cy="16" r="6" stroke="currentColor" stroke-width="1.4" />
@@ -54,7 +56,7 @@ const style = `aspect-ratio: ${slot.ratio};${slot.position ? ` object-position: 
   img,
   .figure__placeholder {
     width: 100%;
-    border-radius: var(--radius-lg);
+    border-radius: var(--figure-radius, var(--radius-lg));
     object-fit: cover;
   }
   .figure__placeholder {
@@ -62,11 +64,13 @@ const style = `aspect-ratio: ${slot.ratio};${slot.position ? ` object-position: 
     display: grid;
     place-items: center;
     overflow: hidden;
-    background:
+    background: var(
+      --figure-placeholder-bg,
       radial-gradient(120% 90% at 85% 10%, rgba(226, 184, 92, 0.16), transparent 60%),
       radial-gradient(100% 80% at 10% 100%, rgba(75, 124, 99, 0.14), transparent 60%),
-      var(--sage-100);
-    color: var(--sage-300);
+      var(--sage-100)
+    );
+    color: var(--figure-placeholder-ink, var(--sage-300));
   }
   .figure__mark {
     width: min(28%, 8rem);

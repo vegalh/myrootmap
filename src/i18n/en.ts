@@ -52,26 +52,31 @@ export const en = {
     authorNoteHint: 'A place for your own reflection, classroom experience or story. Add it in src/i18n.',
   },
 
+  // The homepage is told in five chapters. Captions sit beside photographs: rewrite them to match each photograph
+  // once it is chosen (src/config/images.ts lists the image slots).
   home: {
     title: 'RootMap: Small moments. Meaningful growth.',
+    contentsLabel: 'On this page',
     hero: {
+      chapter: 'Introduction',
       eyebrow: 'For parents and caregivers of young children',
-      title: 'Small moments.\nMeaningful growth.',
+      titleLines: ['Small moments.', 'Meaningful growth.'],
       body: 'RootMap helps parents and caregivers discover meaningful everyday activities, observe children’s interests, and support curiosity, independence, and lifelong learning.',
       primary: 'Get Started',
       secondary: 'Explore RootMap',
       imageAlt: 'A child exploring an everyday activity',
+      caption: 'Learning happens in everyday life.',
     },
-    why: {
-      eyebrow: 'Why RootMap exists',
+    childhood: {
+      chapter: 'The way we see childhood',
       title: 'Learning happens in everyday life.',
-      paragraphs: [
+      intro: [
         'Much of what matters in early childhood doesn’t happen in lessons. It happens at the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
-        'Children explore, experiment, repeat, observe and discover through ordinary experiences. A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
         'RootMap is designed to help adults notice these moments and respond thoughtfully: not by adding more to the day, but by seeing more of what is already there.',
       ],
-      principlesLabel: 'Three principles',
-      principles: [
+      quote: 'A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
+      ideasLabel: 'Four things we pay attention to',
+      ideas: [
         {
           title: 'Curiosity',
           body: 'Children arrive already wanting to understand the world. We start from their questions and interests, not from a checklist.',
@@ -81,82 +86,82 @@ export const en = {
           body: 'Real tasks, child-sized tools and enough time let children do things for themselves, and discover what they are capable of.',
         },
         {
-          title: 'Meaningful Connections',
-          body: 'Learning grows inside relationships. Shared attention, conversation and time together give everyday experiences their meaning.',
+          title: 'Observation',
+          body: 'Before stepping in, it helps to watch. What is the child trying to do? What has caught their attention?',
+        },
+        {
+          title: 'Everyday experiences',
+          body: 'The kitchen, the garden, the bath and the walk home are all places where learning can happen, without special equipment.',
         },
       ],
+      mainAlt: 'A child absorbed in an everyday task at home',
+      mainCaption: 'Ordinary routines, such as washing, pouring and sorting, are rich places to learn.',
+      detailAlt: 'Small hands at work, close up',
+      detailCaption: 'Watching closely before deciding what a child needs.',
+      link: 'Read our philosophy',
     },
-    how: {
-      eyebrow: 'How RootMap works',
-      title: 'Three connected experiences',
+    product: {
+      chapter: 'RootMap in everyday life',
+      title: 'One small idea for today. A place to keep what you notice.',
       intro: 'RootMap fits around family life rather than asking it to change.',
-      steps: [
+      featured: {
+        id: 'experience',
+        kicker: 'Each day',
+        title: 'Experience',
+        lead: 'Turn ordinary routines and everyday moments into opportunities for discovery.',
+        body: 'Each day RootMap suggests one idea for each child, fitted to the times you are usually together, with clear steps and a simple list of materials.',
+        shotAlt: 'The Today screen in RootMap, showing today’s inspiration for a child',
+      },
+      supporting: [
         {
           id: 'discover',
+          kicker: 'When you’re looking',
           title: 'Discover',
-          lead: 'Find meaningful activities that support exploration and learning.',
           body: 'A library of hands-on activities drawn from everyday home life, alongside picture books and themed collections, filtered by age, setting and materials.',
           shotAlt: 'The Discover screen in RootMap, showing the activity library',
         },
         {
-          id: 'experience',
-          title: 'Experience',
-          lead: 'Turn ordinary routines and everyday moments into opportunities for discovery.',
-          body: 'Each day RootMap suggests one idea for each child, fitted to the times you are usually together, with clear steps and a simple list of materials.',
-          shotAlt: 'The Today screen in RootMap, showing today’s inspiration for a child',
-        },
-        {
           id: 'remember',
+          kicker: 'Over time',
           title: 'Remember',
-          lead: 'Capture meaningful Moments and reflect on your child’s experiences over time.',
           body: 'Save a photo and a few words when something is worth remembering, and look back week by week as each child’s own path takes shape.',
           shotAlt: 'The My Moments screen in RootMap, showing a timeline of saved moments',
         },
       ],
       link: 'See all features',
+      app: 'Open RootMap',
       demoNote: 'Screenshots show the current app with a demo family.',
     },
-    philosophy: {
-      eyebrow: 'Our educational philosophy',
-      title: 'Children are naturally curious. Our role is to help that curiosity grow.',
-      body: 'RootMap draws on Montessori-inspired ideas and on the everyday wisdom of attentive caregivers. A few commitments guide every part of it.',
-      themes: [
-        { title: 'Observation', body: 'Watching closely before deciding what a child needs.' },
-        { title: 'Responsive caregiving', body: 'Following a child’s cues with warmth and patience.' },
-        { title: 'Child-led exploration', body: 'Leaving room for children’s own choices and questions.' },
-        { title: 'Independence', body: 'Inviting children into real tasks they can do themselves.' },
-        { title: 'Everyday learning', body: 'Treating ordinary routines as rich places to learn.' },
-      ],
-      link: 'Read our philosophy',
-    },
-    blog: {
-      eyebrow: 'From the blog',
-      title: 'Ideas Worth Exploring',
-      intro: 'Reflections on childhood, learning and educational design.',
+    notes: {
+      chapter: 'Notes on growing',
+      title: 'Ideas worth exploring',
+      intro: 'Reflections on childhood, learning and educational design, and a growing library of practical resources.',
+      featuredLabel: 'Featured article',
+      moreLabel: 'More from the blog',
+      placeholderTag: 'Placeholder · not yet published',
       empty: 'The first articles are being written. They will appear here once published.',
-    },
-    resources: {
-      eyebrow: 'Resources',
-      title: 'Resources for Curious Minds',
-      intro: 'A growing collection of practical educational resources for parents and educators: guides, reading and materials to use at home or in the classroom.',
-      note: 'The collection is just beginning. Resources will be added as they are ready.',
-      link: 'Browse resources',
+      blogLink: 'Visit the blog',
+      resourcesTitle: 'The resource library',
+      resourcesIntro: 'Guides, reading and materials for home and the classroom, organised around six themes.',
+      resourcesNote: 'The collection is just beginning. Resources will be added as they are ready.',
+      resourcesLink: 'Browse resources',
     },
     community: {
-      eyebrow: 'Community',
-      status: 'In exploration',
-      title: 'A Space to Grow Together',
+      chapter: 'Grow with us',
+      title: 'A space to grow together',
+      status: 'In exploration · not yet open',
       paragraphs: [
-        'We are exploring the possibility of building a thoughtful community for parents, educators, researchers, and people who care about childhood and learning.',
-        'This community will extend beyond the RootMap application. It will be a place to exchange ideas, discuss educational experiences, and learn from one another.',
+        'I’m exploring the possibility of creating a thoughtful private community for parents, educators, researchers, and anyone who cares about childhood and learning.',
+        'It would reach beyond the RootMap app: a place to exchange ideas, talk through educational experiences, and learn from one another. Nothing has been built yet, and I’d love to learn what kind of space would be valuable to you.',
       ],
-      cta: 'Help Shape Our Community',
-      imageAlt: 'People learning together',
-    },
-    final: {
-      title: 'Make everyday moments meaningful.',
-      body: 'Open RootMap in your browser. No account is needed to begin.',
-      button: 'Start with RootMap',
+      cta: 'Share your thoughts',
+      ctaNote: 'A short survey, a few minutes long.',
+      imageAlt: 'People in conversation about learning',
+      ps: {
+        label: 'P.S.',
+        body: 'RootMap itself is ready today. Open it in your browser; no account is needed to begin.',
+        button: 'Start with RootMap',
+      },
     },
   },
 
