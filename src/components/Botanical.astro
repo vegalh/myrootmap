@@ -1,0 +1,92 @@
+---
+// One of RootMap's botanical illustrations (src/illustrations/botanicals.ts). Purely decorative: hidden from screen
+// readers and never clickable. With `grow`, the stems draw themselves and the leaves fade in once, when it appears;
+// a page can also add the class "botanical--grow" later (the homepage does this when a drawing scrolls into view).
+// Colors come from custom properties, so a section can retint a drawing: --bot-stem, --bot-leaf-a/-b/-c,
+// --bot-terra and --bot-gold.
+import { url } from '../i18n';
+import { BOTANICALS, renderBotanical, type BotanicalName } from '../illustrations/botanicals';
+
+interface Props {
+  name: BotanicalName;
+  grow?: boolean;
+  class?: string;
+}
+const { name, grow = false, class: className } = Astro.props;
+const art = BOTANICALS[name];
+---
+
+{
+  art.file ? (
+    <img class:list={['botanical', className]} src={url(art.file)} width={art.width} height={art.height} alt="" aria-hidden="true" loading="lazy" decoding="async" />
+  ) : (
+    <svg
+      class:list={['botanical', className, grow && 'botanical--grow']}
+      viewBox={`0 0 ${art.width} ${art.height}`}
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+      set:html={renderBotanical(art)}
+    />
+  )
+}
+
+<style is:global>
+  .botanical {
+    display: block;
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+    color: var(--bot-stem, #3d6650);
+  }
+  .botanical .bot-stem,
+  .botanical .bot-vein {
+    stroke: currentColor;
+    stroke-linecap: round;
+  }
+  .botanical .bot-vein {
+    stroke-width: 1.2;
+  }
+  .botanical .bot-leaf--a {
+    fill: var(--bot-leaf-a, #4b7c63);
+  }
+  .botanical .bot-leaf--b {
+    fill: var(--bot-leaf-b, #9db8a2);
+  }
+  .botanical .bot-leaf--c {
+    fill: var(--bot-leaf-c, #2f4d3d);
+  }
+  .botanical .bot-leaf--line {
+    stroke: currentColor;
+    stroke-width: 1.3;
+    stroke-linejoin: round;
+  }
+  .botanical .bot-accent--terra {
+    fill: var(--bot-terra, #d98b62);
+  }
+  .botanical .bot-accent--gold {
+    fill: var(--bot-gold, #e2b85c);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .botanical--grow .bot-stem {
+      stroke-dasharray: 1;
+      animation: bot-draw 0.5s ease-out both;
+      animation-delay: var(--d, 0s);
+    }
+    .botanical--grow .bot-part {
+      animation: bot-appear 0.6s ease-out both;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes bot-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+  @keyframes bot-appear {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

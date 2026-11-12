@@ -52,52 +52,46 @@ export const en = {
     authorNoteHint: 'A place for your own reflection, classroom experience or story. Add it in src/i18n.',
   },
 
-  // The homepage is told in five chapters. Captions sit beside photographs: rewrite them to match each photograph
-  // once it is chosen (src/config/images.ts lists the image slots).
+  // The homepage: hero, why RootMap, the app, notes (blog and resources) and the community invitation.
+  // Rewrite the photograph caption to match the photograph once it is chosen (src/config/images.ts lists the slots).
   home: {
     title: 'RootMap: Small moments. Meaningful growth.',
-    contentsLabel: 'On this page',
     hero: {
-      chapter: 'Introduction',
       eyebrow: 'For parents and caregivers of young children',
       titleLines: ['Small moments.', 'Meaningful growth.'],
       body: 'RootMap helps parents and caregivers discover meaningful everyday activities, observe children’s interests, and support curiosity, independence, and lifelong learning.',
       primary: 'Get Started',
       secondary: 'Explore RootMap',
       imageAlt: 'A child exploring an everyday activity',
-      caption: 'Learning happens in everyday life.',
     },
-    childhood: {
-      chapter: 'The way we see childhood',
+    why: {
+      eyebrow: 'Why RootMap',
       title: 'Learning happens in everyday life.',
       intro: [
         'Much of what matters in early childhood doesn’t happen in lessons. It happens at the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
         'RootMap is designed to help adults notice these moments and respond thoughtfully: not by adding more to the day, but by seeing more of what is already there.',
       ],
-      quote: 'A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
-      ideasLabel: 'Four things we pay attention to',
-      ideas: [
+      stagesLabel: 'From curiosity to growth',
+      stages: [
         {
           title: 'Curiosity',
-          body: 'Children arrive already wanting to understand the world. We start from their questions and interests, not from a checklist.',
+          body: 'Children arrive already wanting to understand the world. We start from their questions, not from a checklist.',
+        },
+        {
+          title: 'Exploration',
+          body: 'Pouring, sorting, washing, carrying: real objects and everyday tasks give children room to try things their own way.',
         },
         {
           title: 'Independence',
-          body: 'Real tasks, child-sized tools and enough time let children do things for themselves, and discover what they are capable of.',
+          body: 'Real tasks, child-sized tools and enough time let children do things for themselves.',
         },
         {
-          title: 'Observation',
-          body: 'Before stepping in, it helps to watch. What is the child trying to do? What has caught their attention?',
-        },
-        {
-          title: 'Everyday experiences',
-          body: 'The kitchen, the garden, the bath and the walk home are all places where learning can happen, without special equipment.',
+          title: 'Growth',
+          body: 'Small observations add up. Over time they show how each child is growing in their own way.',
         },
       ],
-      mainAlt: 'A child absorbed in an everyday task at home',
-      mainCaption: 'Ordinary routines, such as washing, pouring and sorting, are rich places to learn.',
-      detailAlt: 'Small hands at work, close up',
-      detailCaption: 'Watching closely before deciding what a child needs.',
+      imageAlt: 'A child absorbed in an everyday task at home',
+      caption: 'A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
       link: 'Read our philosophy',
     },
     product: {
