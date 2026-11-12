@@ -1,6 +1,6 @@
 name: Deploy to GitHub Pages
 
-# Builds the site for https://vegalh.github.io/myrootmap/ and publishes it on every push to main.
+# Builds the site for https://myrootmap.com/ (served from the root path) and publishes it on every push to main.
 # Requires Settings › Pages › Source: "GitHub Actions".
 
 on:
@@ -27,7 +27,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm run build:pages
+      - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -1,11 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// GitHub Pages serves this repository at https://vegalh.github.io/myrootmap/, so production builds for Pages
-// (`npm run build:pages`, or any build with GITHUB_PAGES set) use the /myrootmap base path. Local development
-// and a future custom domain use the root. When a custom domain is added, set `site` to it and drop the base.
-const onGitHubPages = Boolean(process.env.GITHUB_PAGES);
-const base = onGitHubPages ? '/myrootmap' : '/';
+// The site is published with GitHub Pages on its own domain, https://myrootmap.com/ (public/CNAME), so it is served
+// from the root: every build, local or deployed, uses the base path "/". If it ever moves to a sub-path (such as
+// https://vegalh.github.io/myrootmap/), change `site` and `base` here; all links and assets follow.
+const site = 'https://myrootmap.com';
+const base = '/';
 
 // Markdown articles write site paths as "/images/blog/a.jpg"; this puts the base path in front of them.
 function rehypeBasePath() {
@@ -26,7 +26,7 @@ function rehypeBasePath() {
 }
 
 export default defineConfig({
-  site: 'https://vegalh.github.io',
+  site,
   base,
   trailingSlash: 'ignore',
   build: { format: 'directory' },

@@ -12,8 +12,7 @@ Requires Node.js 22.12 or later.
 ```bash
 npm install
 npm run dev          # http://localhost:4321 (shows draft articles)
-npm run build        # production build into dist/ (root base path)
-npm run build:pages  # production build for GitHub Pages, served at /myrootmap/
+npm run build        # production build into dist/, as deployed to https://myrootmap.com/
 npm run preview      # serve the last build
 npm run check        # type-check
 ```
@@ -52,9 +51,9 @@ page shows "Coming soon / 即将开放" in place of that button.
 
 ## Deploying to GitHub Pages
 
-Every push to `main` builds the site with `npm run build:pages` and publishes it to
-`https://vegalh.github.io/myrootmap/` (`.github/workflows/deploy.yml`). Settings › Pages › Source must be set to
-"GitHub Actions". A deploy can also be started by hand from the Actions tab.
+Every push to `main` builds the site with `npm run build` and publishes it to `https://myrootmap.com/`
+(`.github/workflows/deploy.yml`). Settings › Pages › Source must be set to "GitHub Actions", with `myrootmap.com` as
+the custom domain (`public/CNAME` records it). A deploy can also be started by hand from the Actions tab.
 
-For a custom domain later: set `site` in `astro.config.mjs` to the domain, build with `npm run build` (root base path),
-and add a `public/CNAME` file.
+The site is served from the root of the domain, so `site` and `base` in `astro.config.mjs` are `https://myrootmap.com`
+and `/`. Building with any other base path makes every stylesheet, script and image address wrong on the live site.
