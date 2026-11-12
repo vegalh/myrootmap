@@ -36,6 +36,21 @@ npm run check        # type-check
 | Page layouts (one per page, language-neutral) | `src/views/` |
 | Routes (thin files that pick a language) | `src/pages/`, `src/pages/zh/` |
 
+## Adding inspiration logos
+
+Put your logo in `public/images/inspired/`, then add an entry to `INSPIRATIONS` in `src/config/inspirations.ts`.
+
+```ts
+{
+  kind: 'logo',
+  name: 'Organization name',
+  image: '/images/inspired/organization.svg',
+  href: 'https://example.com',
+}
+```
+
+Logos appear in the homepage’s Inspired by section with their full proportions. Development previews show empty logo slots until you add entries.
+
 ## Adding images
 
 1. Put the file in the folder named in `src/config/images.ts`, e.g. `public/images/hero/home.jpg`.

@@ -9,6 +9,8 @@
 //
 // Text can be one string used in both languages ('Maria Montessori') or one for each ({ en: '…', zh: '…' }).
 //
+// For an inspiration logo, use kind: 'logo', name, image: '/images/inspired/name.svg', and optional href.
+// Logo images keep their full proportions inside a generous, uncropped frame.
 // Example:
 //   {
 //     kind: 'book',
@@ -21,7 +23,7 @@
 
 import type { Lang } from '../i18n';
 
-export type InspirationKind = 'educator' | 'researcher' | 'author' | 'creator' | 'book' | 'paper' | 'philosophy';
+export type InspirationKind = 'educator' | 'researcher' | 'author' | 'creator' | 'book' | 'paper' | 'philosophy' | 'logo';
 export type Localized = string | Record<Lang, string>;
 
 export type Inspiration = {

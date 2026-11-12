@@ -61,7 +61,7 @@ export const en = {
       eyebrow: 'RootMap · for parents and caregivers of young children',
       titleLines: ['Grow with', 'your child.'],
       body: 'RootMap helps parents turn everyday experiences into meaningful opportunities for exploration, connection, and learning.',
-      note: 'A few minutes of ideas for you. The experiences themselves happen out in the real world, not on a screen.',
+      note: 'A few minutes of inspiration. Meaningful moments to share with your child.',
       primary: 'Explore RootMap',
       secondary: 'Our Story',
       imageAlt: 'A child exploring an everyday activity',
@@ -71,7 +71,7 @@ export const en = {
       eyebrow: 'Why RootMap',
       title: 'Childhood happens in the real world.',
       intro: [
-        'Much of what matters in early childhood doesn’t happen in lessons, and it doesn’t happen on a screen. It happens at the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
+        'Meaningful learning happens in everyday moments. At the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
         'RootMap was made to help adults notice these moments and respond thoughtfully: not by adding more to the day, but by seeing more of what is already there. And as children grow, a door opens for the adults beside them to grow too.',
       ],
       imageAlt: 'A child absorbed in an everyday task at home',
@@ -157,22 +157,21 @@ export const en = {
     // yours. `name` is still empty and shows a labelled placeholder (as `intro` or `observations` would if emptied).
     founder: {
       chapter: 'Meet the founder',
-      title: 'A little note from the founder',
-      hello: 'Hello, and welcome. I’m glad you’re here.',
+      title: 'Growing curious minds, together',
       name: '',
-      draft: true,
+      draft: false,
       draftLabel: 'Draft · for the founder’s review',
       intro: [
-        'I made RootMap because I believe the learning that matters most in the early years happens away from screens and worksheets: at the kitchen sink, in the garden, on the walk home. Real things, done together, with enough time.',
-        'The tools around us grow more capable every year. That makes me think children will need, more than ever, what no tool can do for them: the curiosity to ask their own questions, the focus to stay with something, and the confidence to think for themselves.',
-        'And it isn’t only about children. When we slow down enough to watch a child work something out, we notice more, and we change too. That is what “grow with your child” means to me.',
+        'RootMap begins with a simple belief. Grow with your child. Practical, real-life activities bring parents and children together, away from screens and worksheets. Cooking, planting, making and exploring become chances to build confidence, understand one another and deepen your connection as you both grow.',
       ] as string[],
-      observationsTitle: 'What I believe helps children',
+      observationsTitle: 'The perspectives behind RootMap',
       observations: [
-        'Start from curiosity. A child’s own question is a better beginning than any plan of mine.',
-        'Protect focus. Time to stay with one small task, unhurried, is worth making room for.',
-        'Let them do it themselves. Independence and resilience come from trying, getting it wrong, and trying again.',
-        'Create while learning. Making something is one of the ways children come to understand it.',
+        'Studying at a leading entrepreneurship school',
+        'Conversations with many young founders',
+        'Curiosity, initiative and resilience from an early age',
+        'Connections across AI and innovative education',
+        'A perspective rooted in social-emotional learning',
+        'Real-life experiences. Closer family connections.',
       ] as string[],
       placeholders: {
         name: 'Your name',
@@ -181,9 +180,9 @@ export const en = {
       },
       imageAlt: 'A portrait of RootMap’s founder',
       about: 'More on the About page',
-      connect: 'Connect',
-      // The places Connect leads to. The WeChat ID, Xiaohongshu link and email address are set in src/config/site.ts.
-      channels: { label: 'Other ways to connect', wechat: 'WeChat', xiaohongshu: 'Xiaohongshu', email: 'Email', soon: 'coming soon' },
+      connect: 'Let’s talk about your child',
+      // The places Connect leads to. The WeChat ID, Rednotes link and email address are set in src/config/site.ts.
+      channels: { label: 'Other ways to connect', wechat: 'WeChat', xiaohongshu: 'Rednotes', email: 'Email', soon: 'coming soon' },
     },
     // Three places to go next. This is a signpost, not a list of posts: nothing here is invented content.
     explore: {
@@ -192,12 +191,12 @@ export const en = {
       intro: 'Three places where the thinking behind RootMap keeps growing. Pick whichever suits the moment.',
       linkMissing: 'Link coming soon',
       xiaohongshu: {
-        name: 'Xiaohongshu',
+        name: 'Rednotes',
         nativeName: '小红书',
         tagline: 'Small notes from everyday life',
         topics: ['Personal reflections', 'Everyday experiences', 'Educational observations', 'Creative ideas', 'Behind the scenes'],
-        cta: 'Explore on Xiaohongshu',
-        imageAlt: 'A preview of RootMap on Xiaohongshu',
+        cta: 'Explore on Rednotes',
+        imageAlt: 'A preview of RootMap on Rednotes',
       },
       blog: {
         name: 'Blog',
@@ -229,6 +228,7 @@ export const en = {
         book: 'Book',
         paper: 'Research paper',
         philosophy: 'Educational approach',
+        logo: 'Organization',
       },
       by: 'by',
       empty: {
