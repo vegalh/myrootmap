@@ -1,6 +1,6 @@
 ---
 // The homepage, top to bottom: the hero, why RootMap exists (six ideas growing on one vine), the app as a journey
-// (Discover → Experience → Remember → Reflect, four screens in a row), a note from the founder, three places to explore (Xiaohongshu, the
+// (Discover → Experience → Remember → Reflect, four screens in a row, or a carousel on phones), a note from the founder, three places to explore (Xiaohongshu, the
 // blog, resources), "Inspired by", the ribbon of values and the invitation to grow with us.
 // The vines, leaves and flowers are RootMap's botanical illustrations: see src/illustrations/botanicals.ts.
 // Outside links live in src/config/site.ts, image slots in src/config/images.ts, "Inspired by" entries in
@@ -179,11 +179,13 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
         <p class="product__intro">{home.experience.intro}</p>
       </div>
 
-      <!-- Four screens in a row, each leading to the next. On phones the row scrolls sideways. -->
+      <!-- Four screens, each leading to the next: side by side on wide screens. On phones they are a carousel, one screen
+           at a time with its words underneath and a dot for each step (the script at the foot of this file keeps them in step). -->
+      <div class="stage">
       <ol class="journey" role="list" aria-label={home.experience.journeyLabel} tabindex="0">
         {
           home.experience.steps.map((step, i) => (
-            <li class="step">
+            <li class="step" data-active={i === 0 ? '' : undefined}>
               <div class="step__shot">
                 <Screenshot src={SCREENSHOTS[step.id]} alt={step.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
                 {i < home.experience.steps.length - 1 && (
@@ -202,6 +204,28 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
           ))
         }
       </ol>
+      <div class="captions" aria-live="polite">
+        {
+          home.experience.steps.map((step, i) => (
+            <div class="step__text caption" data-active={i === 0 ? '' : undefined}>
+              <p class="product__kicker">{step.kicker}</p>
+              <h3>{step.title}</h3>
+              <p class="product__lead">{step.lead}</p>
+              <p>{step.body}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="dots" role="group" aria-label={home.experience.dotsLabel}>
+        {
+          home.experience.steps.map((step, i) => (
+            <button type="button" aria-current={i === 0 ? 'true' : undefined}>
+              <span class="visually-hidden">{step.title}</span>
+            </button>
+          ))
+        }
+      </div>
+      </div>
 
       <div class="product__foot">
         <a class="btn btn--light btn--go" href={APP_URL}>{home.experience.app}<span aria-hidden="true">→</span></a>
@@ -568,6 +592,79 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
       { threshold: 0.35 },
     );
     drawings.forEach((drawing) => observer.observe(drawing));
+  }
+
+  // Experience RootMap on phones: the four screens are a carousel. Swiping is the browser's own scroll snapping; this
+  // keeps the words and the dots in step with the screen in the middle, and lets the dots, the arrow keys and a tap
+  // on a neighbouring screen move it. Without this script each screen simply keeps its words beneath it.
+  const stage = document.querySelector<HTMLElement>('.stage');
+  const track = stage?.querySelector<HTMLElement>('.journey');
+  if (stage && track) {
+    const slides = [...track.querySelectorAll<HTMLElement>('.step')];
+    const captions = [...stage.querySelectorAll<HTMLElement>('.caption')];
+    const dots = [...stage.querySelectorAll<HTMLButtonElement>('.dots button')];
+    const phone = window.matchMedia('(max-width: 61.99em)');
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let active = 0;
+    // The screen a dot or key is heading for: the ones passed on the way there are not announced.
+    let heading: number | null = null;
+
+    const show = (index: number) => {
+      active = index;
+      slides.forEach((slide, i) => slide.toggleAttribute('data-active', i === index));
+      captions.forEach((caption, i) => caption.toggleAttribute('data-active', i === index));
+      dots.forEach((dot, i) => (i === index ? dot.setAttribute('aria-current', 'true') : dot.removeAttribute('aria-current')));
+    };
+    // How far a screen's middle is from the middle of the row.
+    const offset = (slide: HTMLElement) => {
+      const s = slide.getBoundingClientRect();
+      const t = track.getBoundingClientRect();
+      return s.left + s.width / 2 - (t.left + t.width / 2);
+    };
+    const nearest = () => slides.reduce((best, slide, i) => (Math.abs(offset(slide)) < Math.abs(offset(slides[best])) ? i : best), 0);
+    const goTo = (index: number) => {
+      const next = Math.max(0, Math.min(slides.length - 1, index));
+      heading = next;
+      show(next);
+      track.scrollTo({ left: track.scrollLeft + offset(slides[next]), behavior: calm.matches ? 'auto' : 'smooth' });
+    };
+
+    let queued = false;
+    track.addEventListener(
+      'scroll',
+      () => {
+        if (queued || !phone.matches) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          const index = nearest();
+          if (heading !== null) {
+            if (index === heading) heading = null;
+            return;
+          }
+          if (index !== active) show(index);
+        });
+      },
+      { passive: true },
+    );
+    // A finger or the wheel takes over from wherever a dot was heading.
+    for (const type of ['touchstart', 'wheel', 'pointerdown']) {
+      track.addEventListener(type, () => (heading = null), { passive: true });
+    }
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+    slides.forEach((slide, i) =>
+      slide.addEventListener('click', () => {
+        if (phone.matches && i !== active) goTo(i);
+      }),
+    );
+    track.addEventListener('keydown', (event) => {
+      if (!phone.matches) return;
+      const to = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: slides.length - 1 }[event.key];
+      if (to === undefined) return;
+      event.preventDefault();
+      goTo(to);
+    });
+    stage.dataset.carousel = '';
   }
 </script>
 
@@ -1100,18 +1197,30 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     font-size: var(--step-1);
   }
 
-  /* Phones: the four screens sit in a row that scrolls sideways, one step at a time */
+  /* Phones: a carousel on its own stage. One screen sits in the middle with the edge of the next beside it, swiped
+     sideways one step at a time. The screen is as wide as the phone allows, but on a short display it gives up some
+     width so that its name still fits underneath, below the header. */
+  .stage {
+    --shot-w: clamp(min(58vw, 13rem), (100vh - var(--header-h) - 9.5rem) * 585 / 1266, min(68vw, 17rem));
+    --shot-w: clamp(min(58vw, 13rem), (100svh - var(--header-h) - 9.5rem) * 585 / 1266, min(68vw, 17rem));
+    margin-inline: calc(-1 * var(--gutter));
+    padding-block: var(--space-6) var(--space-5);
+    background: var(--green-700);
+  }
   .journey {
     display: flex;
-    gap: var(--space-6);
-    margin-inline: calc(-1 * var(--gutter));
-    padding: var(--space-7) var(--gutter) var(--space-6);
+    gap: var(--space-4);
+    /* Room underneath for the screens' shadow, which the words then sit over */
+    margin-bottom: calc(var(--space-5) - var(--space-8));
+    padding: 0 calc((100% - var(--shot-w)) / 2) var(--space-8);
     overflow-x: auto;
     list-style: none;
-    background: var(--green-700);
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    scrollbar-color: rgba(248, 241, 230, 0.4) transparent;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .journey::-webkit-scrollbar {
+    display: none;
   }
   .journey:focus-visible {
     outline-color: var(--gold-400);
@@ -1119,10 +1228,96 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
   }
   .step {
     display: grid;
-    flex: 0 0 min(72%, 17rem);
+    flex: 0 0 var(--shot-w);
     gap: var(--space-5);
     align-content: start;
-    scroll-snap-align: start;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  /* The words for the screen in the middle, and a dot for each step: shown once the carousel is running (see below) */
+  .captions,
+  .dots {
+    display: none;
+  }
+  @media (max-width: 61.99em) {
+    @media (prefers-reduced-motion: no-preference) {
+      .journey {
+        scroll-behavior: smooth;
+      }
+    }
+    .stage[data-carousel] .step .step__text,
+    .stage[data-carousel] .step__arrow {
+      display: none;
+    }
+    .stage[data-carousel] .step {
+      opacity: 0.5;
+      transition: opacity 0.4s var(--ease);
+    }
+    .stage[data-carousel] .step[data-active] {
+      opacity: 1;
+    }
+    /* All four sets of words share one space, so it is as tall as the longest and nothing below it moves */
+    .stage[data-carousel] .captions {
+      position: relative;
+      display: grid;
+      max-width: 30rem;
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+    .caption {
+      grid-area: 1 / 1;
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.35s var(--ease),
+        visibility 0s 0.35s;
+    }
+    .caption[data-active] {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .caption h3 {
+      margin-block: var(--space-1) var(--space-2);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .caption {
+        transition: none;
+      }
+    }
+    .stage[data-carousel] .dots {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-3);
+    }
+    .dots button {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.75rem;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+    .dots button::before {
+      content: '';
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 999px;
+      background: rgba(248, 241, 230, 0.4);
+      transition:
+        width 0.3s var(--ease),
+        background-color 0.3s var(--ease);
+    }
+    .dots button[aria-current]::before {
+      width: 1.5rem;
+      background: var(--gold-400);
+    }
+    .dots button:focus-visible {
+      outline-color: var(--gold-400);
+      outline-offset: -6px;
+    }
   }
   .step__shot {
     position: relative;
@@ -1214,12 +1409,15 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
   }
   /* Wide screens: all four stand side by side on one stage, overlapping a little, each a step up or down from the last */
   @media (min-width: 62em) {
+    .stage {
+      display: contents;
+    }
     .journey {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       grid-template-rows: auto auto;
       gap: var(--space-6) var(--space-5);
-      margin-inline: 0;
+      margin: 0;
       padding: 0;
       overflow: visible;
       background: none;

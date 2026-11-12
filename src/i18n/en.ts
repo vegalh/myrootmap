@@ -111,6 +111,8 @@ export const en = {
       title: 'One small idea for today. A place to keep what you notice.',
       intro: 'RootMap fits around family life rather than asking it to change.',
       journeyLabel: 'The RootMap journey: discover, experience, remember, reflect',
+      // The row of dots under the screens on phones.
+      dotsLabel: 'Choose a step of the journey',
       // The four stages, in order. `id` picks the screenshot (SCREENSHOTS in src/config/images.ts).
       steps: [
         {

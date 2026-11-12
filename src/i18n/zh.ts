@@ -110,6 +110,7 @@ export const zh: Dict = {
       title: '每天一个小点子，一个记下你所见的地方。',
       intro: 'RootMap 配合家庭生活本来的样子，而不是要求它改变。',
       journeyLabel: 'RootMap 的旅程：发现、体验、记录、回顾',
+      dotsLabel: '选择旅程中的一步',
       steps: [
         {
           id: 'discover',
