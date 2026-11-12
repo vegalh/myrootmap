@@ -1,0 +1,210 @@
+---
+// A slow, looping ribbon of words: the values RootMap associates with early childhood. A brand element, not a list
+// of features. The words are written once for screen readers; the moving copies are hidden from them.
+// The loop is plain CSS: several identical groups sit in a row and the row slides left by exactly one group, so the
+// end of the animation looks the same as its start. It pauses on hover, on keyboard focus and with the button.
+// With "reduce motion" switched on nothing moves: the words are set out once, wrapped and centred.
+import Botanical from './Botanical.astro';
+
+interface Props {
+  label: string;
+  words: { text: string; accent: boolean }[];
+  pauseLabel: string;
+  playLabel: string;
+  // Seconds for one group of words to pass. Higher is slower.
+  duration?: number;
+}
+const { label, words, pauseLabel, playLabel, duration = 60 } = Astro.props;
+
+// Enough copies to fill very wide screens even when the words are short (as in Chinese).
+const COPIES = 4;
+---
+
+<div class="ribbon" data-ribbon style={`--ribbon-copies: ${COPIES}; --ribbon-duration: ${duration}s`}>
+  <p class="visually-hidden">{label}: {words.map((word) => word.text).join(', ')}</p>
+  <div class="ribbon__band" aria-hidden="true">
+    <div class="ribbon__track">
+      {
+        Array.from({ length: COPIES }, () => (
+          <ul class="ribbon__group" role="list">
+            {words.map((word, i) => (
+              <li class:list={['ribbon__word', word.accent && 'ribbon__word--accent']}>
+                <span>{word.text}</span>
+                {i % 2 === 0 ? (
+                  <Botanical name="sprig" class="ribbon__mark" />
+                ) : (
+                  <svg class="ribbon__mark ribbon__mark--star" viewBox="0 0 24 24">
+                    <path d="M12 1C12.9 7.6 16.4 11.1 23 12C16.4 12.9 12.9 16.4 12 23C11.1 16.4 7.6 12.9 1 12C7.6 11.1 11.1 7.6 12 1Z" />
+                  </svg>
+                )}
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+  <button class="ribbon__toggle" type="button" aria-pressed="false" aria-label={pauseLabel} data-pause-label={pauseLabel} data-play-label={playLabel} data-ribbon-toggle hidden>
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path class="ribbon__icon-pause" d="M4.5 3v10M11.5 3v10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path>
+      <path class="ribbon__icon-play" d="M5 3.2v9.6L12.6 8Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+</div>
+
+<script>
+  for (const ribbon of document.querySelectorAll<HTMLElement>('[data-ribbon]')) {
+    const toggle = ribbon.querySelector<HTMLButtonElement>('[data-ribbon-toggle]');
+    if (!toggle) continue;
+    toggle.hidden = false;
+    toggle.addEventListener('click', () => {
+      const paused = ribbon.toggleAttribute('data-paused');
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.setAttribute('aria-label', (paused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? '');
+    });
+  }
+</script>
+
+<style>
+  .ribbon {
+    position: relative;
+    /* Room underneath for the pause button */
+    padding-block: clamp(1.25rem, 0.75rem + 2vw, 2.5rem) 3rem;
+    /* The band is tilted and a little wider than the page; this trims what sticks out at the sides */
+    overflow-x: clip;
+    background: linear-gradient(to bottom, var(--ribbon-from, var(--paper)) 50%, var(--ribbon-to, var(--paper)) 50%);
+  }
+  .ribbon__band {
+    width: 104%;
+    margin-left: -2%;
+    padding-block: clamp(0.9rem, 0.6rem + 1.2vw, 1.6rem);
+    overflow: hidden;
+    background: var(--sage-300);
+    transform: rotate(-1.2deg);
+  }
+  .ribbon__track {
+    display: flex;
+    width: max-content;
+  }
+  .ribbon__group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+  .ribbon__word {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 3.9rem);
+    font-weight: 500;
+    font-variation-settings: 'SOFT' 50;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+    color: var(--green-800);
+  }
+  .ribbon__word--accent {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--terracotta-700);
+  }
+  :global(:lang(zh)) .ribbon__word {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  :global(:lang(zh)) .ribbon__word--accent {
+    font-style: normal;
+  }
+  .ribbon__word :global(.ribbon__mark),
+  .ribbon__mark {
+    flex-shrink: 0;
+    width: 0.62em;
+    height: auto;
+    margin-inline: 0.42em;
+    --bot-stem: var(--green-700);
+    --bot-leaf-a: var(--green-500);
+    --bot-leaf-b: var(--green-700);
+  }
+  .ribbon__mark--star {
+    width: 0.4em;
+    margin-inline: 0.53em;
+    fill: var(--terracotta-500);
+  }
+
+  .ribbon__toggle {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 0.25rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--green-700);
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.2s var(--ease);
+  }
+  .ribbon__toggle:hover,
+  .ribbon__toggle:focus-visible {
+    opacity: 1;
+  }
+  .ribbon__toggle svg {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  .ribbon__toggle[aria-pressed='false'] .ribbon__icon-play,
+  .ribbon__toggle[aria-pressed='true'] .ribbon__icon-pause {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ribbon__track {
+      animation: ribbon-slide var(--ribbon-duration) linear infinite;
+    }
+    .ribbon:hover .ribbon__track,
+    .ribbon:focus-within .ribbon__track,
+    .ribbon[data-paused] .ribbon__track {
+      animation-play-state: paused;
+    }
+  }
+  @keyframes ribbon-slide {
+    to {
+      transform: translateX(calc(-100% / var(--ribbon-copies)));
+    }
+  }
+
+  /* Reduce motion: one copy of the words, standing still */
+  @media (prefers-reduced-motion: reduce) {
+    .ribbon {
+      padding-bottom: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+    }
+    .ribbon__band {
+      width: 100%;
+      margin-left: 0;
+      padding-inline: var(--gutter);
+      transform: none;
+    }
+    .ribbon__track {
+      width: auto;
+      animation: none;
+    }
+    .ribbon__group {
+      flex-wrap: wrap;
+      flex-shrink: 1;
+      justify-content: center;
+      row-gap: 0.2em;
+    }
+    .ribbon__group:not(:first-child),
+    .ribbon__toggle {
+      display: none;
+    }
+    .ribbon__word {
+      font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.8rem);
+    }
+  }
+</style>

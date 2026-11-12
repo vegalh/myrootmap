@@ -1,15 +1,20 @@
 ---
-// The homepage: a hero, why RootMap exists (one plant growing through four stages), the app in everyday life,
-// notes (blog and resources) and an invitation to help shape the community.
+// The homepage, top to bottom: the hero, why RootMap exists (six ideas growing on one vine), the app as a journey
+// (Discover → Experience → Remember → Reflect, four screens in a row), a note from the founder, three places to explore (Xiaohongshu, the
+// blog, resources), "Inspired by", the ribbon of values and the invitation to grow with us.
 // The vines, leaves and flowers are RootMap's botanical illustrations: see src/illustrations/botanicals.ts.
+// Outside links live in src/config/site.ts, image slots in src/config/images.ts, "Inspired by" entries in
+// src/config/inspirations.ts and all text in src/i18n.
 import '@fontsource-variable/fraunces/wght-italic.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Botanical from '../components/Botanical.astro';
 import Figure from '../components/Figure.astro';
 import Screenshot from '../components/Screenshot.astro';
-import { formatDate, localePath, t, type Lang } from '../i18n';
-import { APP_URL } from '../config/site';
+import ValuesRibbon from '../components/ValuesRibbon.astro';
+import { localePath, t, url, type Lang } from '../i18n';
+import { APP_URL, CONTACT_EMAIL, FEEDBACK_URL, SHOW_DESIGN_PLACEHOLDERS, SURVEY_URLS, WECHAT_ID, XIAOHONGSHU_URL } from '../config/site';
 import { IMAGES, SCREENSHOTS } from '../config/images';
+import { INSPIRATIONS, localized, type InspirationKind } from '../config/inspirations';
 import { getPublishedPosts, postUrl } from '../lib/content';
 import type { BotanicalName } from '../illustrations/botanicals';
 
@@ -19,44 +24,106 @@ interface Props {
 const { lang } = Astro.props;
 const copy = t(lang);
 const home = copy.home;
-const [featured, ...morePosts] = await getPublishedPosts(lang, 3);
-const resourceCategories = Object.entries(copy.categories.resources) as [keyof typeof copy.categories.resources, { title: string; body: string }][];
+const explore = home.explore;
+const [latestPost] = await getPublishedPosts(lang, 1);
+const otherLang = lang === 'zh' ? 'en' : 'zh-CN';
 
-// One plant, four stages: the drawing beside each idea in "Why RootMap".
-const STAGE_ART: BotanicalName[] = ['stageSeed', 'stageSprout', 'stageBranch', 'stageBloom'];
-const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName> = {
-  development: 'catSeedling',
-  everyday: 'catTwig',
-  observation: 'catBud',
-  activities: 'catBerries',
-  reading: 'catFern',
-  educators: 'catFlower',
+// The drawing beside each idea in "Why RootMap", in the order the ideas are written.
+const IDEA_ART: BotanicalName[] = ['catTwig', 'catBerries', 'catBud', 'catSeedling', 'catFern', 'catFlower'];
+
+// Inspired by: people are shown as round portraits, books and papers as upright covers, approaches as a leaf shape.
+const KIND_SHAPE: Record<InspirationKind, 'portrait' | 'cover' | 'idea'> = {
+  educator: 'portrait',
+  researcher: 'portrait',
+  author: 'portrait',
+  creator: 'portrait',
+  book: 'cover',
+  paper: 'cover',
+  philosophy: 'idea',
 };
+const KIND_ART: Record<InspirationKind, BotanicalName> = {
+  educator: 'catFlower',
+  researcher: 'catFern',
+  author: 'catTwig',
+  creator: 'catBerries',
+  book: 'catBud',
+  paper: 'catFern',
+  philosophy: 'catSeedling',
+};
+const inspirations = INSPIRATIONS.map((item) => ({
+  kind: item.kind,
+  name: localized(item.name, lang),
+  by: localized(item.by, lang),
+  note: localized(item.note, lang),
+  quote: localized(item.quote, lang),
+  image: item.image ?? '',
+  imageAlt: localized(item.imageAlt, lang),
+  href: item.href ?? '',
+  placeholder: false,
+}));
+// With no entries yet: sample slots that show the layout while developing, and a short note on the published site.
+const PLACEHOLDER_KINDS: InspirationKind[] = ['educator', 'book', 'philosophy', 'researcher', 'author', 'paper', 'creator'];
+const showPlaceholders = inspirations.length === 0 && SHOW_DESIGN_PLACEHOLDERS;
+const shelf = showPlaceholders
+  ? PLACEHOLDER_KINDS.map((kind) => ({ kind, name: home.inspired.placeholder.name, by: '', note: home.inspired.placeholder.note, quote: '', image: '', imageAlt: '', href: '', placeholder: true }))
+  : inspirations;
+
+// The two community surveys. An empty link (src/config/site.ts) shows "Coming soon" instead of a button.
+const surveys = [
+  { key: 'china', lang: 'zh-CN', url: SURVEY_URLS.china, ...copy.community.survey.china },
+  { key: 'international', lang: 'en', url: SURVEY_URLS.international, ...copy.community.survey.international },
+];
+const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
 ---
 
 <BaseLayout lang={lang} title={home.title} fullTitle>
-  <!-- Hero -->
+  <!-- Hero: words on one side, a layered picture on the other (the photograph, with the app tucked over its corner) -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="container hero__grid">
       <div class="hero__text">
         <p class="kicker"><Botanical name="sprig" />{home.hero.eyebrow}</p>
         <h1 class="hero__title" id="hero-title">
-          {home.hero.titleLines.map((line) => <span class="hero__line">{line}</span>)}
+          {
+            home.hero.titleLines.map((line) => (
+              <>
+                <span class="hero__line">{line}</span>{lang === 'zh' ? '' : ' '}
+              </>
+            ))
+          }
         </h1>
         <p class="hero__lead">{home.hero.body}</p>
         <div class="hero__actions">
-          <a class="btn btn--go" href={APP_URL}>{home.hero.primary}<span aria-hidden="true">→</span></a>
-          <a class="text-link" href={localePath(lang, '/features')}>{home.hero.secondary}</a>
+          <a class="btn btn--go btn--down" href="#experience">{home.hero.primary}<span aria-hidden="true">↓</span></a>
+          <a class="btn btn--secondary" href="#founder">{home.hero.secondary}</a>
         </div>
+        <p class="hero__note">
+          <span class="hero__note-art" aria-hidden="true"><Botanical name="catSeedling" /></span>
+          <span>{home.hero.note}</span>
+        </p>
       </div>
       <div class="hero__art">
         <span class="hero__patch" aria-hidden="true"></span>
+        <span class="hero__sun" aria-hidden="true"></span>
         <Figure class="hero__media" image={IMAGES.homeHero} alt={home.hero.imageAlt} placeholder={copy.common.imagePlaceholder} eager />
+        <div class="hero__shot">
+          <Screenshot src={SCREENSHOTS.today} alt={home.hero.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
+        </div>
         <Botanical name="heroVine" class="hero__vine" grow />
-        <Botanical name="heroVineSmall" class="hero__vine-small" grow />
       </div>
     </div>
   </section>
+
+  <!-- A length of vine between the hero and the rest: decoration only, it does not move -->
+  <div class="container" aria-hidden="true">
+    <div class="vine-rule">
+      <svg class="vine-rule__line" viewBox="0 0 1200 28" preserveAspectRatio="none" fill="none">
+        <path d="M0 17C140 3 290 27 450 14S760 5 900 17S1110 25 1200 11"></path>
+      </svg>
+      <Botanical name="sprig" />
+      <Botanical name="sprig" />
+      <Botanical name="sprig" />
+    </div>
+  </div>
 
   <!-- Why RootMap -->
   <section class="section why" id="why" aria-labelledby="why-title">
@@ -68,76 +135,78 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
           {home.why.intro.map((p) => <p>{p}</p>)}
           <a class="text-link" href={localePath(lang, '/philosophy')}>{home.why.link}</a>
         </div>
-        <Figure class="why__photo" image={IMAGES.homeChildhoodMain} alt={home.why.imageAlt} caption={home.why.caption} placeholder={copy.common.imagePlaceholder} />
+        <div class="why__collage">
+          <Figure class="why__photo" image={IMAGES.homeChildhoodMain} alt={home.why.imageAlt} caption={home.why.caption} placeholder={copy.common.imagePlaceholder} />
+          <Figure class="why__detail" image={IMAGES.homeChildhoodDetail} alt={home.why.detailAlt} placeholder={copy.common.imagePlaceholder} />
+        </div>
       </div>
 
-      <h3 class="visually-hidden">{home.why.stagesLabel}</h3>
-      <div class="growth">
-        <!-- The runner the four plants grow from: it lies along the ground on wide screens and climbs on phones -->
-        <svg class="growth__runner growth__runner--across" viewBox="0 0 1200 28" preserveAspectRatio="none" fill="none" aria-hidden="true">
-          <path d="M0 17C140 3 290 27 450 14S760 5 900 17S1110 25 1200 11"></path>
+      <h3 class="visually-hidden">{home.why.ideasLabel}</h3>
+      <div class="roots">
+        <!-- The vine the six ideas grow on: down the middle on wide screens, along the left edge on phones -->
+        <svg class="roots__stem" viewBox="0 0 24 800" preserveAspectRatio="none" fill="none" aria-hidden="true">
+          <path d="M12 0C5 90 19 180 12 270S6 450 13 540S18 720 11 800"></path>
         </svg>
-        <svg class="growth__runner growth__runner--down" viewBox="0 0 24 800" preserveAspectRatio="none" fill="none" aria-hidden="true">
-          <path d="M12 0C3 90 21 180 12 270S4 450 13 540S20 720 11 800"></path>
-        </svg>
-        <ol class="growth__stages" role="list">
+        <ul class="roots__list" role="list">
           {
-            home.why.stages.map((stage, i) => (
-              <li class="growth__stage">
-                <Botanical name={STAGE_ART[i]} class="growth__plant js-grow" />
-                <div>
-                  <h4>{stage.title}</h4>
-                  <p>{stage.body}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <!-- RootMap in everyday life -->
-  <section class="section section--forest product" id="everyday-life" aria-labelledby="product-title">
-    <svg class="wave wave--top" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 48V24C190 2 380 42 640 27S1130 0 1440 21V48Z" fill="currentColor"></path>
-    </svg>
-    <Botanical name="edgeVine" class="product__vine" />
-    <div class="container product__inner">
-      <div class="product__head">
-        <p class="kicker"><Botanical name="sprig" />{home.product.chapter}</p>
-        <h2 class="product__title" id="product-title">{home.product.title}</h2>
-        <p class="product__intro">{home.product.intro}</p>
-      </div>
-      <div class="product__show">
-        <div class="product__stage">
-          <Screenshot src={SCREENSHOTS[home.product.featured.id]} alt={home.product.featured.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
-        </div>
-        <div class="product__featured">
-          <p class="product__kicker">{home.product.featured.kicker}</p>
-          <h3>{home.product.featured.title}</h3>
-          <p class="product__lead">{home.product.featured.lead}</p>
-          <p>{home.product.featured.body}</p>
-        </div>
-        <ul class="product__more" role="list">
-          {
-            home.product.supporting.map((item) => (
-              <li>
-                <Screenshot src={SCREENSHOTS[item.id]} alt={item.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
-                <div>
-                  <p class="product__kicker">{item.kicker}</p>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
+            home.why.ideas.map((idea, i) => (
+              <li class="idea">
+                <span class="idea__art" aria-hidden="true">
+                  <Botanical name={IDEA_ART[i]} class="js-grow" />
+                </span>
+                <div class="idea__text">
+                  <h4>{idea.title}</h4>
+                  <p>{idea.body}</p>
                 </div>
               </li>
             ))
           }
         </ul>
       </div>
+    </div>
+  </section>
+
+  <!-- Experience RootMap: the app as a journey -->
+  <section class="section section--forest product" id="experience" aria-labelledby="product-title">
+    <svg class="wave wave--top" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 48V24C190 2 380 42 640 27S1130 0 1440 21V48Z" fill="currentColor"></path>
+    </svg>
+    <Botanical name="edgeVine" class="product__vine" />
+    <div class="container product__inner">
+      <div class="product__head">
+        <p class="kicker"><Botanical name="sprig" />{home.experience.chapter}</p>
+        <h2 class="product__title" id="product-title">{home.experience.title}</h2>
+        <p class="product__intro">{home.experience.intro}</p>
+      </div>
+
+      <!-- Four screens in a row, each leading to the next. On phones the row scrolls sideways. -->
+      <ol class="journey" role="list" aria-label={home.experience.journeyLabel} tabindex="0">
+        {
+          home.experience.steps.map((step, i) => (
+            <li class="step">
+              <div class="step__shot">
+                <Screenshot src={SCREENSHOTS[step.id]} alt={step.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
+                {i < home.experience.steps.length - 1 && (
+                  <span class="step__arrow" aria-hidden="true">
+                    →
+                  </span>
+                )}
+              </div>
+              <div class="step__text">
+                <p class="product__kicker">{step.kicker}</p>
+                <h3>{step.title}</h3>
+                <p class="product__lead">{step.lead}</p>
+                <p>{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
       <div class="product__foot">
-        <a class="btn btn--light btn--go" href={APP_URL}>{home.product.app}<span aria-hidden="true">→</span></a>
-        <a class="text-link" href={localePath(lang, '/features')}>{home.product.link}</a>
-        <p class="product__note">{home.product.demoNote}</p>
+        <a class="btn btn--light btn--go" href={APP_URL}>{home.experience.app}<span aria-hidden="true">→</span></a>
+        <a class="text-link" href={localePath(lang, '/features')}>{home.experience.link}</a>
+        <p class="product__note">{home.experience.demoNote}</p>
       </div>
     </div>
     <svg class="wave wave--bottom" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
@@ -145,121 +214,340 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     </svg>
   </section>
 
-  <!-- Notes on growing: blog and resources -->
-  <section class="section section--cream notes" id="notes" aria-labelledby="notes-title">
+  <!-- A little note from the founder. The arrow leads down into it from the app above. -->
+  <section class="section section--cream founder" id="founder" aria-labelledby="founder-title">
+    <svg class="founder__lead-in" viewBox="0 0 64 120" fill="none" aria-hidden="true">
+      <path d="M32 4C22 34 42 62 32 104" />
+      <path d="M15 84L32 110L49 84" />
+      <path class="founder__lead-leaf" d="M27 40C17 38 11 31 10 22C19 23 26 30 27 40Z" />
+      <path class="founder__lead-leaf" d="M36 60C46 59 53 53 55 44C46 44 38 50 36 60Z" />
+    </svg>
     <div class="container">
-      <div class="notes__head">
-        <p class="kicker"><Botanical name="sprig" />{home.notes.chapter}</p>
-        <h2 class="notes__title" id="notes-title">{home.notes.title}</h2>
-        <p class="notes__intro">{home.notes.intro}</p>
-      </div>
-
-      {
-        featured ? (
-          <div class="notes__blog">
-            <article class="feature">
-              <a href={postUrl(featured)} class="feature__media" tabindex="-1" aria-hidden="true">
-                <Figure image={{ src: featured.data.cover ?? '', ratio: '4 / 3', folder: 'blog' }} alt={featured.data.coverAlt} placeholder={copy.common.imagePlaceholder} />
-              </a>
-              <div class="feature__body">
-                <p class="feature__meta">
-                  <span class="tag">{copy.categories.blog[featured.data.category]}</span>
-                  {featured.data.date && <time datetime={featured.data.date.toISOString()}>{formatDate(featured.data.date, lang)}</time>}
-                </p>
-                <h3 class="feature__title">
-                  <a href={postUrl(featured)}>{featured.data.title}</a>
-                </h3>
-                <p class="feature__desc">{featured.data.description}</p>
-                <a class="text-link" href={postUrl(featured)} aria-label={`${copy.common.readArticle}: ${featured.data.title}`}>
-                  {copy.common.readArticle}
-                </a>
-              </div>
-            </article>
-            {morePosts.length > 0 && (
-              <ul class="stories" role="list">
-                {morePosts.map((post) => (
-                  <li class="story">
-                    <a href={postUrl(post)} class="story__media" tabindex="-1" aria-hidden="true">
-                      <Figure image={{ src: post.data.cover ?? '', ratio: '1 / 1', folder: 'blog' }} alt={post.data.coverAlt} placeholder={copy.common.imagePlaceholder} />
-                    </a>
-                    <div>
-                      <p class="feature__meta">
-                        <span class="tag">{copy.categories.blog[post.data.category]}</span>
-                        {post.data.date && <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>}
-                      </p>
-                      <h3 class="story__title">
-                        <a href={postUrl(post)}>{post.data.title}</a>
-                      </h3>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <a class="text-link" href={localePath(lang, '/blog')}>{home.notes.blogLink}</a>
-          </div>
-        ) : (
-          <div class="feature feature--empty">
-            <span class="feature__pot" aria-hidden="true">
-              <Botanical name="catSeedling" class="js-grow" />
-            </span>
-            <div class="feature__body">
-              <p class="tag tag--draft">{home.notes.placeholderTag}</p>
-              <p class="feature__desc">{home.notes.empty}</p>
-              <a class="text-link" href={localePath(lang, '/blog')}>{home.notes.blogLink}</a>
-            </div>
-          </div>
-        )
-      }
-
-      <div class="library">
-        <div class="library__intro">
-          <h3 class="library__title">{home.notes.resourcesTitle}</h3>
-          <p>{home.notes.resourcesIntro}</p>
-          <p class="library__note">{home.notes.resourcesNote}</p>
-          <a class="text-link" href={localePath(lang, '/resources')}>{home.notes.resourcesLink}</a>
+      <div class="founder__note">
+        <Botanical name="catTwig" class="founder__sprig js-grow" />
+        <div class="founder__head">
+          <p class="kicker"><Botanical name="sprig" />{home.founder.chapter}</p>
+          <h2 class="founder__title" id="founder-title">{home.founder.title}</h2>
+          {home.founder.draft && <p class="tag tag--draft">{home.founder.draftLabel}</p>}
         </div>
-        <ul class="library__list" role="list">
-          {
-            resourceCategories.map(([key, cat]) => (
-              <li>
-                <a class="seed" href={`${localePath(lang, '/resources')}#${key}`}>
-                  <span class="seed__art">
-                    <Botanical name={CATEGORY_ART[key]} />
+        <div class="founder__row">
+          <div class="founder__art">
+            <span class="founder__patch" aria-hidden="true"></span>
+            <Figure class="founder__photo" image={IMAGES.founderPortrait} alt={home.founder.imageAlt} placeholder={copy.common.imagePlaceholder} />
+            <Botanical name="heroVineSmall" class="founder__vine js-grow" />
+          </div>
+          <div class="founder__words">
+            <p class="founder__hello">{home.founder.hello}</p>
+            {
+              home.founder.intro.length > 0 ? (
+                home.founder.intro.map((p) => <p class="founder__body">{p}</p>)
+              ) : (
+                <p class="draft-note">
+                  <span class="tag tag--draft">{copy.common.placeholder}</span>
+                  <span>{home.founder.placeholders.intro}</span>
+                </p>
+              )
+            }
+            <div class="founder__thoughts">
+              <h3>{home.founder.observationsTitle}</h3>
+              {
+                home.founder.observations.length > 0 ? (
+                  <ul role="list">
+                    {home.founder.observations.map((thought) => <li>{thought}</li>)}
+                  </ul>
+                ) : (
+                  <p class="draft-note">
+                    <span class="tag tag--draft">{copy.common.placeholder}</span>
+                    <span>{home.founder.placeholders.observations}</span>
+                  </p>
+                )
+              }
+            </div>
+            <p class="founder__sign">
+              <span aria-hidden="true">—</span>
+              {home.founder.name ? home.founder.name : <span class="tag tag--draft">{copy.common.placeholder} · {home.founder.placeholders.name}</span>}
+            </p>
+          </div>
+        </div>
+        <div class="founder__actions">
+          <a class="btn btn--go" href={localePath(lang, '/contact')}>{home.founder.connect}<span aria-hidden="true">→</span></a>
+          <ul class="founder__channels" role="list" aria-label={home.founder.channels.label}>
+            <li>
+              {
+                WECHAT_ID ? (
+                  <span class="channel">
+                    {home.founder.channels.wechat}: <strong>{WECHAT_ID}</strong>
                   </span>
-                  <span>
-                    <span class="seed__name">{cat.title}</span>
-                    <span class="seed__body">{cat.body}</span>
+                ) : (
+                  <span class="channel channel--soon">
+                    {home.founder.channels.wechat} · {home.founder.channels.soon}
                   </span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+                )
+              }
+            </li>
+            <li>
+              {
+                XIAOHONGSHU_URL ? (
+                  <a class="channel" href={XIAOHONGSHU_URL} target="_blank" rel="noopener">
+                    {home.founder.channels.xiaohongshu}
+                    <span aria-hidden="true">↗</span>
+                    <span class="visually-hidden"> ({copy.common.newWindow})</span>
+                  </a>
+                ) : (
+                  <span class="channel channel--soon">
+                    {home.founder.channels.xiaohongshu} · {home.founder.channels.soon}
+                  </span>
+                )
+              }
+            </li>
+            <li>
+              {
+                CONTACT_EMAIL ? (
+                  <a class="channel" href={`mailto:${CONTACT_EMAIL}`}>
+                    {home.founder.channels.email}: <strong>{CONTACT_EMAIL}</strong>
+                  </a>
+                ) : (
+                  <span class="channel channel--soon">
+                    {home.founder.channels.email} · {home.founder.channels.soon}
+                  </span>
+                )
+              }
+            </li>
+          </ul>
+          <a class="text-link" href={localePath(lang, '/about')}>{home.founder.about}</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Grow with us: the community invitation -->
-  <section class="section section--sage invite" id="grow-with-us" aria-labelledby="invite-title">
-    <div class="container invite__grid">
-      <div class="invite__letter">
-        <p class="kicker"><Botanical name="sprig" />{home.community.chapter}</p>
-        <h2 class="invite__title" id="invite-title">{home.community.title}</h2>
-        <p class="tag tag--gold">{home.community.status}</p>
-        {home.community.paragraphs.map((p) => <p class="invite__body">{p}</p>)}
-        <div class="invite__cta">
-          <a class="btn btn--go" href={localePath(lang, '/community')}>{home.community.cta}<span aria-hidden="true">→</span></a>
-          <p>{home.community.ctaNote}</p>
+  <!-- Explore more with us: three places to go next -->
+  <section class="section explore" id="explore" aria-labelledby="explore-title">
+    <div class="container">
+      <div class="head">
+        <p class="kicker"><Botanical name="sprig" />{explore.chapter}</p>
+        <h2 class="head__title" id="explore-title">{explore.title}</h2>
+        <p class="head__intro">{explore.intro}</p>
+      </div>
+
+      <div class="explore__mosaic">
+        <!-- Xiaohongshu: photographs and small notes -->
+        <article class="dest dest--xhs">
+          <div class="dest__media">
+            <span class="dest__snap dest__snap--back" aria-hidden="true"></span>
+            <div class="dest__snap">
+              <Figure image={IMAGES.exploreXiaohongshu} alt={explore.xiaohongshu.imageAlt} placeholder={copy.common.imagePlaceholder} />
+            </div>
+          </div>
+          <div class="dest__body">
+            <h3 class="dest__name">
+              {explore.xiaohongshu.name}
+              <span class="dest__native" lang={otherLang}>{explore.xiaohongshu.nativeName}</span>
+            </h3>
+            <p class="dest__tagline">{explore.xiaohongshu.tagline}</p>
+            <ul class="dest__topics dest__topics--dots" role="list">
+              {explore.xiaohongshu.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+            {
+              XIAOHONGSHU_URL ? (
+                <a class="dest__cta" href={XIAOHONGSHU_URL} target="_blank" rel="noopener">
+                  {explore.xiaohongshu.cta}
+                  <span aria-hidden="true">→</span>
+                  <span class="visually-hidden"> ({copy.common.newWindow})</span>
+                </a>
+              ) : (
+                <p class="dest__cta dest__cta--missing">
+                  <span class="visually-hidden">{explore.xiaohongshu.cta}: </span>
+                  {explore.linkMissing}
+                </p>
+              )
+            }
+          </div>
+        </article>
+
+        <!-- Blog: longer writing -->
+        <article class="dest dest--blog">
+          <div class="dest__body">
+            <h3 class="dest__name">{explore.blog.name}</h3>
+            <p class="dest__tagline">{explore.blog.tagline}</p>
+            <ul class="dest__topics dest__topics--lines" role="list">
+              {explore.blog.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+            {
+              latestPost && (
+                <p class="dest__latest">
+                  <span>{explore.blog.latest}</span>
+                  <a href={postUrl(latestPost)}>{latestPost.data.title}</a>
+                </p>
+              )
+            }
+            <a class="dest__cta" href={localePath(lang, '/blog')}>{explore.blog.cta}<span aria-hidden="true">→</span></a>
+          </div>
+          <div class="dest__media">
+            <span class="dest__sheet" aria-hidden="true"></span>
+            <Figure image={IMAGES.exploreBlog} alt={explore.blog.imageAlt} placeholder={copy.common.imagePlaceholder} />
+          </div>
+        </article>
+
+        <!-- Resources: materials to use -->
+        <article class="dest dest--resources">
+          <div class="dest__media">
+            <Figure image={IMAGES.exploreResources} alt={explore.resources.imageAlt} placeholder={copy.common.imagePlaceholder} />
+            <span class="dest__specimen dest__specimen--a" aria-hidden="true"><Botanical name="catFern" /></span>
+            <span class="dest__specimen dest__specimen--b" aria-hidden="true"><Botanical name="catBerries" /></span>
+            <span class="dest__specimen dest__specimen--c" aria-hidden="true"><Botanical name="catFlower" /></span>
+          </div>
+          <div class="dest__body">
+            <h3 class="dest__name">{explore.resources.name}</h3>
+            <p class="dest__tagline">{explore.resources.tagline}</p>
+            <ul class="dest__topics dest__topics--tags" role="list">
+              {explore.resources.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+            <a class="dest__cta" href={localePath(lang, '/resources')}>{explore.resources.cta}<span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inspired by: a small collection, hung along a vine -->
+  <section class="section section--cream inspired" id="inspired-by" aria-labelledby="inspired-title">
+    <div class="container inspired__grid">
+      <div class="head inspired__head">
+        <p class="kicker"><Botanical name="sprig" />{home.inspired.chapter}</p>
+        <h2 class="head__title" id="inspired-title">{home.inspired.title}</h2>
+        <p class="head__intro">{home.inspired.intro}</p>
+      </div>
+
+      {
+        shelf.length > 0 ? (
+          <>
+            <div class="inspired__body">
+            <ul class="shelf" role="list">
+              {shelf.map((item) => (
+                <li class:list={['pin', `pin--${KIND_SHAPE[item.kind]}`, item.placeholder && 'pin--placeholder']}>
+                  <svg class="pin__vine" viewBox="0 0 200 24" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                    <path d="M0 12C35 4 65 4 100 12S165 20 200 12" />
+                  </svg>
+                  <span class="pin__string" aria-hidden="true" />
+                  <div class="pin__media">
+                    {item.image ? <img src={url(item.image)} alt={item.imageAlt} loading="lazy" decoding="async" /> : <Botanical name={KIND_ART[item.kind]} />}
+                  </div>
+                  <p class="pin__kind">{home.inspired.kinds[item.kind]}</p>
+                  <h3 class="pin__name">
+                    {item.href ? (
+                      <a href={item.href} target="_blank" rel="noopener">
+                        {item.name}
+                        <span class="visually-hidden"> ({copy.common.newWindow})</span>
+                      </a>
+                    ) : (
+                      item.name
+                    )}
+                  </h3>
+                  {item.by && (
+                    <p class="pin__by">
+                      {home.inspired.by} {item.by}
+                    </p>
+                  )}
+                  {item.quote && <blockquote class="pin__quote">“{item.quote}”</blockquote>}
+                  {item.note && <p class="pin__note">{item.note}</p>}
+                </li>
+              ))}
+            </ul>
+            {showPlaceholders ? (
+              <p class="draft-note inspired__after">
+                <span class="tag tag--draft">{copy.common.placeholder}</span>
+                <span>{home.inspired.placeholder.hint}</span>
+              </p>
+            ) : (
+              <p class="inspired__after inspired__disclaimer">{home.inspired.disclaimer}</p>
+            )}
+            </div>
+          </>
+        ) : (
+          <div class="inspired__empty">
+            <span class="inspired__pot" aria-hidden="true">
+              <Botanical name="catSeedling" class="js-grow" />
+            </span>
+            <h3>{home.inspired.empty.title}</h3>
+            <p>{home.inspired.empty.body}</p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- The ribbon of values, between inspiration and invitation -->
+  <ValuesRibbon label={home.values.label} words={home.values.words} pauseLabel={home.values.pause} playLabel={home.values.play} />
+
+  <!-- Grow with us: two separate invitations -->
+  <section class="section section--sage grow" id="grow-with-us" aria-labelledby="grow-title">
+    <div class="container">
+      <div class="head head--center">
+        <p class="kicker"><Botanical name="sprig" />{home.grow.chapter}</p>
+        <h2 class="head__title" id="grow-title">{home.grow.title}</h2>
+        {home.grow.paragraphs.map((p) => <p class="head__intro">{p}</p>)}
+      </div>
+
+      <div class="grow__paths">
+        <div class="path path--feedback">
+          <p class="path__label">{home.grow.feedback.label}</p>
+          <h3>{home.grow.feedback.title}</h3>
+          <p>{home.grow.feedback.body}</p>
+          {
+            FEEDBACK_URL ? (
+              <a class="btn btn--go" href={FEEDBACK_URL} target={feedbackIsWeb ? '_blank' : undefined} rel={feedbackIsWeb ? 'noopener' : undefined}>
+                {home.grow.feedback.button}
+                <span aria-hidden="true">→</span>
+                {feedbackIsWeb && <span class="visually-hidden"> ({copy.common.newWindow})</span>}
+              </a>
+            ) : (
+              <span class="btn" data-disabled>
+                <span class="visually-hidden">{home.grow.feedback.button}: </span>
+                {home.grow.feedback.missing}
+              </span>
+            )
+          }
+        </div>
+
+        <div class="grow__plant" aria-hidden="true">
+          <Botanical name="together" class="js-grow" />
+        </div>
+
+        <div class="path path--community">
+          <p class="path__label">{home.grow.community.label}</p>
+          <h3>{home.grow.community.title}</h3>
+          <p class="tag tag--gold">{home.grow.community.status}</p>
+          <p>{home.grow.community.body}</p>
+          <p class="path__choose">{home.grow.community.choose}</p>
+          <ul class="path__surveys" role="list">
+            {
+              surveys.map((survey) => (
+                <li lang={survey.lang}>
+                  <span class="path__region">{survey.region}</span>
+                  {survey.url ? (
+                    <a class="btn btn--small" href={survey.url} target="_blank" rel="noopener">
+                      {survey.button}
+                      <span aria-hidden="true">↗</span>
+                      <span class="visually-hidden"> ({copy.common.newWindow})</span>
+                    </a>
+                  ) : (
+                    <span class="btn btn--small" data-disabled>
+                      <span class="visually-hidden">{survey.button}: </span>
+                      {copy.community.survey.comingSoon}
+                    </span>
+                  )}
+                </li>
+              ))
+            }
+          </ul>
+          <a class="text-link" href={localePath(lang, '/community')}>{home.grow.community.more}</a>
         </div>
       </div>
-      <div class="invite__art">
-        <Figure class="invite__media" image={IMAGES.homeCommunity} alt={home.community.imageAlt} placeholder={copy.common.imagePlaceholder} />
-        <Botanical name="together" class="invite__vines js-grow" />
-      </div>
-      <div class="invite__ps">
-        <span class="invite__ps-art" aria-hidden="true"><Botanical name="catSeedling" /></span>
-        <p><span class="invite__ps-label">{home.community.ps.label}</span> {home.community.ps.body}</p>
-        <a class="btn btn--secondary" href={APP_URL}>{home.community.ps.button}</a>
+
+      <div class="grow__ps">
+        <span class="grow__ps-art" aria-hidden="true"><Botanical name="catSeedling" /></span>
+        <p><span class="grow__ps-label">{home.grow.ps.label}</span> {home.grow.ps.body}</p>
+        <a class="btn btn--secondary" href={APP_URL}>{home.grow.ps.button}</a>
       </div>
     </div>
   </section>
@@ -303,6 +591,27 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     transform: rotate(-8deg);
   }
 
+  /* Section headings: a label, a title and a line or two of introduction */
+  .head {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .head__title {
+    font-size: var(--step-4);
+  }
+  .head__intro {
+    max-width: 36rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .head--center {
+    justify-items: center;
+    text-align: center;
+  }
+
   /* Photographs: soft shapes on a quiet placeholder */
   section :global(.figure) {
     --figure-radius: 1.5rem;
@@ -320,6 +629,9 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
   .btn--go:hover span {
     transform: translateX(3px);
   }
+  .btn--down:hover span {
+    transform: translateY(3px);
+  }
   .btn:active {
     transform: translateY(1px);
   }
@@ -331,7 +643,7 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
   }
   .hero__grid {
     display: grid;
-    gap: var(--space-7);
+    gap: var(--space-8);
   }
   .hero__text {
     display: flex;
@@ -342,10 +654,13 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
   .hero__title {
     display: flex;
     flex-direction: column;
-    font-size: clamp(2.7rem, 1.4rem + 5.2vw, 5.4rem);
+    font-size: clamp(2.9rem, 1.4rem + 6.4vw, 5.4rem);
     line-height: 1.02;
     letter-spacing: -0.025em;
     text-wrap: initial;
+  }
+  .hero__line {
+    white-space: nowrap;
   }
   .hero__line:last-child {
     padding-left: 0.5em;
@@ -354,7 +669,7 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     color: var(--terracotta-700);
   }
   :lang(zh) .hero__title {
-    font-size: clamp(2.4rem, 1.2rem + 4.4vw, 4.6rem);
+    font-size: clamp(2.6rem, 1.2rem + 5.4vw, 4.6rem);
     line-height: 1.25;
     letter-spacing: 0.02em;
   }
@@ -371,37 +686,100 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-4) var(--space-6);
-    width: 100%;
+    gap: var(--space-3);
   }
+  /* The real world, not the screen: a small aside under the buttons */
+  .hero__note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    align-items: center;
+    max-width: 27rem;
+    margin-top: var(--space-3);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--green-700);
+  }
+  :lang(zh) .hero__note {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+    line-height: 1.75;
+  }
+  .hero__note-art {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--gold-100);
+  }
+  .hero__note-art :global(.botanical) {
+    width: 2.6rem;
+  }
+  /* The layered picture: the photograph at the back, the app leaning over its lower corner, a vine up the far side */
   .hero__art {
     position: relative;
     z-index: 0;
-    padding-left: 22%;
+    padding: 0 6% 7% 20%;
   }
-  /* A soft patch of sage behind the photograph */
   .hero__patch {
     position: absolute;
     z-index: -1;
-    inset: 12% -12% -5% 6%;
+    inset: 14% -10% 0 4%;
     border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
     background: var(--sage-100);
+  }
+  .hero__sun {
+    position: absolute;
+    z-index: -1;
+    top: -4%;
+    right: -3%;
+    width: 30%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--gold-100);
   }
   section :global(.hero__media) {
     --figure-radius: 999px 999px 1.5rem 1.5rem;
   }
-  :global(.hero__vine) {
-    display: none;
+  :global(.hero__media .figure__label) {
+    left: auto;
+    right: 1rem;
+    text-align: right;
   }
-  :global(.hero__vine-small) {
+  .hero__shot {
     position: absolute;
-    left: 3%;
-    bottom: -3%;
-    width: 24%;
+    left: 5%;
+    bottom: 0;
+    width: 36%;
+    transform: rotate(-6deg);
+    transform-origin: 50% 100%;
+    transition: transform 0.6s var(--ease);
+  }
+  .hero__art:hover .hero__shot {
+    transform: rotate(-3deg) translateY(-4px);
+  }
+  .hero__shot :global(.shot) {
+    max-width: none;
+  }
+  .hero__shot :global(.shot img) {
+    border-radius: clamp(1rem, 2.4vw, 1.75rem);
+    box-shadow:
+      0 1px 2px rgba(43, 37, 32, 0.08),
+      0 28px 48px -22px rgba(35, 58, 46, 0.5);
+  }
+  :global(.hero__vine) {
+    position: absolute;
+    right: -6%;
+    bottom: 2%;
+    width: 36%;
+    transform: scaleX(-1);
   }
   @media (max-width: 35.99em) {
     .hero__actions .btn {
-      flex-basis: 100%;
+      flex: 1 1 auto;
       min-height: 3.25rem;
     }
   }
@@ -412,38 +790,59 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
       align-items: center;
     }
     .hero__text {
-      grid-column: 1 / 8;
+      grid-column: 1 / 7;
       gap: var(--space-6);
     }
     .hero__title {
-      font-size: clamp(2.9rem, 0.5rem + 4.3vw, 4.4rem);
+      font-size: clamp(2.9rem, 0.4rem + 4.6vw, 4.75rem);
     }
-    .hero__line {
-      white-space: nowrap;
+    :lang(zh) .hero__title {
+      font-size: clamp(2.6rem, 0.4rem + 4.2vw, 4.25rem);
     }
     .hero__art {
-      grid-column: 8 / -1;
-      padding-left: 16%;
+      grid-column: 7 / -1;
     }
-    .hero__patch {
-      inset: 14% -22% -6% -4%;
-    }
-    :global(.hero__vine) {
-      display: block;
-      position: absolute;
-      left: -6%;
-      bottom: -5%;
-      width: 46%;
-    }
-    :global(.hero__vine-small) {
-      display: none;
-    }
+  }
+
+  /* The vine between the hero and "Why RootMap" */
+  .vine-rule {
+    position: relative;
+    height: 28px;
+    color: var(--green-600);
+  }
+  .vine-rule__line {
+    width: 100%;
+    height: 100%;
+  }
+  .vine-rule__line path {
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .vine-rule :global(.botanical) {
+    position: absolute;
+    left: 16%;
+    bottom: 52%;
+    width: 2.4rem;
+  }
+  .vine-rule :global(.botanical ~ .botanical) {
+    left: 53%;
+    bottom: 40%;
+    width: 2rem;
+    transform: scaleX(-1) rotate(8deg);
+  }
+  .vine-rule :global(.botanical ~ .botanical ~ .botanical) {
+    left: 82%;
+    bottom: 34%;
+    width: 2.6rem;
+    transform: rotate(-6deg);
   }
 
   /* Why RootMap */
   .why__top {
     display: grid;
-    gap: var(--space-7);
+    gap: var(--space-8);
   }
   .why__text {
     display: flex;
@@ -469,6 +868,11 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
   .why__text .text-link {
     margin-top: var(--space-2);
   }
+  /* A larger photograph with a small detail tucked over its corner */
+  .why__collage {
+    position: relative;
+    padding-right: 5%;
+  }
   section :global(.why__photo) {
     --figure-radius: 1.5rem 6rem 1.5rem 1.5rem;
   }
@@ -484,61 +888,99 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     font-family: var(--font-serif-zh);
     font-style: normal;
   }
+  section :global(.why__detail) {
+    position: absolute;
+    top: -2.25rem;
+    right: 0;
+    width: 32%;
+    padding: 0.4rem;
+    border-radius: 1.4rem;
+    background: var(--paper);
+    transform: rotate(4deg);
+    transition: transform 0.5s var(--ease);
+    --figure-radius: 1.1rem;
+    --figure-placeholder-bg: var(--gold-100);
+  }
+  .why__collage:hover :global(.why__detail) {
+    transform: rotate(1deg) translateY(-3px);
+  }
+  :global(.why__detail .figure__label) {
+    left: 0.6rem;
+    bottom: 0.5rem;
+  }
+  :global(.why__detail .figure__label code) {
+    display: none;
+  }
 
-  .growth {
+  /* Six ideas on one vine */
+  .roots {
     position: relative;
     margin-top: clamp(3rem, 2rem + 4vw, 6rem);
-    --plant-w: 5rem;
+    --bead: 4.5rem;
   }
-  .growth__runner {
+  .roots__stem {
     position: absolute;
+    top: -1rem;
+    left: calc(var(--bead) / 2 - 12px);
+    width: 24px;
+    height: calc(100% + 2rem);
     color: var(--green-600);
   }
-  .growth__runner path {
+  .roots__stem path {
     stroke: currentColor;
     stroke-width: 2.4;
     stroke-linecap: round;
     vector-effect: non-scaling-stroke;
   }
-  /* Phones: the runner climbs the left edge and each stage grows beside it */
-  .growth__runner--across {
-    display: none;
-  }
-  .growth__runner--down {
-    top: 0;
-    left: calc(var(--plant-w) / 2 - 12px);
-    width: 24px;
-    height: 100%;
-  }
-  .growth__stages {
+  .roots__list {
     position: relative;
     display: grid;
     gap: var(--space-6);
   }
-  .growth__stage {
+  .idea {
     display: grid;
-    grid-template-columns: var(--plant-w) 1fr;
+    grid-template-columns: var(--bead) 1fr;
     gap: var(--space-4);
-    align-items: end;
+    align-items: center;
   }
-  :global(.growth__plant) {
-    width: var(--plant-w);
-    transition: transform 0.6s var(--ease);
-    transform-origin: 50% 100%;
+  .idea__art {
+    display: grid;
+    place-items: center;
+    width: var(--bead);
+    height: var(--bead);
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--sage-100);
+    transition: border-radius 0.6s var(--ease);
   }
-  .growth__stage:hover :global(.growth__plant) {
-    transform: rotate(-4deg);
+  .idea:nth-child(3n + 2) .idea__art {
+    border-radius: 45% 55% 42% 58% / 56% 44% 56% 44%;
+    background: var(--gold-100);
   }
-  .growth__stage h4 {
+  .idea:nth-child(3n) .idea__art {
+    border-radius: 52% 48% 60% 40% / 42% 58% 42% 58%;
+    background: var(--cream-200);
+  }
+  .idea:hover .idea__art {
+    border-radius: 50%;
+  }
+  .idea__art :global(.botanical) {
+    width: 72%;
+    transition: transform 0.5s var(--ease);
+    transform-origin: 50% 90%;
+  }
+  .idea:hover .idea__art :global(.botanical) {
+    transform: rotate(-9deg) scale(1.06);
+  }
+  .idea h4 {
     font-family: var(--font-serif);
     font-size: var(--step-2);
     font-weight: 500;
   }
-  :lang(zh) .growth__stage h4 {
+  :lang(zh) .idea h4 {
     font-family: var(--font-serif-zh);
     font-weight: 600;
   }
-  .growth__stage p {
+  .idea p {
     margin-top: var(--space-1);
     color: var(--ink-soft);
   }
@@ -551,38 +993,55 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     .why__text {
       grid-column: 1 / 7;
     }
-    :global(.why__photo) {
+    .why__collage {
       grid-column: 8 / -1;
+      padding-right: 0;
     }
-    /* Wide screens: the runner lies along the ground and the four plants stand on it, each taller than the last */
-    .growth {
-      --plant-w: 7.75rem;
-      --plant-h: calc(var(--plant-w) * 170 / 120);
+    section :global(.why__detail) {
+      right: -1.5rem;
+      width: 34%;
     }
-    .growth__runner--across {
-      display: block;
-      top: calc(var(--plant-h) - 16px);
-      left: calc(-1 * var(--gutter));
-      width: calc(100% + 2 * var(--gutter));
-      height: 28px;
+    /* Wide screens: the vine runs down the middle, with ideas to the left and right, each a step below the last */
+    .roots {
+      --bead: 5rem;
+      --step-down: 5.5rem;
+      max-width: 62rem;
+      margin-inline: auto;
+      padding-bottom: var(--step-down);
     }
-    .growth__runner--down {
-      display: none;
+    .roots__stem {
+      left: calc(50% - 12px);
     }
-    .growth__stages {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: var(--space-6);
+    .roots__list {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: minmax(calc(var(--step-down) * 2), auto);
+      gap: 0;
     }
-    .growth__stage {
-      display: block;
+    .idea {
+      gap: var(--space-5);
     }
-    .growth__stage > div {
-      margin-top: var(--space-6);
-      max-width: 17rem;
+    .idea:nth-child(odd) {
+      grid-template-columns: 1fr var(--bead);
+      margin-right: calc(var(--bead) / -2 + 0.9rem);
+      text-align: right;
+    }
+    .idea:nth-child(odd) .idea__art {
+      order: 1;
+    }
+    .idea:nth-child(odd) p {
+      margin-left: auto;
+    }
+    .idea:nth-child(even) {
+      position: relative;
+      top: var(--step-down);
+      margin-left: calc(var(--bead) / -2 + 0.9rem);
+    }
+    .idea p {
+      max-width: 22rem;
     }
   }
 
-  /* RootMap in everyday life */
+  /* Experience RootMap */
   .product {
     position: relative;
   }
@@ -640,24 +1099,70 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     color: rgba(250, 238, 220, 0.86);
     font-size: var(--step-1);
   }
-  .product__show {
-    display: grid;
-    gap: var(--space-7);
-  }
-  .product__stage {
-    display: grid;
-    place-items: center;
-    padding-block: var(--space-7);
+
+  /* Phones: the four screens sit in a row that scrolls sideways, one step at a time */
+  .journey {
+    display: flex;
+    gap: var(--space-6);
     margin-inline: calc(-1 * var(--gutter));
+    padding: var(--space-7) var(--gutter) var(--space-6);
+    overflow-x: auto;
+    list-style: none;
     background: var(--green-700);
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-color: rgba(248, 241, 230, 0.4) transparent;
   }
-  .product__stage :global(.shot) {
-    width: 70%;
-    max-width: 22rem;
+  .journey:focus-visible {
+    outline-color: var(--gold-400);
+    outline-offset: -4px;
+  }
+  .step {
+    display: grid;
+    flex: 0 0 min(72%, 17rem);
+    gap: var(--space-5);
+    align-content: start;
+    scroll-snap-align: start;
+  }
+  .step__shot {
+    position: relative;
+  }
+  .step__shot :global(.shot) {
+    max-width: none;
+    transition: transform 0.5s var(--ease);
   }
   .product :global(.shot img) {
     border-color: rgba(248, 241, 230, 0.22);
     box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  }
+  /* The arrow that leads from one screen to the next */
+  .step__arrow {
+    position: absolute;
+    top: 42%;
+    right: calc(var(--space-6) / -2);
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--gold-400);
+    color: var(--green-800);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.6);
+    transform: translateX(50%);
+  }
+  .step__text p:not(.product__kicker) {
+    color: rgba(250, 238, 220, 0.86);
+    font-size: var(--step--1);
+  }
+  .step__text .product__lead {
+    margin-bottom: var(--space-2);
+    color: #fbf2e4;
+    font-size: var(--step-0);
+    line-height: 1.5;
   }
   .product__kicker {
     color: var(--gold-400);
@@ -667,6 +1172,7 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
   .product h3 {
     margin-block: var(--space-2) var(--space-3);
     font-family: var(--font-serif);
+    font-size: var(--step-3);
     font-weight: 500;
     color: var(--white);
   }
@@ -674,66 +1180,17 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
     font-family: var(--font-serif-zh);
     font-weight: 600;
   }
-  .product__featured h3 {
-    font-size: var(--step-4);
-  }
-  .product__featured p:not(.product__kicker) {
-    max-width: 30rem;
-    color: rgba(250, 238, 220, 0.86);
-  }
-  .product__featured .product__lead {
-    margin-bottom: var(--space-3);
-    color: #fbf2e4;
-    font-size: var(--step-1);
-    line-height: 1.5;
-  }
-  /* Phones: the two supporting previews sit side by side, text under each */
-  .product__more {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-5);
-  }
-  .product__more li {
-    display: grid;
-    align-content: start;
-    gap: var(--space-4);
-  }
-  .product__more :global(.shot) {
-    max-width: 10.5rem;
-    transition: transform 0.4s var(--ease);
-  }
-  .product__more li:hover :global(.shot) {
-    transform: translateY(-4px) rotate(-1deg);
-  }
-  .product__more h3 {
-    font-size: var(--step-2);
-  }
-  .product__more p:not(.product__kicker) {
-    color: rgba(250, 238, 220, 0.82);
-    font-size: var(--step--1);
-  }
   .product__foot {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-4) var(--space-6);
-    margin-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+    margin-top: clamp(2.5rem, 2rem + 3vw, 4rem);
   }
   .product__note {
     flex-basis: 100%;
     color: rgba(250, 238, 220, 0.72);
     font-size: var(--step--1);
-  }
-  @media (min-width: 40em) {
-    .product__more {
-      grid-template-columns: 1fr;
-      gap: var(--space-6);
-    }
-    .product__more li {
-      grid-template-columns: 9rem 1fr;
-      gap: var(--space-5);
-      align-items: center;
-    }
   }
   @media (min-width: 56em) {
     .product__head {
@@ -750,398 +1207,961 @@ const CATEGORY_ART: Record<keyof typeof copy.categories.resources, BotanicalName
       grid-column: 9 / -1;
       align-self: end;
     }
-    .product__show {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--space-5);
-      row-gap: var(--space-7);
-      align-items: start;
-    }
-    .product__stage {
-      grid-column: 1 / 7;
-      grid-row: 1 / 3;
-      padding-block: var(--space-8);
-      margin-inline: calc((min(100vw - 2 * var(--gutter), var(--container)) - 100vw) / 2) 0;
-      border-radius: 0 3rem 3rem 0;
-    }
-    .product__stage :global(.shot) {
-      width: 22rem;
-    }
-    .product__featured {
-      grid-column: 8 / -1;
-      padding-top: var(--space-7);
-    }
-    .product__more {
-      grid-column: 8 / -1;
-    }
-    .product__more li {
-      grid-template-columns: 10.5rem 1fr;
-      gap: var(--space-6);
-    }
     .product__note {
       flex-basis: auto;
       margin-left: auto;
     }
   }
+  /* Wide screens: all four stand side by side on one stage, overlapping a little, each a step up or down from the last */
+  @media (min-width: 62em) {
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: auto auto;
+      gap: var(--space-6) var(--space-5);
+      margin-inline: 0;
+      padding: 0;
+      overflow: visible;
+      background: none;
+    }
+    .journey::before {
+      content: '';
+      grid-area: 1 / 1 / 2 / -1;
+      margin-inline: calc(-1 * var(--space-6));
+      border-radius: 3rem;
+      background: var(--green-700);
+    }
+    .step {
+      grid-row: 1 / 3;
+      grid-template-rows: subgrid;
+      gap: var(--space-6);
+    }
+    .step:nth-child(1) {
+      grid-column: 1;
+    }
+    .step:nth-child(2) {
+      grid-column: 2;
+    }
+    .step:nth-child(3) {
+      grid-column: 3;
+    }
+    .step:nth-child(4) {
+      grid-column: 4;
+    }
+    .step__shot {
+      display: grid;
+      justify-items: center;
+      padding-block: 2.5rem 5.5rem;
+    }
+    .step:nth-child(even) .step__shot {
+      z-index: 1;
+      padding-block: 5.5rem 2.5rem;
+    }
+    .step__shot :global(.shot) {
+      width: 114%;
+      transform: rotate(-2.5deg);
+    }
+    .step:nth-child(even) .step__shot :global(.shot) {
+      transform: rotate(2deg);
+    }
+    .step:hover .step__shot {
+      z-index: 2;
+    }
+    .step:hover .step__shot :global(.shot) {
+      transform: rotate(0deg) translateY(-8px);
+    }
+    .step__arrow {
+      top: 50%;
+      right: calc(var(--space-5) / -2);
+    }
+  }
 
-  /* Notes on growing */
-  .notes__head {
+  /* A little note from the founder */
+  .founder {
+    position: relative;
+  }
+  /* The arrow that leads down from the app into the note */
+  .founder__lead-in {
+    position: absolute;
+    top: calc(-1 * clamp(1.5rem, 3vw, 3rem));
+    left: 50%;
+    z-index: 2;
+    width: clamp(2.75rem, 5vw, 4rem);
+    transform: translateX(-50%);
+  }
+  .founder__lead-in path {
+    stroke: var(--terracotta-500);
+    stroke-width: 3.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .founder__lead-in .founder__lead-leaf {
+    fill: var(--terracotta-500);
+    stroke: none;
+  }
+  /* The note: a sheet of paper held with a strip of tape */
+  .founder__note {
+    position: relative;
     display: grid;
-    gap: var(--space-4);
-    justify-items: start;
-    margin-bottom: var(--space-7);
-  }
-  .notes__title {
-    font-size: var(--step-4);
-  }
-  .notes__intro {
-    max-width: 36rem;
-    color: var(--ink-soft);
-    font-size: var(--step-1);
-  }
-  .notes__blog {
-    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-6);
-    justify-items: start;
-  }
-  .feature {
-    display: grid;
-    gap: var(--space-5);
-    width: 100%;
-    padding: var(--space-4);
-    border-radius: 2rem;
+    max-width: 64rem;
+    margin: var(--space-6) auto 0;
+    padding: clamp(1.75rem, 1rem + 3.5vw, 3.75rem);
+    border-radius: 0.5rem 2.5rem 0.5rem 2.5rem;
     background: var(--white);
     box-shadow: var(--shadow-sm);
   }
-  .feature__media,
-  .story__media {
-    display: block;
-    overflow: hidden;
-    border-radius: 1.5rem 4rem 1.5rem 1.5rem;
+  .founder__note::before {
+    content: '';
+    position: absolute;
+    top: -0.8rem;
+    left: clamp(1.75rem, 8%, 4rem);
+    width: 6.5rem;
+    height: 1.7rem;
+    border-radius: 2px;
+    background: rgba(217, 139, 98, 0.5);
+    transform: rotate(-3deg);
   }
-  .feature__media :global(.figure),
-  .story__media :global(.figure) {
-    --figure-radius: 0;
+  :global(.founder__sprig) {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    width: clamp(3rem, 8vw, 4.5rem);
+    opacity: 0.9;
   }
-  .feature:hover :global(img),
-  .story:hover :global(img) {
-    transform: scale(1.03);
+  .founder__head {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: start;
+    padding-right: var(--space-8);
   }
-  .feature__body {
+  .founder__title {
+    font-size: var(--step-4);
+  }
+  .founder__row {
+    display: grid;
+    gap: var(--space-6);
+  }
+  /* A round portrait with a vine up its side */
+  .founder__art {
+    position: relative;
+    z-index: 0;
+    width: min(60%, 13rem);
+    margin-left: var(--space-3);
+  }
+  .founder__patch {
+    position: absolute;
+    z-index: -1;
+    inset: 10% -14% -8% -10%;
+    border-radius: 45% 55% 42% 58% / 56% 44% 56% 44%;
+    background: var(--sage-200);
+  }
+  section :global(.founder__photo) {
+    --figure-radius: 50%;
+    --figure-placeholder-bg: var(--cream-100);
+  }
+  :global(.founder__photo .figure__label) {
+    left: 0;
+    right: 0;
+    bottom: 16%;
+    align-items: center;
+  }
+  :global(.founder__photo .figure__label code) {
+    display: none;
+  }
+  :global(.founder__vine) {
+    position: absolute;
+    right: -20%;
+    bottom: -6%;
+    width: 34%;
+    transform: scaleX(-1);
+  }
+  .founder__words {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+  .founder__hello {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--terracotta-700);
+  }
+  :lang(zh) .founder__hello {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+  }
+  .founder__body {
+    max-width: 38rem;
+    font-size: var(--step-1);
+    line-height: 1.65;
+  }
+  .founder__thoughts {
+    display: grid;
+    gap: var(--space-3);
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+  .founder__thoughts h3 {
+    color: var(--green-600);
+    font-size: var(--step--1);
+  }
+  .founder__thoughts ul {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .founder__thoughts li {
+    max-width: 36rem;
+    padding-left: var(--space-5);
+    border-left: 2px solid var(--terracotta-500);
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--green-700);
+  }
+  :lang(zh) .founder__thoughts li {
+    font-family: var(--font-serif-zh);
+  }
+  .founder__note .draft-note {
+    width: 100%;
+    background: var(--paper);
+  }
+  .draft-note {
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+  .founder__sign {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-style: italic;
+    color: var(--green-700);
+  }
+  .founder__sign .tag {
+    font-family: var(--font-sans);
+    font-style: normal;
+  }
+  /* Connect, and the places it leads to */
+  .founder__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+  .founder__channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .channel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--sage-300);
+    border-radius: 999px;
+    background: var(--sage-100);
+    color: var(--green-700);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  a.channel:hover {
+    border-color: var(--green-500);
+  }
+  .channel--soon {
+    border-style: dashed;
+    border-color: var(--line-strong);
+    background: none;
+    color: var(--muted);
+  }
+  @media (min-width: 48em) {
+    .founder__row {
+      grid-template-columns: clamp(11rem, 22vw, 15rem) minmax(0, 1fr);
+      gap: clamp(2.5rem, 5vw, 4.5rem);
+      align-items: start;
+    }
+    .founder__art {
+      width: 100%;
+      margin: var(--space-2) 0 0;
+    }
+    .founder__actions .text-link {
+      margin-left: auto;
+    }
+    .founder__channels {
+      flex: 1;
+    }
+  }
+
+  /* Explore more with us: three destinations, each with its own character */
+  .explore__mosaic {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .dest {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+    align-content: start;
+    padding: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
+    border-radius: 2rem;
+    transition: transform 0.4s var(--ease);
+  }
+  .dest:has(a.dest__cta):hover {
+    transform: translateY(-4px);
+  }
+  .dest__body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-3);
-    padding: var(--space-2) var(--space-3) var(--space-4);
   }
-  .feature__meta {
+  .dest__name {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2) var(--space-4);
-    color: var(--muted);
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  :lang(zh) .dest__name {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .dest__native {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    opacity: 0.75;
+  }
+  .dest__tagline {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  :lang(zh) .dest__tagline {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+  }
+  .dest__topics {
+    margin-block: var(--space-2);
     font-size: var(--step--1);
   }
-  .feature__title {
-    max-width: 22ch;
+  /* The link covers its whole panel, so the panel is one large target */
+  .dest__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    margin-top: auto;
+    padding-top: var(--space-2);
+    font-size: var(--step-0);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+  }
+  a.dest__cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .dest__cta span[aria-hidden] {
+    transition: transform 0.25s var(--ease);
+  }
+  .dest:hover a.dest__cta span[aria-hidden] {
+    transform: translateX(4px);
+  }
+  .dest__cta--missing {
+    padding: 0.45rem 0.9rem;
+    border: 1px dashed currentColor;
+    border-radius: 999px;
+    font-size: var(--step--1);
+    text-decoration: none;
+    opacity: 0.8;
+  }
+  .dest__media {
+    position: relative;
+  }
+
+  /* Xiaohongshu: a snapshot, like a post */
+  .dest--xhs {
+    border-top-left-radius: 5rem;
+    background: color-mix(in srgb, var(--terracotta-500) 24%, var(--paper));
+  }
+  .dest--xhs .dest__name,
+  .dest--xhs .dest__cta {
+    color: var(--terracotta-700);
+  }
+  .dest--xhs .dest__media {
+    width: min(70%, 19rem);
+    margin: var(--space-3) auto var(--space-2);
+  }
+  .dest__snap {
+    position: relative;
+    padding: 0.55rem 0.55rem 1.9rem;
+    border-radius: 0.5rem;
+    background: var(--white);
+    box-shadow: 0 18px 36px -22px rgba(43, 37, 32, 0.5);
+    transform: rotate(2.5deg);
+    transition: transform 0.5s var(--ease);
+  }
+  .dest__snap :global(.figure) {
+    --figure-radius: 0.3rem;
+  }
+  .dest__snap--back {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    background: var(--cream-100);
+    transform: rotate(-6deg) translate(-7%, 2%);
+  }
+  .dest--xhs:hover .dest__snap:not(.dest__snap--back) {
+    transform: rotate(0.5deg) translateY(-3px);
+  }
+  .dest--xhs:hover .dest__snap--back {
+    transform: rotate(-9deg) translate(-10%, 2%);
+  }
+  .dest__topics--dots {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .dest__topics--dots li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .dest__topics--dots li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--terracotta-500);
+    transform: translateY(-0.1em);
+  }
+
+  /* Blog: a written page */
+  .dest--blog {
+    border-top-right-radius: 5rem;
+    background: var(--green-700);
+    color: rgba(250, 238, 220, 0.9);
+  }
+  .dest--blog .dest__name {
+    color: var(--white);
+  }
+  .dest--blog .dest__tagline,
+  .dest--blog .dest__cta {
+    color: var(--gold-400);
+  }
+  .dest--blog :focus-visible {
+    outline-color: var(--gold-400);
+  }
+  .dest__topics--lines {
+    width: 100%;
+    max-width: 24rem;
+  }
+  .dest__topics--lines li {
+    padding-block: 0.4rem;
+    border-bottom: 1px solid rgba(248, 241, 230, 0.2);
+  }
+  .dest__latest {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.6rem;
+    font-size: var(--step--1);
+  }
+  .dest__latest span {
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+  .dest--blog .dest__media {
+    width: min(86%, 22rem);
+    margin-inline: auto;
+  }
+  .dest__sheet {
+    position: absolute;
+    inset: -5% 4% 5% -6%;
+    border-radius: 0.4rem;
+    background: repeating-linear-gradient(to bottom, transparent 0 1.05rem, var(--line) 1.05rem calc(1.05rem + 1px)), var(--cream-100);
+    transform: rotate(-5deg);
+    transition: transform 0.5s var(--ease);
+  }
+  .dest--blog .dest__media :global(.figure) {
+    position: relative;
+    transform: rotate(2deg);
+    transition: transform 0.5s var(--ease);
+    --figure-radius: 0.4rem;
+    --figure-placeholder-bg: var(--white);
+  }
+  .dest--blog:hover .dest__sheet {
+    transform: rotate(-8deg);
+  }
+  .dest--blog:hover .dest__media :global(.figure) {
+    transform: rotate(0.5deg);
+  }
+
+  /* Resources: a table of specimens */
+  .dest--resources {
+    border-bottom-right-radius: 5rem;
+    background: var(--sage-200);
+  }
+  .dest__topics--tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .dest__topics--tags li {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--green-700);
+    font-weight: 600;
+  }
+  .dest--resources .dest__cta {
+    color: var(--green-700);
+  }
+  .dest--resources .dest__media {
+    width: min(86%, 22rem);
+    margin: var(--space-3) auto;
+  }
+  .dest--resources .dest__media :global(.figure) {
+    --figure-radius: 42% 58% 46% 54% / 52% 44% 56% 48%;
+    --figure-placeholder-bg: var(--white);
+  }
+  :global(.dest--resources .figure__label) {
+    left: 22%;
+    bottom: 16%;
+  }
+  .dest__specimen {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 26%;
+    aspect-ratio: 1;
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--gold-100);
+    transition: transform 0.5s var(--ease);
+  }
+  .dest__specimen :global(.botanical) {
+    width: 74%;
+  }
+  .dest__specimen--a {
+    top: -8%;
+    left: -6%;
+  }
+  .dest__specimen--b {
+    right: -8%;
+    top: 30%;
+    background: var(--cream-100);
+  }
+  .dest__specimen--c {
+    left: 10%;
+    bottom: -10%;
+    width: 22%;
+    background: var(--white);
+  }
+  .dest--resources:hover .dest__specimen--a {
+    transform: rotate(-10deg);
+  }
+  .dest--resources:hover .dest__specimen--b {
+    transform: rotate(8deg) translateX(3px);
+  }
+  .dest--resources:hover .dest__specimen--c {
+    transform: rotate(-6deg) translateY(3px);
+  }
+  @media (min-width: 40em) {
+    .dest--blog,
+    .dest--resources {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+    }
+    .dest--resources {
+      grid-template-columns: 1fr 1.1fr;
+    }
+    .dest--blog .dest__media,
+    .dest--resources .dest__media {
+      width: 86%;
+    }
+    .dest__body {
+      height: 100%;
+    }
+  }
+  @media (min-width: 62em) {
+    .explore__mosaic {
+      grid-template-columns: 5fr 7fr;
+    }
+    .dest--xhs {
+      grid-row: 1 / 3;
+      grid-template-rows: auto 1fr;
+    }
+  }
+
+  /* Inspired by: the label on one side, the collection clustered beside it */
+  .inspired__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .inspired__head {
+    justify-items: center;
+    text-align: center;
+  }
+  .shelf {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-7);
+  }
+  .pin {
+    position: relative;
+    display: flex;
+    flex: 0 0 50%;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-3);
+    text-align: center;
+    --string: 1.5rem;
+    --tilt: -2deg;
+  }
+  .pin:nth-child(even) {
+    --string: 2.75rem;
+    --tilt: 2.5deg;
+  }
+  .pin:nth-child(3n) {
+    --string: 2.1rem;
+    --tilt: -1deg;
+  }
+  /* Each piece carries its own length of vine; side by side they join into one */
+  .pin__vine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 24px;
+    color: var(--green-600);
+  }
+  .pin__vine path {
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .pin__string {
+    width: 1.5px;
+    height: var(--string);
+    margin-top: 12px;
+    background: var(--green-600);
+  }
+  .pin__media {
+    display: grid;
+    place-items: center;
+    width: 6.5rem;
+    aspect-ratio: 1;
+    margin-top: calc(-1 * var(--space-2));
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--sage-200);
+    box-shadow: var(--shadow-sm);
+    transform: rotate(var(--tilt));
+    transform-origin: 50% 0;
+    transition: transform 0.6s var(--ease);
+  }
+  .pin:hover .pin__media {
+    transform: rotate(calc(var(--tilt) * -1));
+  }
+  .pin__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pin__media :global(.botanical) {
+    width: 62%;
+  }
+  .pin--cover .pin__media {
+    width: 5.5rem;
+    aspect-ratio: 2 / 3;
+    border-radius: 0.3rem 0.6rem 0.6rem 0.3rem;
+    background: var(--gold-100);
+  }
+  .pin--idea .pin__media {
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--white);
+  }
+  .pin--placeholder .pin__media {
+    border: 1.5px dashed var(--line-strong);
+    background: var(--paper);
+    box-shadow: none;
+    --bot-stem: var(--line-strong);
+    --bot-leaf-a: var(--line-strong);
+    --bot-leaf-b: var(--line);
+    --bot-leaf-c: var(--line-strong);
+    --bot-terra: var(--line-strong);
+    --bot-gold: var(--line);
+  }
+  .pin__kind {
+    color: var(--muted);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .pin__name {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  :lang(zh) .pin__name {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .pin__name a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .pin__by {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .pin__quote {
+    max-width: 16rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+  /* Your own words, like a note in the margin */
+  .pin__note {
+    max-width: 14rem;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--terracotta-700);
+    transform: rotate(-1.5deg);
+  }
+  :lang(zh) .pin__note {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+  }
+  .pin--placeholder :is(.pin__name, .pin__note) {
+    color: var(--muted);
+  }
+  .inspired__after {
+    max-width: 40rem;
+    margin: var(--space-7) auto 0;
+  }
+  .inspired__disclaimer {
+    color: var(--muted);
+    font-size: var(--step--1);
+    text-align: center;
+  }
+  .inspired__empty {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+    text-align: center;
+  }
+  .inspired__pot {
+    display: grid;
+    place-items: center;
+    width: 7rem;
+    height: 7rem;
+    margin-bottom: var(--space-2);
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--sage-200);
+  }
+  .inspired__pot :global(.botanical) {
+    width: 5rem;
+  }
+  .inspired__empty h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  :lang(zh) .inspired__empty h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .inspired__empty p {
+    max-width: 30rem;
+    color: var(--ink-soft);
+  }
+  @media (min-width: 40em) {
+    .pin {
+      flex-basis: 33.333%;
+    }
+  }
+  @media (min-width: 62em) {
+    .inspired__grid {
+      grid-template-columns: 4fr 8fr;
+      column-gap: var(--space-7);
+      align-items: start;
+    }
+    .inspired__head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-6));
+      justify-items: start;
+      margin-bottom: 0;
+      text-align: left;
+    }
+    .pin {
+      flex-basis: 25%;
+    }
+    .shelf {
+      row-gap: var(--space-6);
+    }
+    .inspired__empty {
+      padding-block: var(--space-5);
+    }
+  }
+
+  /* The ribbon sits on the seam between "Inspired by" and "Grow with us" */
+  :global(.ribbon) {
+    --ribbon-from: var(--cream-100);
+    --ribbon-to: var(--sage-100);
+  }
+
+  /* Grow with us */
+  .grow__paths {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .path {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
+    border-radius: 2rem 2rem 2rem 5rem;
+    background: var(--paper);
+  }
+  .path--community {
+    border-radius: 2rem 2rem 5rem 2rem;
+  }
+  .path__label {
+    color: var(--terracotta-700);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .path h3 {
     font-family: var(--font-serif);
     font-size: var(--step-3);
     font-weight: 500;
     line-height: 1.15;
   }
-  .story__title {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    font-weight: 500;
-    line-height: 1.3;
-  }
-  :lang(zh) .feature__title,
-  :lang(zh) .story__title {
+  :lang(zh) .path h3 {
     font-family: var(--font-serif-zh);
     font-weight: 600;
   }
-  .feature__title a,
-  .story__title a {
-    text-decoration: none;
-  }
-  .feature__title a:hover,
-  .story__title a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 5px;
-  }
-  .feature__desc {
-    max-width: 36rem;
+  .path > p:not([class]) {
+    max-width: 32rem;
     color: var(--ink-soft);
   }
-  /* No article published yet: a seedling in a pot of sage, and an honest note */
-  .feature--empty {
-    align-items: center;
-    padding: var(--space-5);
+  .path > .btn {
+    margin-top: var(--space-3);
   }
-  .feature__pot {
-    display: grid;
-    place-items: center;
-    width: 7rem;
-    height: 7rem;
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--sage-100);
-  }
-  .feature__pot :global(.botanical) {
-    width: 5rem;
-  }
-  .feature--empty .feature__body {
-    padding: 0;
-  }
-  .stories {
-    display: grid;
-    gap: var(--space-5);
-    width: 100%;
-  }
-  .story {
-    display: grid;
-    grid-template-columns: 6.5rem 1fr;
-    gap: var(--space-5);
-    align-items: center;
-  }
-  .story:nth-child(even) .story__media {
-    border-radius: 4rem 1.5rem 1.5rem 1.5rem;
-  }
-  .story > div {
-    display: grid;
-    gap: var(--space-2);
-  }
-
-  .library {
-    display: grid;
-    gap: var(--space-6);
-    margin-top: clamp(3rem, 2rem + 4vw, 5.5rem);
-  }
-  .library__intro {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-    color: var(--ink-soft);
-  }
-  .library__title {
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
-    font-weight: 500;
-  }
-  :lang(zh) .library__title {
-    font-family: var(--font-serif-zh);
-    font-weight: 600;
-  }
-  .library__note {
-    color: var(--muted);
+  .path__choose {
+    margin-top: var(--space-2);
     font-size: var(--step--1);
-  }
-  .library__list {
-    display: grid;
-    gap: var(--space-2);
-  }
-  .seed {
-    display: grid;
-    grid-template-columns: 4rem 1fr;
-    gap: var(--space-4);
-    align-items: center;
-    min-height: 100%;
-    padding: var(--space-3);
-    margin-inline: calc(-1 * var(--space-3));
-    border-radius: 1.5rem;
-    text-decoration: none;
-    transition: background-color 0.3s var(--ease);
-  }
-  .seed:hover {
-    background: var(--white);
-  }
-  .seed__art {
-    display: grid;
-    place-items: center;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--sage-100);
-    transition: border-radius 0.6s var(--ease);
-  }
-  .library__list li:nth-child(3n + 2) .seed__art {
-    border-radius: 45% 55% 42% 58% / 56% 44% 56% 44%;
-    background: var(--gold-100);
-  }
-  .library__list li:nth-child(3n) .seed__art {
-    border-radius: 52% 48% 60% 40% / 42% 58% 42% 58%;
-    background: var(--cream-200);
-  }
-  .seed:hover .seed__art {
-    border-radius: 50%;
-  }
-  .seed__art :global(.botanical) {
-    width: 2.9rem;
-    transition: transform 0.5s var(--ease);
-    transform-origin: 50% 90%;
-  }
-  .seed:hover .seed__art :global(.botanical) {
-    transform: rotate(-9deg) scale(1.06);
-  }
-  .seed__name {
-    display: block;
-    color: var(--green-700);
     font-weight: 700;
+    color: var(--green-700);
   }
-  .seed__body {
-    display: block;
-    color: var(--ink-soft);
-    font-size: var(--step--1);
-    line-height: 1.5;
-  }
-  @media (min-width: 40em) {
-    .feature {
-      grid-template-columns: 5fr 6fr;
-      align-items: center;
-      padding: var(--space-5);
-    }
-    .feature--empty {
-      grid-template-columns: auto 1fr;
-      gap: var(--space-6);
-      max-width: 44rem;
-      padding: var(--space-5) var(--space-6);
-    }
-    .stories {
-      grid-template-columns: 1fr 1fr;
-    }
-    .library__list {
-      grid-template-columns: 1fr 1fr;
-      column-gap: var(--space-6);
-    }
-  }
-  @media (min-width: 56em) {
-    .library {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--space-5);
-      align-items: start;
-    }
-    .library__intro {
-      grid-column: 1 / 5;
-      padding-top: var(--space-3);
-    }
-    .library__list {
-      grid-column: 6 / -1;
-    }
-  }
-
-  /* Grow with us */
-  .invite__grid {
+  .path__surveys {
     display: grid;
-    gap: var(--space-7);
+    width: 100%;
+    margin-bottom: var(--space-3);
   }
-  .invite__letter {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-    max-width: 36rem;
-  }
-  .invite__title {
-    font-size: var(--step-4);
-  }
-  .invite .tag--gold {
-    margin-bottom: var(--space-2);
-  }
-  .invite__body {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    line-height: 1.6;
-    color: var(--ink);
-  }
-  :lang(zh) .invite__body {
-    font-family: var(--font-serif-zh);
-    line-height: 1.9;
-  }
-  .invite__cta {
+  .path__surveys li {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-3) var(--space-5);
-    width: 100%;
-    margin-top: var(--space-3);
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--line);
   }
-  .invite__cta p {
-    color: var(--ink-soft);
-    font-size: var(--step--1);
+  .path__surveys li:last-child {
+    border-bottom: 1px solid var(--line);
   }
-  .invite__art {
-    position: relative;
-    width: min(100%, 22rem);
-    padding-left: 18%;
-    justify-self: center;
+  .path__region {
+    font-weight: 700;
+    color: var(--ink);
   }
-  section :global(.invite__media) {
-    --figure-radius: 999px 999px 1.5rem 1.5rem;
-    --figure-placeholder-bg: var(--cream-100);
+  .grow__plant {
+    display: grid;
+    place-items: center;
+    margin-block: calc(-1 * var(--space-3));
   }
-  :global(.invite__vines) {
-    position: absolute;
-    left: -8%;
-    bottom: -4%;
-    width: 40%;
+  .grow__plant :global(.botanical) {
+    width: 7rem;
   }
-  .invite__ps {
+  .grow__ps {
     display: grid;
     gap: var(--space-4);
     justify-items: start;
-    padding: var(--space-5);
-    border-radius: 1.75rem;
-    background: var(--paper);
+    margin-top: var(--space-7);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--sage-300);
     color: var(--ink-soft);
   }
-  .invite__ps-art {
+  .grow__ps-art {
     display: grid;
     place-items: center;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--sage-100);
+    background: var(--paper);
   }
-  .invite__ps-art :global(.botanical) {
+  .grow__ps-art :global(.botanical) {
     width: 2.6rem;
   }
-  .invite__ps-label {
+  .grow__ps-label {
     font-family: var(--font-serif);
     font-style: italic;
     color: var(--terracotta-700);
   }
   @media (max-width: 35.99em) {
-    .invite__cta .btn,
-    .invite__ps .btn {
+    .path > .btn,
+    .grow__ps .btn {
       width: 100%;
       min-height: 3.25rem;
     }
   }
   @media (min-width: 56em) {
-    .invite__grid {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--space-5);
-      align-items: center;
+    /* Two plants from separate roots grow beside the two invitations */
+    .grow__paths {
+      grid-template-columns: 5fr 6fr;
+      grid-template-rows: auto 1fr;
+      gap: var(--space-5) var(--space-6);
     }
-    .invite__letter {
-      grid-column: 1 / 7;
+    .path--community {
+      grid-area: 1 / 2 / 3 / 3;
     }
-    .invite__art {
-      grid-column: 8 / 12;
-      width: 100%;
-      padding-left: 0;
+    .grow__plant {
+      align-items: end;
+      margin-block: 0;
     }
-    :global(.invite__vines) {
-      left: -48%;
-      bottom: -5%;
-      width: 62%;
+    .grow__plant :global(.botanical) {
+      width: min(60%, 15rem);
     }
-    .invite__ps {
-      grid-column: 1 / -1;
+    .grow__ps {
       grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: var(--space-5);
-      padding: var(--space-5) var(--space-6);
     }
   }
 </style>

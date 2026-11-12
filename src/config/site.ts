@@ -19,5 +19,25 @@ export const SURVEY_URLS = {
   international: '',
 };
 
+// Xiaohongshu (小红书) account page, linked from the homepage ("Explore more with us"). Paste the full profile link
+// here; while it is empty the homepage shows "Link coming soon" instead of a link.
+export const XIAOHONGSHU_URL = '';
+
+// WeChat ID, shown beside the Connect button in the founder's note. While it is empty the page shows
+// "WeChat · coming soon".
+export const WECHAT_ID = '';
+
+// Contact email, shown beside the Connect button as a mail link. While it is empty the page shows
+// "Email · coming soon".
+export const CONTACT_EMAIL = '';
+
+// Where people share feedback about the RootMap app (a form or survey link, or 'mailto:you@example.com').
+// While it is empty the homepage shows "Feedback form coming soon" instead of a button.
+export const FEEDBACK_URL = '';
+
 // Blog drafts (`draft: true`) are shown while developing (`npm run dev`) and left out of production builds.
 export const SHOW_DRAFTS = import.meta.env.DEV;
+
+// Design placeholders that only show the shape of a layout (such as the sample slots in "Inspired by" while
+// src/config/inspirations.ts is empty) appear while developing; the published site shows a short empty state instead.
+export const SHOW_DESIGN_PLACEHOLDERS = import.meta.env.DEV;

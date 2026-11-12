@@ -25,11 +25,13 @@ npm run check        # type-check
 | What | Where |
 |---|---|
 | All page text, both languages | `src/i18n/en.ts`, `src/i18n/zh.ts` |
-| App links, survey links, draft visibility | `src/config/site.ts` |
+| App links, survey links, Xiaohongshu and feedback links, draft visibility | `src/config/site.ts` |
+| "Inspired by" entries on the homepage | `src/config/inspirations.ts` (images go in `public/images/inspired/`) |
 | Photograph and illustration slots | `src/config/images.ts` (files go in `public/images/<folder>/`) |
 | App screenshots | `public/images/features/app/` (from RootMapMVP `docs/screenshots`) |
 | Blog articles | `src/content/blog/en/`, `src/content/blog/zh/` (see `src/content/README.md`) |
 | Resources | `src/content/resources/` (see `src/content/README.md`) |
+| Sketch and review screenshots (not part of the website) | `design/reference/`, `design/review/` |
 | Design tokens and shared styles | `src/styles/global.css` |
 | Shared components | `src/components/` |
 | Page layouts (one per page, language-neutral) | `src/views/` |
