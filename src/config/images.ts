@@ -23,7 +23,7 @@ export const IMAGES = {
   homeChildhoodMain: { src: '', ratio: '5 / 4', folder: 'philosophy' },
   homeChildhoodDetail: { src: '', ratio: '1 / 1', folder: 'philosophy' },
   // Home, the founder's note: a portrait photograph or illustration, square, shown in a circle (about 1000 × 1000 px).
-  founderPortrait: { src: '', ratio: '1 / 1', folder: 'founder' },
+  founderPortrait: { src: '/images/founder/portrait.jpg', ratio: '1 / 1', position: '50% 30%', folder: 'founder' },
   // Home, "Explore more with us": one preview for each destination.
   //   Xiaohongshu: a personal photograph, portrait like a post (about 1200 × 1600 px)
   //   Blog: writing, notes or a desk (about 1600 × 1200 px)
