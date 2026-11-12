@@ -23,6 +23,27 @@ const count = (n: number) => (n === 1 ? page.countOne : page.countMany.replace('
 <BaseLayout lang={lang} title={page.title} description={page.description}>
   <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead} />
 
+  <section class="section section--cream bookshelf" id="bookshelf" aria-labelledby="bookshelf-title">
+    <div class="container">
+      <header class="bookshelf__head">
+        <h2 id="bookshelf-title">{copy.bookshelf.title}</h2>
+        <p>{copy.bookshelf.intro}</p>
+      </header>
+      <ul class="bookshelf__list" role="list">
+        {copy.bookshelf.books.map((book) => (
+          <li class="book">
+            <div class="book__cover" aria-hidden="true"><span>{book.title}</span><span>{book.author}</span></div>
+            <div class="book__details">
+              <h3>{book.title}</h3>
+              <p class="book__author">{book.author}</p>
+              <p>{book.note}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <section class="section section--tight">
     <div class="container">
       {
@@ -77,6 +98,83 @@ const count = (n: number) => (n === 1 ? page.countOne : page.countMany.replace('
 </BaseLayout>
 
 <style>
+  .bookshelf__head {
+    max-width: 42rem;
+    margin-bottom: var(--space-6);
+
+  }
+  .bookshelf__head h2 {
+    font-family: var(--font-serif);
+    font-size: var(--step-4);
+    font-weight: 500;
+    margin-bottom: var(--space-3);
+
+  }
+  :lang(zh) .bookshelf__head h2 {
+    font-family: var(--font-serif-zh);
+
+  }
+  .bookshelf__head p, .book__details p {
+    color: var(--ink-soft);
+
+  }
+  .bookshelf__list {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 25rem), 1fr));
+
+  }
+  .book {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-bottom: 2px solid var(--sage-300);
+
+  }
+  .book__cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    aspect-ratio: 2 / 3;
+    padding: 1rem 0.75rem 1rem 1rem;
+    border-left: 5px solid var(--green-800);
+    border-radius: 2px 8px 8px 2px;
+    background: var(--green-700);
+    color: var(--cream-100);
+    box-shadow: var(--shadow-sm);
+    transform: rotate(-3deg);
+
+  }
+  .book__cover span:first-child {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.2;
+
+  }
+  .book__cover span:last-child {
+    font-size: 0.75rem;
+
+  }
+  .book__details h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+
+  }
+  .book__author {
+    margin-block: var(--space-1) var(--space-3);
+    font-size: var(--step--1);
+
+  }
+  @media (max-width: 25em) {
+    .book {
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+  }
+
   .cats__title {
     margin: var(--space-8) 0 var(--space-5);
     font-size: var(--step-2);

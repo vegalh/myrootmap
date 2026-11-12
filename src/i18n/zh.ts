@@ -160,14 +160,20 @@ export const zh: Dict = {
       intro: [
         'RootMap 源于一个简单的信念：和孩子一起成长。通过真实、实用的生活活动，父母和孩子放下屏幕与练习纸，一起做饭、种植、动手创造、探索身边的世界。在相处中建立自信，更懂彼此，让亲子联结随着共同成长而加深。',
       ] as string[],
+      shaped: {
+        title: '塑造 RootMap 的经历与灵感',
+        experience: '走访美国与中国的 20 多个幼儿园及学前教育课堂，与 15 多位学校负责人和课程设计者交流。',
+        influences: '灵感来自蒙台梭利、瑞吉欧教育、哈佛 CEEL 项目、《Free to Learn》，以及 Julia Cook 等童书作者。',
+        bookshelf: '看看我的书架',
+      },
       observationsTitle: 'RootMap 背后的经历与视角',
       observations: [
-        '就读于顶尖创业院校',
-        '访谈多位年轻创始人',
-        '从小培养好奇心、主动性与韧性',
-        '联结 AI 与创新教育领域',
-        '关注社会情感学习（SEL）',
-        '真实生活里的学习，更亲密的亲子联结',
+        "我在蒙台梭利幼儿园陪伴孩子学习与成长",
+        "向中国家庭分享 Julia Cook 关于孩子情绪与人际关系的教育理念",
+        "与 AI 创业者共同生活、工作，并参与 AI 相关工作",
+        "参加过哈佛 CEEL 项目培训",
+        "曾在企鹅兰登书屋童书版权团队工作",
+        "我共同创办了 Truvit，帮助企业把 AI 用到日常工作中",
       ] as string[],
       placeholders: {
         name: '你的名字',
@@ -448,6 +454,14 @@ export const zh: Dict = {
     back: '全部文章',
     otherLanguage: 'Read in English',
     filterLabel: '按类别筛选',
+  },
+
+  bookshelf: {
+    title: '我的书架',
+    intro: '这些是我读过、也想推荐给家长的书，一起探索童年、学习与共同成长。',
+    books: [
+      { title: 'Free to Learn', author: 'Peter Gray', note: '探讨游戏、好奇心与自主探索在孩子学习中的作用。' },
+    ],
   },
 
   resources: {

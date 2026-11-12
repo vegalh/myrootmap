@@ -164,14 +164,20 @@ export const en = {
       intro: [
         'RootMap begins with a simple belief. Grow with your child. Practical, real-life activities bring parents and children together, away from screens and worksheets. Cooking, planting, making and exploring become chances to build confidence, understand one another and deepen your connection as you both grow.',
       ] as string[],
+      shaped: {
+        title: 'What shaped RootMap',
+        experience: '20+ preschool and kindergarten classroom visits across the U.S. and China. Insights from 15+ school leaders and curriculum designers.',
+        influences: 'Inspired by Montessori, Reggio Emilia, Harvard’s CEEL program, Free to Learn, and children’s book authors including Julia Cook.',
+        bookshelf: 'View my bookshelf',
+      },
       observationsTitle: 'The perspectives behind RootMap',
       observations: [
-        'Studying at a leading entrepreneurship school',
-        'Conversations with many young founders',
-        'Curiosity, initiative and resilience from an early age',
-        'Connections across AI and innovative education',
-        'A perspective rooted in social-emotional learning',
-        'Real-life experiences. Closer family connections.',
+        "I work with young children in a Montessori preschool",
+        "Bringing Julia Cook’s ideas on children’s feelings and relationships to families in China",
+        "Living and working alongside AI startup founders, and working with AI",
+        "Trained through Harvard’s CEEL program",
+        "Worked in the children’s book rights team at Penguin Random House",
+        "I co-founded Truvit to help companies find practical ways to use AI in their daily work",
       ] as string[],
       placeholders: {
         name: 'Your name',
@@ -453,6 +459,14 @@ export const en = {
     back: 'All articles',
     otherLanguage: '阅读中文版',
     filterLabel: 'Filter by category',
+  },
+
+  bookshelf: {
+    title: 'My bookshelf',
+    intro: 'Books I’ve read and recommend to parents, exploring childhood, learning and growing together.',
+    books: [
+      { title: 'Free to Learn', author: 'Peter Gray', note: 'On the role of play, curiosity and self-directed exploration in children’s learning.' },
+    ],
   },
 
   resources: {
