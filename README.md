@@ -1,44 +1,78 @@
-# RootMap website
+# RootMap
 
-The official website for RootMap: educational philosophy, features, blog, resources and the future community.
-It is a separate project from the RootMap app ([RootMapMVP](https://github.com/vegalh/RootMapMVP)) and only links to it.
+Grow with your child through meaningful everyday experiences.
 
-Built with [Astro](https://astro.build) as a static site. English is the default language; Simplified Chinese lives under `/zh/`.
+RootMap helps parents and caregivers turn small moments into opportunities for curiosity, independence and connection. Cook together, sort the laundry, plant a seed or explore the neighborhood. Simple activities give children room to discover, try and learn, while adults learn alongside them.
 
-## Run locally
+[Visit the website](https://myrootmap.com/) · [Open RootMap](https://vegalh.github.io/rootmapmvp/) · [Log in](https://vegalh.github.io/rootmapmvp/#/sign-in)
 
-Requires Node.js 22.12 or later.
+## Find your next idea
+
+- **Discover activities** that fit your child’s age, your surroundings and the materials you have.
+- **Try something together** with practical steps for everyday family life.
+- **Remember small moments** with a photo and a few words.
+- **Reflect on your child’s growth** through their experiences and interests.
+
+## Explore the website
+
+Read about the thinking behind RootMap, see how the app works, and explore reflections on childhood and learning. The blog and resources library will grow over time. You can also learn about plans for a community and share what you would like it to offer.
+
+The website is available in [English](https://myrootmap.com/) and [简体中文](https://myrootmap.com/zh/).
+
+## For website editors
+
+Use the guide below to update the website or preview changes on your computer.
+
+<details>
+<summary>Open the editing guide</summary>
+
+### Preview the website
+
+Install Node.js 22.12 or later, then run these commands in the project folder.
 
 ```bash
 npm install
-npm run dev          # http://localhost:4321 (shows draft articles)
-npm run build        # production build into dist/, as deployed to https://myrootmap.com/
-npm run preview      # serve the last build
-npm run check        # type-check
+npm run dev
 ```
 
-`astro dev` runs in the background; stop it with `npx astro dev stop`.
+Open the local address printed in the terminal, usually `http://localhost:4321`.
 
-## Where things live
+To check your changes and create the published version, run the following commands.
 
-| What | Where |
-|---|---|
-| All page text, both languages | `src/i18n/en.ts`, `src/i18n/zh.ts` |
-| App links, survey links, Xiaohongshu and feedback links, draft visibility | `src/config/site.ts` |
-| "Inspired by" entries on the homepage | `src/config/inspirations.ts` (images go in `public/images/inspired/`) |
-| Photograph and illustration slots | `src/config/images.ts` (files go in `public/images/<folder>/`) |
-| App screenshots | `public/images/features/app/` (from RootMapMVP `docs/screenshots`) |
-| Blog articles | `src/content/blog/en/`, `src/content/blog/zh/` (see `src/content/README.md`) |
-| Resources | `src/content/resources/` (see `src/content/README.md`) |
-| Sketch and review screenshots (not part of the website) | `design/reference/`, `design/review/` |
-| Design tokens and shared styles | `src/styles/global.css` |
-| Shared components | `src/components/` |
-| Page layouts (one per page, language-neutral) | `src/views/` |
-| Routes (thin files that pick a language) | `src/pages/`, `src/pages/zh/` |
+```bash
+npm run check
+npm run build
+```
 
-## Adding inspiration logos
+Use `npm run preview` to view the latest build. Stop background servers with `npx astro dev stop` or `npx astro preview stop`.
 
-Put your logo in `public/images/inspired/`, then add an entry to `INSPIRATIONS` in `src/config/inspirations.ts`.
+### Find the files you need
+
+| To update | Open |
+| --- | --- |
+| English text | `src/i18n/en.ts` |
+| Chinese text | `src/i18n/zh.ts` |
+| Login, app, Rednotes, contact and survey links | `src/config/site.ts` |
+| Homepage layout | `src/views/Home.astro` |
+| Photos and their placement | `src/config/images.ts` and `public/images/` |
+| Inspiration names and logos | `src/config/inspirations.ts` |
+| Blog posts and resources | `src/content/` and its [content guide](src/content/README.md) |
+| Navigation and shared page elements | `src/components/` |
+| Colors, fonts and shared styles | `src/styles/global.css` |
+| Page addresses in each language | `src/pages/` |
+| Design references and review images | `design/` |
+
+### Add a photo
+
+1. Save the image in the matching folder inside `public/images/`.
+2. Open `src/config/images.ts` and enter its website path in the matching `src` field. For a founder portrait, use a path such as `/images/founder/portrait.jpg`.
+3. Add a short image description in both language files so people using screen readers can understand it.
+
+JPEG and WebP work well for photos. Aim for 1600–2400 pixels on the long edge and a file size under about 400 KB.
+
+### Add an inspiration logo
+
+Save the logo in `public/images/inspired/`, then add an entry inside the `INSPIRATIONS` list in `src/config/inspirations.ts`.
 
 ```ts
 {
@@ -49,26 +83,18 @@ Put your logo in `public/images/inspired/`, then add an entry to `INSPIRATIONS` 
 }
 ```
 
-Logos appear in the homepage’s Inspired by section with their full proportions. Development previews show empty logo slots until you add entries.
+The logo will appear in the homepage’s Inspired by section. Local development previews show sample spaces until real entries are added.
 
-## Adding images
+### Add contact details or surveys
 
-1. Put the file in the folder named in `src/config/images.ts`, e.g. `public/images/hero/home.jpg`.
-2. Set that slot's `src`, e.g. `homeHero: { src: '/images/hero/home.jpg', ... }`.
-3. Write or adjust its alt text in `src/i18n/en.ts` and `src/i18n/zh.ts`.
+Open `src/config/site.ts` to add your email, WeChat ID, Rednotes profile and community survey links. Empty fields display a coming-soon message.
 
-Export photos at roughly 2× their displayed size (1600–2400 px on the long edge) as JPEG or WebP, under ~400 KB.
+### Publish changes
 
-## Community surveys
+The website uses Astro and GitHub Pages. Pushing changes to `main` starts the build and publication process. You can follow its progress in the repository’s Actions tab.
 
-Set `SURVEY_URLS.china` and `SURVEY_URLS.international` in `src/config/site.ts`. While a URL is empty, the Community
-page shows "Coming soon / 即将开放" in place of that button.
+GitHub Pages should use GitHub Actions as its source and `myrootmap.com` as its custom domain. The domain is recorded in `public/CNAME`. In `astro.config.mjs`, `site` is `https://myrootmap.com` and `base` is `/`.
 
-## Deploying to GitHub Pages
+The [RootMap app](https://github.com/vegalh/RootMapMVP) has its own repository.
 
-Every push to `main` builds the site with `npm run build` and publishes it to `https://myrootmap.com/`
-(`.github/workflows/deploy.yml`). Settings › Pages › Source must be set to "GitHub Actions", with `myrootmap.com` as
-the custom domain (`public/CNAME` records it). A deploy can also be started by hand from the Actions tab.
-
-The site is served from the root of the domain, so `site` and `base` in `astro.config.mjs` are `https://myrootmap.com`
-and `/`. Building with any other base path makes every stylesheet, script and image address wrong on the live site.
+</details>
