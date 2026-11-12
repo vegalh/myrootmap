@@ -64,7 +64,7 @@ export const en = {
       note: 'A few minutes of inspiration. Meaningful moments to share with your child.',
       primary: 'Explore RootMap',
       secondary: 'Our Story',
-      imageAlt: 'A child exploring an everyday activity',
+      imageAlt: 'An adult and a child preparing cucumber together',
       shotAlt: 'The Today screen in RootMap',
     },
     why: {
@@ -74,8 +74,8 @@ export const en = {
         'Meaningful learning happens in everyday moments. At the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
         'RootMap was made to help adults notice these moments and respond thoughtfully: not by adding more to the day, but by seeing more of what is already there. And as children grow, a door opens for the adults beside them to grow too.',
       ],
-      imageAlt: 'A child absorbed in an everyday task at home',
-      detailAlt: 'Small hands at work on an everyday task',
+      imageAlt: 'A child carefully pouring water from a jug into a glass',
+      detailAlt: 'A child’s hands planting a seedling in a terracotta pot',
       caption: 'A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
       link: 'Read our philosophy',
       ideasLabel: 'What RootMap cares about',
@@ -202,7 +202,7 @@ export const en = {
         tagline: 'Small notes from everyday life',
         topics: ['Personal reflections', 'Everyday experiences', 'Educational observations', 'Creative ideas', 'Behind the scenes'],
         cta: 'Explore on Rednotes',
-        imageAlt: 'A preview of RootMap on Rednotes',
+        imageAlt: 'A child arranging flowers in a small vase',
       },
       blog: {
         name: 'Blog',
@@ -210,14 +210,14 @@ export const en = {
         topics: ['Longer educational reflections', 'Classroom observations', 'Discussions of child development', 'Personal essays', 'Research-informed articles'],
         cta: 'Read the Blog',
         latest: 'Latest',
-        imageAlt: 'A preview of the RootMap blog',
+        imageAlt: 'A child reading a photo book at home',
       },
       resources: {
         name: 'Resources',
         tagline: 'A growing library for home and classroom',
         topics: ['Educational materials', 'Practical activities', 'Observation guides', 'Research and reading', 'For parents and educators'],
         cta: 'Explore Resources',
-        imageAlt: 'A preview of RootMap’s resources',
+        imageAlt: 'A child collecting natural objects in an egg carton',
       },
     },
     // Entries live in src/config/inspirations.ts.
@@ -300,7 +300,7 @@ export const en = {
     eyebrow: 'Our Philosophy',
     heading: 'Growing alongside children',
     lead: 'The educational thinking behind RootMap: what we believe about how young children learn, and what that asks of the adults around them.',
-    heroImageAlt: 'A child absorbed in hands-on exploration',
+    heroImageAlt: 'A child playing among autumn leaves',
     contentsLabel: 'On this page',
     sections: [
       {
@@ -497,7 +497,7 @@ export const en = {
       'It would be open to parents, educators, researchers and anyone who shares these interests, not only people who use RootMap.',
       'I’d love to learn what kind of space would be valuable to you.',
     ],
-    imageAlt: 'People in conversation about learning',
+    imageAlt: 'A child sharing family photographs with an adult',
     survey: {
       title: 'Share your thoughts',
       intro: 'Choose the survey for where you live. Each takes a few minutes.',

@@ -17,27 +17,27 @@ export type ImageSlot = {
 export const IMAGES = {
   // Home, hero: the main photograph or illustration, portrait (about 1600 × 2000 px or larger). It is shown in an
   // arch, so the top corners are rounded away: keep faces and hands away from the top corners.
-  homeHero: { src: '', ratio: '4 / 5', folder: 'hero' },
+  homeHero: { src: '/images/hero/cooking-together.jpg', ratio: '4 / 5', position: '50% 65%', folder: 'hero' },
   // Home, "Why RootMap": real-world learning. A larger photograph of a child absorbed in something everyday
   // (about 1800 × 1440 px) and a small square detail that overlaps its corner (hands, materials; about 800 × 800 px).
-  homeChildhoodMain: { src: '', ratio: '5 / 4', folder: 'philosophy' },
-  homeChildhoodDetail: { src: '', ratio: '1 / 1', folder: 'philosophy' },
+  homeChildhoodMain: { src: '/images/philosophy/pouring-water.jpg', ratio: '5 / 4', folder: 'philosophy' },
+  homeChildhoodDetail: { src: '/images/philosophy/planting.jpg', ratio: '1 / 1', folder: 'philosophy' },
   // Home, the founder's note: a portrait photograph or illustration, square, shown in a circle (about 1000 × 1000 px).
   founderPortrait: { src: '/images/founder/portrait.jpg', ratio: '1 / 1', position: '50% 30%', folder: 'founder' },
   // Home, "Explore more with us": one preview for each destination.
   //   Xiaohongshu: a personal photograph, portrait like a post (about 1200 × 1600 px)
   //   Blog: writing, notes or a desk (about 1600 × 1200 px)
   //   Resources: educational materials or an illustration (about 1600 × 1200 px)
-  exploreXiaohongshu: { src: '', ratio: '3 / 4', folder: 'explore' },
-  exploreBlog: { src: '', ratio: '4 / 3', folder: 'explore' },
-  exploreResources: { src: '', ratio: '4 / 3', folder: 'explore' },
+  exploreXiaohongshu: { src: '/images/explore/flower-arranging.jpg', ratio: '3 / 4', folder: 'explore' },
+  exploreBlog: { src: '/images/explore/reading-together.jpg', ratio: '4 / 3', folder: 'explore' },
+  exploreResources: { src: '/images/explore/nature-activity.jpg', ratio: '4 / 3', folder: 'explore' },
   // Our Philosophy: a wide image under the page title (about 2000 × 900 px)
-  philosophyHero: { src: '', ratio: '21 / 9', folder: 'philosophy' },
+  philosophyHero: { src: '/images/philosophy/autumn-play.jpg', ratio: '21 / 9', position: '50% 35%', folder: 'philosophy' },
   // Our Philosophy: one image beside the "Learning through real experiences" and "independence" sections (portrait)
-  philosophyRealExperiences: { src: '', ratio: '4 / 5', folder: 'philosophy' },
-  philosophyIndependence: { src: '', ratio: '4 / 5', folder: 'philosophy' },
+  philosophyRealExperiences: { src: '/images/philosophy/washing-greens.jpg', ratio: '4 / 5', folder: 'philosophy' },
+  philosophyIndependence: { src: '/images/philosophy/watering-plant.jpg', ratio: '4 / 5', folder: 'philosophy' },
   // Community page: landscape (about 1600 × 1200 px)
-  communityHero: { src: '', ratio: '4 / 3', folder: 'community' },
+  communityHero: { src: '/images/community/family-stories.jpg', ratio: '4 / 3', folder: 'community' },
 } satisfies Record<string, ImageSlot>;
 
 // Authentic screenshots of the RootMap app (copied from RootMapMVP docs/screenshots, iPhone size, demo family).

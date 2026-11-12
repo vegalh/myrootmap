@@ -63,7 +63,7 @@ export const zh: Dict = {
       note: '几分钟的灵感，开启和孩子一起度过的美好时刻。',
       primary: '了解 RootMap',
       secondary: '我们的故事',
-      imageAlt: '一个孩子正在探索日常活动',
+      imageAlt: '大人和孩子一起准备黄瓜',
       shotAlt: 'RootMap 的“今日”页面',
     },
     why: {
@@ -73,8 +73,8 @@ export const zh: Dict = {
         '有意义的学习，发生在日常生活的点滴里：厨房水槽边、回家的路上、一篮等着分类的衣服旁。',
         'RootMap 想帮助大人留意这些时刻，并用心回应：不是给一天再添更多安排，而是看见本来就在那里的东西。而当孩子成长的时候，也为身边的大人打开了一扇一起成长的门。',
       ],
-      imageAlt: '一个孩子在家中专注于一件日常小事',
-      detailAlt: '一双小手正在做一件日常小事',
+      imageAlt: '孩子专注地将水壶里的水倒入杯中',
+      detailAlt: '孩子用双手将幼苗种进陶土花盆',
       caption: '一个幼儿把水从一个杯子倒进另一个杯子，一遍又一遍，并不是在浪费时间，而是在弄明白一件事。',
       link: '阅读我们的教育理念',
       ideasLabel: 'RootMap 在意的事',
@@ -197,7 +197,7 @@ export const zh: Dict = {
         tagline: '来自日常生活的小记',
         topics: ['个人随想', '日常经历', '教育观察', '创意点子', '幕后故事'],
         cta: '去小红书看看',
-        imageAlt: 'RootMap 小红书内容预览',
+        imageAlt: '孩子将花朵插入小花瓶',
       },
       blog: {
         name: '文章',
@@ -205,14 +205,14 @@ export const zh: Dict = {
         topics: ['较长的教育思考', '课堂观察', '关于儿童发展的讨论', '个人随笔', '有研究依据的文章'],
         cta: '阅读文章',
         latest: '最新',
-        imageAlt: 'RootMap 文章预览',
+        imageAlt: '孩子在家阅读照片书',
       },
       resources: {
         name: '资源',
         tagline: '为家庭和课堂准备的、持续丰富的资源库',
         topics: ['教育素材', '实用活动', '观察指南', '研究与阅读', '给父母和教育者'],
         cta: '浏览资源',
-        imageAlt: 'RootMap 资源预览',
+        imageAlt: '孩子用鸡蛋盒收集自然物品',
       },
     },
     // 条目在 src/config/inspirations.ts 中维护。
@@ -295,7 +295,7 @@ export const zh: Dict = {
     eyebrow: '教育理念',
     heading: '与孩子一起成长',
     lead: 'RootMap 背后的教育思考：我们如何理解幼儿的学习，以及这对身边的大人意味着什么。',
-    heroImageAlt: '一个孩子专注地动手探索',
+    heroImageAlt: '孩子在秋日落叶中玩耍',
     contentsLabel: '本页内容',
     sections: [
       {
@@ -492,7 +492,7 @@ export const zh: Dict = {
       '它将向父母、教育者、研究者以及所有有共同兴趣的人开放，而不仅限于 RootMap 的用户。',
       '我很想知道，什么样的空间对你来说是有价值的。',
     ],
-    imageAlt: '人们在交流关于学习的想法',
+    imageAlt: '孩子和大人一起分享家庭照片',
     survey: {
       title: '分享你的想法',
       intro: '请根据你所在的地区选择问卷，每份问卷只需几分钟。',
