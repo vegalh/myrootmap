@@ -1,6 +1,6 @@
 ---
-// The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder strip
-// and a short invitation. Copy: `home` and `invite` in src/i18n. Image slots: src/config/images.ts.
+// The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder strip.
+// Copy: `home` in src/i18n. Image slots: src/config/images.ts.
 // Every "Request an invite" button opens the Request an invite page (src/views/Invite.astro), where the form is.
 // The longer blocks that used to be here are in src/components/sections/ and shown on Our Philosophy, About and Community.
 import '@fontsource-variable/fraunces/wght-italic.css';
@@ -145,7 +145,7 @@ const home = copy.home;
     </div>
   </section>
 
-  <!-- 5. The founder strip, then a short invitation that opens the Request an invite page -->
+  <!-- 5. The founder strip closes the page; the form lives on the Request an invite page -->
   <section class="section section--tight founder" id="founder" aria-labelledby="founder-title">
     <div class="container founder__strip">
       <div class="founder__art">
@@ -160,14 +160,10 @@ const home = copy.home;
     </div>
   </section>
 
-  <!-- id="invite" stays, so older links to /#invite still land here -->
-  <section class="section section--sage invite" id="invite" aria-labelledby="invite-title">
-    <div class="container container--narrow invite__inner">
-      <h2 class="section-title" id="invite-title">{copy.invite.title}</h2>
-      <p class="invite__body">{copy.invite.body}</p>
-      <a class="btn btn--go" href={invitePath(lang)}>{copy.common.cta}<span aria-hidden="true">→</span></a>
-    </div>
-  </section>
+  <!-- Older links to /#invite (where the form used to be) go straight to the Request an invite page -->
+  <script is:inline define:vars={{ invite: invitePath(lang) }}>
+    if (location.hash === '#invite') location.replace(invite);
+  </script>
 </BaseLayout>
 
 <style>
@@ -669,26 +665,6 @@ const home = copy.home;
     line-height: 1.8;
   }
 
-  /* The closing invitation */
-  .invite {
-    scroll-margin-top: var(--header-h);
-  }
-  .invite__inner {
-    display: grid;
-    gap: var(--space-4);
-    justify-items: start;
-  }
-  .invite__body {
-    color: var(--ink-soft);
-    font-size: var(--step-1);
-    line-height: 1.6;
-  }
-  @media (max-width: 35.99em) {
-    .invite__inner .btn {
-      width: 100%;
-      min-height: 3.25rem;
-    }
-  }
   #how {
     scroll-margin-top: var(--header-h);
   }
