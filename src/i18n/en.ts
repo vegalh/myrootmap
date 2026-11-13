@@ -542,7 +542,7 @@ export const en = {
       heading: 'Privacy',
       body: [
         'This website does not use cookies, analytics or advertising trackers.',
-        'The invite form on the homepage is the one place this website asks for personal information: your email address, whether you are a parent, caregiver or teacher, your child’s age or the age group you teach, and whether you live in mainland China. The form is hosted by Google Forms on the English site and by Jinshuju (金数据) on the Chinese site, and your answers are stored by that service. They are used only to send invitations and to understand who RootMap is for.',
+        'The invite form on the homepage is the one place this website asks for personal information: a way to reach you (your email address on the English site, your WeChat ID on the Chinese site), whether you are a parent, caregiver or teacher, your child’s age or the age group you teach, roughly how much time you have for play and activities on workdays and at weekends, and what you hope RootMap will do for you. The form is hosted by Google Forms on the English site and by Jinshuju (金数据) on the Chinese site, and your answers are stored by that service. They are used only to send invitations and to decide what RootMap should become.',
         'The RootMap app is a separate product. It stores data on your device by default; its optional account (beta) syncs data across devices.',
       ],
       draft: 'Draft: this is not a privacy policy. A full privacy policy for the website and the app has not been published yet.',
