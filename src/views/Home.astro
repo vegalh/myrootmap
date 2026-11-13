@@ -214,7 +214,7 @@ const home = copy.home;
   .hero__title {
     display: flex;
     flex-direction: column;
-    font-size: clamp(2.9rem, 1.4rem + 6.4vw, 5.4rem);
+    font-size: var(--step-5);
     line-height: 1.02;
     letter-spacing: -0.025em;
     text-wrap: initial;
@@ -229,7 +229,6 @@ const home = copy.home;
     color: var(--terracotta-700);
   }
   :lang(zh) .hero__title {
-    font-size: clamp(2.6rem, 1.2rem + 5.4vw, 4.6rem);
     line-height: 1.25;
     letter-spacing: 0.02em;
   }
@@ -339,12 +338,6 @@ const home = copy.home;
       grid-column: 1 / 7;
       gap: var(--space-6);
     }
-    .hero__title {
-      font-size: clamp(2.9rem, 0.4rem + 4.6vw, 4.75rem);
-    }
-    :lang(zh) .hero__title {
-      font-size: clamp(2.6rem, 0.4rem + 4.2vw, 4.25rem);
-    }
     .hero__art {
       grid-column: 7 / -1;
     }
@@ -386,7 +379,7 @@ const home = copy.home;
     --bot-terra: rgba(217, 139, 98, 0.65);
   }
   .how__title {
-    font-size: var(--step-4);
+    font-size: var(--step-3);
   }
   /* Phones: one step under another, a slice of each screen beside its words */
   .steps {
@@ -423,7 +416,7 @@ const home = copy.home;
     border-radius: 50%;
     background: var(--gold-400);
     color: var(--green-800);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     font-weight: 700;
   }
   .step h3 {
@@ -449,7 +442,7 @@ const home = copy.home;
   }
   .how__note {
     color: rgba(250, 238, 220, 0.72);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
   }
   /* Wide screens: all four in one row, each with its whole screen above its words */
   @media (min-width: 56em) {
@@ -519,13 +512,13 @@ const home = copy.home;
     border-radius: 999px;
     background: var(--gold-100);
     color: var(--ink-soft);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     font-weight: 700;
   }
   .card__label {
     margin-top: var(--space-2);
     color: var(--terracotta-700);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     font-weight: 700;
   }
   .card__materials {

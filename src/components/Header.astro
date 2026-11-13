@@ -189,13 +189,12 @@ const isCurrent = (path: string) => (path === '/' ? current === '/' : current ==
     display: block;
     padding: 0.95rem 0;
     font-family: var(--font-serif);
-    font-size: 1.5rem;
+    font-size: var(--step-2);
     font-weight: 500;
     color: var(--green-700);
   }
   :global(:lang(zh)) [data-open] .site-nav a {
     font-family: var(--font-serif-zh);
-    font-size: 1.3rem;
   }
   [data-open] .site-nav a[aria-current='page'] {
     color: var(--terracotta-700);
