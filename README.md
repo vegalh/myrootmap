@@ -65,7 +65,7 @@ Use `npm run preview` to view the latest build. Stop background servers with `np
 ### Add a photo
 
 1. Save the image in the matching folder inside `public/images/`.
-2. Open `src/config/images.ts` and enter its website path in the matching `src` field. For a founder portrait, use a path such as `/images/founder/portrait.jpg`.
+2. Open `src/config/images.ts` and enter its website path in the matching `src` field. For a founder portrait, use a path such as `/images/about/founder-portrait.jpg`. Every picture file is listed in [IMAGES.md](IMAGES.md).
 3. Add a short image description in both language files so people using screen readers can understand it.
 
 JPEG and WebP work well for photos. Aim for 1600–2400 pixels on the long edge and a file size under about 400 KB.
