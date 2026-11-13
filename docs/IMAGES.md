@@ -4,6 +4,9 @@ Every picture file lives in `public/images/`, in a folder named for the page tha
 the page it goes, then what it shows. Where each one is placed, and how it is cropped, is set in
 `src/config/images.ts`; the description read aloud by screen readers is in `src/i18n/en.ts` and `zh.ts`.
 
+Full-size originals of some photographs (before they were made smaller for the web) are kept in `design/photo-originals/`,
+named the same way. They are not published.
+
 To replace a picture, save the new file over the old one with the same name. To use a different name, change the path
 in `src/config/images.ts` as well.
 

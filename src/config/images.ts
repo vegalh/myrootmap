@@ -1,5 +1,5 @@
 // Every photograph and illustration slot on the website, in one place.
-// A full list of the picture files, what each shows and where it appears, is in IMAGES.md at the top of the project.
+// A full list of the picture files, what each shows and where it appears, is in docs/IMAGES.md.
 // Files are grouped by the page that uses them, and named for their place on that page.
 //
 // To add an image: put the file in the folder shown (under public/images/), then set `src` to its path,

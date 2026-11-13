@@ -14,7 +14,7 @@ export const APP_LOGIN_URL = `${APP_URL}#/sign-in`;
 //   en: Google Forms. In the form, choose Send › "<>" (embed) and paste the address from its src="…" here; it ends
 //       in "/viewform?embedded=true".
 //   zh: Jinshuju (金数据), which loads in mainland China. Paste the form's embed address (发布 › 嵌入网页).
-// Both forms ask the same questions in the same order (the full wording is in INVITE-FORM.md): how to reach you
+// Both forms ask the same questions in the same order (the full wording is in docs/INVITE-FORM.md): how to reach you
 // (email on Google Forms, WeChat ID on Jinshuju; required); parent / caregiver / teacher; the child's age or the age
 // group taught; time for play and activities on a workday; the same at the weekend; what RootMap would be useful
 // for; what to improve or add. Set each form to show a thank-you message rather than redirect.
