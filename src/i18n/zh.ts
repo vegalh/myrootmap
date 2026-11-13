@@ -44,7 +44,7 @@ export const zh: Dict = {
     placeholder: '占位',
     imagePlaceholder: '图片待添加',
     screenshotPlaceholder: '截图待添加',
-    // 全站统一的行动按钮，指向首页的邀请申请表（#invite）。
+    // 全站统一的行动按钮，指向“申请邀请”页面（/zh/invite）。
     cta: '申请邀请',
     opensApp: '打开 RootMap 应用',
     newWindow: '在新标签页打开',
@@ -137,14 +137,18 @@ export const zh: Dict = {
       link: '读读我的故事',
       imageAlt: 'RootMap 创始人的照片',
     },
-    // 邀请申请表是嵌入的第三方表单，链接在 src/config/site.ts 中设置（INVITE_FORM_URLS）。
-    invite: {
-      title: '申请邀请',
-      body: '我们正在分小批邀请家庭和老师。轮到你时，会通过微信联系你。',
-      formTitle: '邀请申请表',
-      privacy: '我们如何使用你填写的信息',
-      setup: '在 src/config/site.ts（INVITE_FORM_URLS）中填入表单链接后，表单会显示在这里。仅在开发时显示。',
-    },
+  },
+
+  // “申请邀请”页面（/zh/invite）。网站上所有“申请邀请”按钮都指向这里。首页结尾有一个简短版本：title、body 和一个按钮。
+  // 表单是嵌入的第三方表单，链接在 src/config/site.ts 中设置（INVITE_FORM_URLS）。
+  invite: {
+    title: '申请邀请',
+    description: 'RootMap 目前处于内测阶段，凭邀请使用。为你的家庭或班级申请邀请。',
+    body: '我们正在分小批邀请家庭和老师。轮到你时，会通过微信联系你。',
+    access: '内测阶段，凭邀请使用，内测期间免费。填写大约需要一分钟。',
+    formTitle: '邀请申请表',
+    privacy: '我们如何使用你填写的信息',
+    setup: '在 src/config/site.ts（INVITE_FORM_URLS）中填入表单链接后，表单会显示在这里。仅在开发时显示。',
   },
 
   philosophy: {
@@ -535,7 +539,7 @@ export const zh: Dict = {
       heading: '隐私',
       body: [
         '本网站不使用 Cookie、分析工具或广告追踪。',
-        '首页的邀请申请表，是本网站唯一会请你填写个人信息的地方：联系方式（中文站填微信号，英文站填邮箱），你是父母、照护者还是老师，孩子的年龄或你所教的年龄段，工作日和周末大约有多少时间陪孩子玩耍和做活动，以及你希望 RootMap 帮你做什么。中文站的表单由金数据提供，英文站的表单由 Google Forms 提供，你填写的内容保存在相应的服务上，只用于发送邀请和决定 RootMap 接下来怎么做。',
+        '网站上的邀请申请表，是本网站唯一会请你填写个人信息的地方：联系方式（中文站填微信号，英文站填邮箱），你是父母、照护者还是老师，孩子的年龄或你所教的年龄段，工作日和周末大约有多少时间陪孩子玩耍和做活动，以及你希望 RootMap 帮你做什么。中文站的表单由金数据提供，英文站的表单由 Google Forms 提供，你填写的内容保存在相应的服务上，只用于发送邀请和决定 RootMap 接下来怎么做。',
         'RootMap 应用是一个独立的产品。它默认把数据保存在你的设备上；可选的账号（测试版）会在多台设备之间同步数据。',
       ],
       draft: '草稿：这不是隐私政策。网站和应用的完整隐私政策尚未发布。',

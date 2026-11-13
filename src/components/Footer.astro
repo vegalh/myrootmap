@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { localePath, t, type Lang } from '../i18n';
+import { invitePath, localePath, t, type Lang } from '../i18n';
 import { APP_URL } from '../config/site';
 
 interface Props {
@@ -16,7 +16,7 @@ const explore = [
   { path: '/community', label: copy.nav.community },
 ];
 const more = [
-  { href: `${localePath(lang)}#invite`, label: copy.common.cta },
+  { href: invitePath(lang), label: copy.common.cta },
   { href: APP_URL, label: copy.nav.haveInvite },
   { href: localePath(lang, '/about'), label: copy.footer.about },
   { href: localePath(lang, '/privacy'), label: copy.footer.privacy },

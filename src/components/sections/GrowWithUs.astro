@@ -5,7 +5,7 @@
 // and until the community surveys have links, their questions are asked in the invite form on the homepage.
 import Botanical from '../Botanical.astro';
 import GrowOnScroll from './GrowOnScroll.astro';
-import { localePath, t, type Lang } from '../../i18n';
+import { invitePath, localePath, t, type Lang } from '../../i18n';
 import { FEEDBACK_URL, SURVEY_URLS } from '../../config/site';
 
 interface Props {
@@ -59,7 +59,7 @@ const paragraphs = FEEDBACK_URL ? grow.paragraphs : grow.paragraphs.slice(0, 1);
           ) : (
             <>
               <p>{grow.community.inForm}</p>
-              <a class="btn btn--go" href={`${localePath(lang)}#invite`}>{copy.common.cta}<span aria-hidden="true">→</span></a>
+              <a class="btn btn--go" href={invitePath(lang)}>{copy.common.cta}<span aria-hidden="true">→</span></a>
             </>
           )
         }

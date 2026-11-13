@@ -43,7 +43,7 @@ export const en = {
     placeholder: 'Placeholder',
     imagePlaceholder: 'Image to come',
     screenshotPlaceholder: 'Screenshot to come',
-    // The one call to action, used everywhere. It leads to the invite form on the homepage (#invite).
+    // The one call to action, used everywhere. It leads to the Request an invite page (/invite).
     cta: 'Request an invite',
     opensApp: 'Opens the RootMap app',
     newWindow: 'opens in a new tab',
@@ -52,7 +52,7 @@ export const en = {
   },
 
   // The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder
-  // strip with the invite form, with the ribbon of values between the examples and "Who it's for". What used to sit
+  // strip and a short invitation, with the ribbon of values between the examples and "Who it's for". What used to sit
   // here now lives on its own page: "Why RootMap" and "Inspired by" under `philosophy`, the founder's full note under `about`, "Explore more" and "Grow with us" under
   // `community`. Photograph slots are listed in src/config/images.ts; the invite form links in src/config/site.ts.
   home: {
@@ -142,14 +142,19 @@ export const en = {
       link: 'Read my story',
       imageAlt: 'A portrait of RootMap’s founder',
     },
-    // The invite form itself is a hosted form, embedded from the links in src/config/site.ts (INVITE_FORM_URLS).
-    invite: {
-      title: 'Request an invite',
-      body: 'We’re inviting families and teachers in small groups. You’ll hear from us by email.',
-      formTitle: 'Invite request form',
-      privacy: 'How we use your details',
-      setup: 'The form will appear here once its link is added in src/config/site.ts (INVITE_FORM_URLS). Shown only while developing.',
-    },
+  },
+
+  // The Request an invite page (/invite). Every "Request an invite" button on the site leads here. The homepage ends
+  // with a short version: `title`, `body` and a button. The form itself is a hosted form, embedded from the links in
+  // src/config/site.ts (INVITE_FORM_URLS).
+  invite: {
+    title: 'Request an invite',
+    description: 'RootMap is in early access, by invitation. Request an invite for your family or classroom.',
+    body: 'We’re inviting families and teachers in small groups. You’ll hear from us by email.',
+    access: 'Early access, by invitation. Free during early access. The form takes about a minute.',
+    formTitle: 'Invite request form',
+    privacy: 'How we use your details',
+    setup: 'The form will appear here once its link is added in src/config/site.ts (INVITE_FORM_URLS). Shown only while developing.',
   },
 
   philosophy: {
@@ -542,7 +547,7 @@ export const en = {
       heading: 'Privacy',
       body: [
         'This website does not use cookies, analytics or advertising trackers.',
-        'The invite form on the homepage is the one place this website asks for personal information: a way to reach you (your email address on the English site, your WeChat ID on the Chinese site), whether you are a parent, caregiver or teacher, your child’s age or the age group you teach, roughly how much time you have for play and activities on workdays and at weekends, and what you hope RootMap will do for you. The form is hosted by Google Forms on the English site and by Jinshuju (金数据) on the Chinese site, and your answers are stored by that service. They are used only to send invitations and to decide what RootMap should become.',
+        'The invite request form on this website is the one place this website asks for personal information: a way to reach you (your email address on the English site, your WeChat ID on the Chinese site), whether you are a parent, caregiver or teacher, your child’s age or the age group you teach, roughly how much time you have for play and activities on workdays and at weekends, and what you hope RootMap will do for you. The form is hosted by Google Forms on the English site and by Jinshuju (金数据) on the Chinese site, and your answers are stored by that service. They are used only to send invitations and to decide what RootMap should become.',
         'The RootMap app is a separate product. It stores data on your device by default; its optional account (beta) syncs data across devices.',
       ],
       draft: 'Draft: this is not a privacy policy. A full privacy policy for the website and the app has not been published yet.',

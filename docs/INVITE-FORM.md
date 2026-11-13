@@ -1,6 +1,6 @@
 # The invite request form
 
-The homepage's "Request an invite" section shows a hosted form: Google Forms on the English page, Jinshuju (金数据)
+The Request an invite page (`/invite` and `/zh/invite`; every "Request an invite" button leads there) shows a hosted form: Google Forms on the English page, Jinshuju (金数据)
 on the Chinese page. Build both with the questions below, in this order, so the answers line up in one spreadsheet.
 Then paste each form's embed address into `INVITE_FORM_URLS` in `src/config/site.ts`.
 

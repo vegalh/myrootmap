@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Screenshot from '../components/Screenshot.astro';
-import { localePath, t, type Lang } from '../i18n';
+import { invitePath, localePath, t, type Lang } from '../i18n';
 import { SCREENSHOTS } from '../config/images';
 
 interface Props {
@@ -17,7 +17,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <BaseLayout lang={lang} title={page.title} description={page.description}>
   <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead}>
     <div class="btn-row intro-actions">
-      <a class="btn" href={`${localePath(lang)}#invite`}>{copy.common.cta}</a>
+      <a class="btn" href={invitePath(lang)}>{copy.common.cta}</a>
     </div>
     <p class="muted small">{page.demoNote}</p>
   </PageIntro>
@@ -74,7 +74,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <h2 id="features-cta">{page.cta.title}</h2>
         <p>{page.cta.body}</p>
       </div>
-      <a class="btn btn--light" href={`${localePath(lang)}#invite`}>{copy.common.cta}</a>
+      <a class="btn btn--light" href={invitePath(lang)}>{copy.common.cta}</a>
     </div>
   </section>
 </BaseLayout>

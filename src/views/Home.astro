@@ -1,6 +1,7 @@
 ---
 // The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder strip
-// with the invite form. Copy: `home` in src/i18n. Image slots: src/config/images.ts. Invite form links: src/config/site.ts.
+// and a short invitation. Copy: `home` and `invite` in src/i18n. Image slots: src/config/images.ts.
+// Every "Request an invite" button opens the Request an invite page (src/views/Invite.astro), where the form is.
 // The longer blocks that used to be here are in src/components/sections/ and shown on Our Philosophy, About and Community.
 import '@fontsource-variable/fraunces/wght-italic.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -8,8 +9,7 @@ import Botanical from '../components/Botanical.astro';
 import Figure from '../components/Figure.astro';
 import Screenshot from '../components/Screenshot.astro';
 import ValuesRibbon from '../components/ValuesRibbon.astro';
-import { localePath, t, type Lang } from '../i18n';
-import { INVITE_FORM_URLS, SHOW_DESIGN_PLACEHOLDERS } from '../config/site';
+import { invitePath, localePath, t, type Lang } from '../i18n';
 import { IMAGES, SCREENSHOTS } from '../config/images';
 
 interface Props {
@@ -18,7 +18,6 @@ interface Props {
 const { lang } = Astro.props;
 const copy = t(lang);
 const home = copy.home;
-const formUrl = INVITE_FORM_URLS[lang];
 ---
 
 <BaseLayout lang={lang} title={home.title} fullTitle>
@@ -37,7 +36,7 @@ const formUrl = INVITE_FORM_URLS[lang];
         </h1>
         <p class="hero__lead">{home.hero.body}</p>
         <div class="hero__actions">
-          <a class="btn btn--go" href="#invite">{copy.common.cta}<span aria-hidden="true">→</span></a>
+          <a class="btn btn--go" href={invitePath(lang)}>{copy.common.cta}<span aria-hidden="true">→</span></a>
           <a class="text-link" href="#how">{home.hero.secondary}</a>
         </div>
         <p class="hero__access">{home.hero.access}</p>
@@ -116,7 +115,7 @@ const formUrl = INVITE_FORM_URLS[lang];
           ))
         }
       </ul>
-      <a class="btn btn--go examples__cta" href="#invite">{copy.common.cta}<span aria-hidden="true">→</span></a>
+      <a class="btn btn--go examples__cta" href={invitePath(lang)}>{copy.common.cta}<span aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -146,7 +145,7 @@ const formUrl = INVITE_FORM_URLS[lang];
     </div>
   </section>
 
-  <!-- 5. The founder strip, then the invite form -->
+  <!-- 5. The founder strip, then a short invitation that opens the Request an invite page -->
   <section class="section section--tight founder" id="founder" aria-labelledby="founder-title">
     <div class="container founder__strip">
       <div class="founder__art">
@@ -161,23 +160,12 @@ const formUrl = INVITE_FORM_URLS[lang];
     </div>
   </section>
 
+  <!-- id="invite" stays, so older links to /#invite still land here -->
   <section class="section section--sage invite" id="invite" aria-labelledby="invite-title">
     <div class="container container--narrow invite__inner">
-      <h2 class="section-title" id="invite-title">{home.invite.title}</h2>
-      <p class="invite__body">{home.invite.body}</p>
-      {
-        formUrl ? (
-          <iframe class="invite__frame" src={formUrl} title={home.invite.formTitle} loading="lazy" />
-        ) : (
-          SHOW_DESIGN_PLACEHOLDERS && (
-            <p class="draft-note">
-              <span class="tag tag--draft">{copy.common.placeholder}</span>
-              <span>{home.invite.setup}</span>
-            </p>
-          )
-        )
-      }
-      <a class="text-link" href={localePath(lang, '/privacy')}>{home.invite.privacy}</a>
+      <h2 class="section-title" id="invite-title">{copy.invite.title}</h2>
+      <p class="invite__body">{copy.invite.body}</p>
+      <a class="btn btn--go" href={invitePath(lang)}>{copy.common.cta}<span aria-hidden="true">→</span></a>
     </div>
   </section>
 </BaseLayout>
@@ -681,9 +669,8 @@ const formUrl = INVITE_FORM_URLS[lang];
     line-height: 1.8;
   }
 
-  /* The invite form: a hosted form in a frame */
+  /* The closing invitation */
   .invite {
-    /* Clear of the sticky header when a "Request an invite" link jumps here */
     scroll-margin-top: var(--header-h);
   }
   .invite__inner {
@@ -696,18 +683,11 @@ const formUrl = INVITE_FORM_URLS[lang];
     font-size: var(--step-1);
     line-height: 1.6;
   }
-  /* Hosted forms do not report their height, so the frame is given room for four questions and scrolls beyond that.
-     Adjust --invite-frame-h once the real forms are in. */
-  .invite__frame {
-    width: 100%;
-    height: var(--invite-frame-h, 52rem);
-    margin-block: var(--space-3);
-    border: 1px solid var(--line);
-    border-radius: 1.5rem;
-    background: var(--white);
-  }
-  .invite .draft-note {
-    margin-block: var(--space-3);
+  @media (max-width: 35.99em) {
+    .invite__inner .btn {
+      width: 100%;
+      min-height: 3.25rem;
+    }
   }
   #how {
     scroll-margin-top: var(--header-h);

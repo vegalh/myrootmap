@@ -7,7 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Figure from '../components/Figure.astro';
 import InspiredBy from '../components/sections/InspiredBy.astro';
-import { localePath, t, type Lang } from '../i18n';
+import { invitePath, localePath, t, type Lang } from '../i18n';
 import { SHOW_DESIGN_PLACEHOLDERS } from '../config/site';
 import { IMAGES } from '../config/images';
 
@@ -105,7 +105,7 @@ const sectionImages: Record<string, { image: typeof IMAGES.philosophyRealExperie
     <div class="container cta">
       <h2>{page.cta.title}</h2>
       <div class="btn-row">
-        <a class="btn" href={`${localePath(lang)}#invite`}>{copy.common.cta}</a>
+        <a class="btn" href={invitePath(lang)}>{copy.common.cta}</a>
         <a class="btn btn--secondary" href={localePath(lang, '/features')}>{page.cta.features}</a>
       </div>
     </div>

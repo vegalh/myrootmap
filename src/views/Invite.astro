@@ -1,0 +1,102 @@
+---
+// Request an invite: where every "Request an invite" button on the site leads. A title, one sentence on what happens
+// next, the hosted form (Google Forms in English, Jinshuju in Chinese; links in src/config/site.ts) and the privacy
+// link. Copy: `invite` in src/i18n. The questions themselves are listed in docs/INVITE-FORM.md.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botanical from '../components/Botanical.astro';
+import { localePath, t, type Lang } from '../i18n';
+import { INVITE_FORM_URLS, SHOW_DESIGN_PLACEHOLDERS } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.invite;
+const formUrl = INVITE_FORM_URLS[lang];
+---
+
+<BaseLayout lang={lang} title={page.title} description={page.description}>
+  <section class="invite">
+    <div class="container container--narrow">
+      <span class="invite__sprig" aria-hidden="true"><Botanical name="catSeedling" /></span>
+      <h1>{page.title}</h1>
+      <p class="invite__body">{page.body}</p>
+      <p class="invite__access">{page.access}</p>
+
+      {
+        formUrl ? (
+          <iframe class="invite__frame" src={formUrl} title={page.formTitle} />
+        ) : (
+          SHOW_DESIGN_PLACEHOLDERS && (
+            <p class="draft-note invite__setup">
+              <span class="tag tag--draft">{copy.common.placeholder}</span>
+              <span>{page.setup}</span>
+            </p>
+          )
+        )
+      }
+
+      <a class="text-link" href={localePath(lang, '/privacy')}>{page.privacy}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .invite {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--section-y);
+    background: linear-gradient(to bottom, var(--cream-100), var(--sage-100));
+  }
+  .invite__sprig {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-4);
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--gold-100);
+  }
+  .invite__sprig :global(.botanical) {
+    width: 2.6rem;
+  }
+  h1 {
+    font-size: var(--step-5);
+    line-height: 1.05;
+  }
+  :lang(zh) h1 {
+    line-height: 1.25;
+  }
+  .invite__body {
+    max-width: 34rem;
+    margin-top: var(--space-4);
+    color: var(--ink);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .invite__access {
+    margin-top: var(--space-2);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  /* Hosted forms do not report their height, so the frame is given room for the questions and scrolls beyond that.
+     Adjust --invite-frame-h once the real forms are in. */
+  .invite__frame {
+    display: block;
+    width: 100%;
+    height: var(--invite-frame-h, 64rem);
+    margin-block: var(--space-6) var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+    background: var(--white);
+  }
+  .invite__setup {
+    margin-block: var(--space-6) var(--space-5);
+  }
+  .invite .text-link {
+    margin-top: var(--space-5);
+  }
+  .invite__frame + .text-link,
+  .invite__setup + .text-link {
+    margin-top: 0;
+  }
+</style>

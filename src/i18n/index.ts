@@ -33,6 +33,11 @@ export function localePath(lang: Lang, path = '/'): string {
   return url(prefixed);
 }
 
+// The Request an invite page, where every "Request an invite" button leads.
+export function invitePath(lang: Lang): string {
+  return localePath(lang, '/invite');
+}
+
 // The language-neutral page path of a URL pathname: '/myrootmap/zh/blog/' → '/blog'.
 export function pagePath(pathname: string): string {
   let path = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname;

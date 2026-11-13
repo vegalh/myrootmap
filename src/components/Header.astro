@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import LangSwitch from './LangSwitch.astro';
-import { localePath, pagePath, t, type Lang } from '../i18n';
+import { invitePath, localePath, pagePath, t, type Lang } from '../i18n';
 import { APP_URL } from '../config/site';
 
 interface Props {
@@ -52,7 +52,7 @@ const isCurrent = (path: string) => (path === '/' ? current === '/' : current ==
       <div class="site-header__actions">
         <LangSwitch lang={lang} alternates={alternates} />
         <a class="site-header__invited" href={APP_URL}>{copy.nav.haveInvite}</a>
-        <a class="btn btn--small" href={`${localePath(lang)}#invite`}>{copy.common.cta}</a>
+        <a class="btn btn--small" href={invitePath(lang)}>{copy.common.cta}</a>
       </div>
     </div>
   </div>
