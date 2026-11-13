@@ -53,7 +53,7 @@ export const zh: Dict = {
   },
 
   // 首页，共五个简短的部分：开场、怎么用、两张真实的活动卡、适合谁用，以及创始人简介和邀请申请表。
-  // 原先放在首页的内容已各归其位：“为什么有 RootMap”“灵感来源”和价值观滚动条在 `philosophy`，创始人的完整介绍在 `about`，
+  // 原先放在首页的内容已各归其位：“为什么有 RootMap”和“灵感来源”在 `philosophy`（价值观滚动条留在首页），创始人的完整介绍在 `about`，
   // “探索更多”和“一起成长”在 `community`。
   home: {
     title: 'RootMap：和孩子一起成长',
@@ -64,6 +64,23 @@ export const zh: Dict = {
       secondary: '看看怎么用',
       imageAlt: '大人和孩子一起准备黄瓜',
       shotAlt: 'RootMap 的“今日”页面',
+    },
+    // 滚动的价值观词条。accent 为 true 的词以陶土色显示。
+    values: {
+      label: '童年为这些留出空间',
+      pause: '暂停滚动的文字',
+      play: '继续滚动文字',
+      words: [
+        { text: '专注', accent: false },
+        { text: '独立', accent: false },
+        { text: '创造力', accent: true },
+        { text: '好奇心', accent: false },
+        { text: '韧性', accent: false },
+        { text: '想象力', accent: true },
+        { text: '逻辑思维', accent: false },
+        { text: '探索', accent: false },
+        { text: '成长', accent: true },
+      ],
     },
     how: {
       title: '怎么用',
@@ -263,23 +280,6 @@ export const zh: Dict = {
         note: '用你自己的话写一句感想',
         hint: '设计占位，仅在开发时显示。请在 src/config/inspirations.ts 中添加真实条目。',
       },
-    },
-    // 滚动的价值观词条。accent 为 true 的词以陶土色显示。
-    values: {
-      label: '童年为这些留出空间',
-      pause: '暂停滚动的文字',
-      play: '继续滚动文字',
-      words: [
-        { text: '专注', accent: false },
-        { text: '独立', accent: false },
-        { text: '创造力', accent: true },
-        { text: '好奇心', accent: false },
-        { text: '韧性', accent: false },
-        { text: '想象力', accent: true },
-        { text: '逻辑思维', accent: false },
-        { text: '探索', accent: false },
-        { text: '成长', accent: true },
-      ],
     },
   },
 

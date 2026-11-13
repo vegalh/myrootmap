@@ -52,8 +52,8 @@ export const en = {
   },
 
   // The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder
-  // strip with the invite form. What used to sit here now lives on its own page: "Why RootMap", "Inspired by" and the
-  // values ribbon under `philosophy`, the founder's full note under `about`, "Explore more" and "Grow with us" under
+  // strip with the invite form, with the ribbon of values between the examples and "Who it's for". What used to sit
+  // here now lives on its own page: "Why RootMap" and "Inspired by" under `philosophy`, the founder's full note under `about`, "Explore more" and "Grow with us" under
   // `community`. Photograph slots are listed in src/config/images.ts; the invite form links in src/config/site.ts.
   home: {
     title: 'RootMap: Grow with your child',
@@ -65,6 +65,23 @@ export const en = {
       secondary: 'See how it works',
       imageAlt: 'An adult and a child preparing cucumber together',
       shotAlt: 'The Today screen in RootMap',
+    },
+    // The moving ribbon of values. `accent` words are shown in terracotta.
+    values: {
+      label: 'What childhood makes room for',
+      pause: 'Pause the moving words',
+      play: 'Resume the moving words',
+      words: [
+        { text: 'Focus', accent: false },
+        { text: 'Independence', accent: false },
+        { text: 'Creativity', accent: true },
+        { text: 'Curiosity', accent: false },
+        { text: 'Resilience', accent: false },
+        { text: 'Imagination', accent: true },
+        { text: 'Logical Thinking', accent: false },
+        { text: 'Exploration', accent: false },
+        { text: 'Growth', accent: true },
+      ],
     },
     how: {
       title: 'How it works',
@@ -268,23 +285,6 @@ export const en = {
         note: 'A short reflection in your own words',
         hint: 'Design placeholders, shown only while developing. Add real entries in src/config/inspirations.ts.',
       },
-    },
-    // The moving ribbon of values. `accent` words are shown in terracotta.
-    values: {
-      label: 'What childhood makes room for',
-      pause: 'Pause the moving words',
-      play: 'Resume the moving words',
-      words: [
-        { text: 'Focus', accent: false },
-        { text: 'Independence', accent: false },
-        { text: 'Creativity', accent: true },
-        { text: 'Curiosity', accent: false },
-        { text: 'Resilience', accent: false },
-        { text: 'Imagination', accent: true },
-        { text: 'Logical Thinking', accent: false },
-        { text: 'Exploration', accent: false },
-        { text: 'Growth', accent: true },
-      ],
     },
   },
 

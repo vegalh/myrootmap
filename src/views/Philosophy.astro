@@ -1,11 +1,14 @@
 ---
+// Our Philosophy, set out like an essay in print: a title, one wide photograph, "Childhood happens in the real world"
+// with its photographs, the six things RootMap cares about as a plain list, then the longer sections one after another.
+// No small labels above headings, no numbered sections and no contents box: the page is meant to be read, not scanned.
+// Copy: `philosophy` in src/i18n. Photographs: src/config/images.ts.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Figure from '../components/Figure.astro';
-import { localePath, t, type Lang } from '../i18n';
-import WhyRootMap from '../components/sections/WhyRootMap.astro';
 import InspiredBy from '../components/sections/InspiredBy.astro';
-import ValuesRibbon from '../components/ValuesRibbon.astro';
+import { localePath, t, type Lang } from '../i18n';
+import { SHOW_DESIGN_PLACEHOLDERS } from '../config/site';
 import { IMAGES } from '../config/images';
 
 interface Props {
@@ -14,76 +17,89 @@ interface Props {
 const { lang } = Astro.props;
 const copy = t(lang);
 const page = copy.philosophy;
-const pad = (n: number) => String(n).padStart(2, '0');
+const why = page.why;
 
 // Photographs placed after particular sections (see src/config/images.ts).
-const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
-  'real-experiences': IMAGES.philosophyRealExperiences,
-  independence: IMAGES.philosophyIndependence,
+const sectionImages: Record<string, { image: typeof IMAGES.philosophyRealExperiences; alt: string }> = {
+  'real-experiences': { image: IMAGES.philosophyRealExperiences, alt: '' },
+  independence: { image: IMAGES.philosophyIndependence, alt: '' },
 };
 ---
 
 <BaseLayout lang={lang} title={page.title} description={page.description}>
-  <PageIntro eyebrow={page.eyebrow} title={page.heading} lead={page.lead} />
+  <PageIntro title={page.heading} lead={page.lead} />
 
   <div class="container">
     <Figure image={IMAGES.philosophyHero} alt={page.heroImageAlt} placeholder={copy.common.imagePlaceholder} eager />
   </div>
 
-  <section class="section">
-    <div class="container essay">
-      <nav class="essay__toc" aria-labelledby="toc-label">
-        <p id="toc-label" class="essay__toc-label">{page.contentsLabel}</p>
-        <ol role="list">
-          {page.sections.map((s, i) => (
-            <li>
-              <a href={`#${s.id}`}><span aria-hidden="true">{pad(i + 1)}</span> {s.title}</a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+  <!-- Childhood happens in the real world (moved here from the homepage) -->
+  <section class="section why" id="why" aria-labelledby="why-title">
+    <div class="container why__top">
+      <div class="why__text">
+        <h2 class="why__title" id="why-title">{why.title}</h2>
+        {why.intro.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="why__collage">
+        <Figure class="why__photo" image={IMAGES.homeChildhoodMain} alt={why.imageAlt} caption={why.caption} placeholder={copy.common.imagePlaceholder} />
+        <Figure class="why__detail" image={IMAGES.homeChildhoodDetail} alt={why.detailAlt} placeholder={copy.common.imagePlaceholder} />
+      </div>
+    </div>
 
-      <div class="essay__body">
+    <!-- What RootMap cares about: six short entries, read down like a list in a book -->
+    <div class="container cares">
+      <h3 class="cares__title">{why.ideasLabel}</h3>
+      <dl class="cares__list">
         {
-          page.sections.map((s, i) => (
+          why.ideas.map((idea) => (
+            <div class="cares__item">
+              <dt>{idea.title}</dt>
+              <dd>{idea.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- The longer thinking, one section after another -->
+  <section class="section section--cream essay-band">
+    <div class="container">
+      <article class="essay">
+        {
+          page.sections.map((s) => (
             <section class="essay__section" aria-labelledby={s.id}>
-              <p class="essay__num" aria-hidden="true">{pad(i + 1)}</p>
               <h2 id={s.id}>{s.title}</h2>
-              <div class="essay__text">
-                {s.paragraphs.map((p) => <p>{p}</p>)}
-              </div>
+              {s.paragraphs.map((p) => <p>{p}</p>)}
               {s.note ? (
-                <aside class="essay__note">
+                <blockquote class="essay__note">
                   <p>{s.note}</p>
-                </aside>
+                </blockquote>
               ) : (
-                <aside class="draft-note essay__slot">
-                  <strong>{copy.common.authorNote}</strong>
-                  <span>{copy.common.authorNoteHint}</span>
-                </aside>
+                SHOW_DESIGN_PLACEHOLDERS && (
+                  <aside class="draft-note essay__slot">
+                    <strong>{copy.common.authorNote}</strong>
+                    <span>{copy.common.authorNoteHint}</span>
+                  </aside>
+                )
               )}
               {sectionImages[s.id] && (
-                <Figure class="essay__figure" image={sectionImages[s.id]} alt="" placeholder={copy.common.imagePlaceholder} />
+                <Figure class="essay__figure" image={sectionImages[s.id].image} alt={sectionImages[s.id].alt} placeholder={copy.common.imagePlaceholder} />
               )}
             </section>
           ))
         }
 
-        <aside class="evidence">
-          <h2>{page.evidence.title}</h2>
+        <aside class="evidence" aria-labelledby="evidence-title">
+          <h2 id="evidence-title">{page.evidence.title}</h2>
           <p>{page.evidence.body}</p>
         </aside>
-      </div>
+      </article>
     </div>
   </section>
 
-  <!-- Moved here from the homepage: why RootMap exists and the six things it cares about, the collection of
-       influences (shown once it has entries) and the ribbon of values. -->
-  <WhyRootMap lang={lang} />
+  <!-- Shown only once src/config/inspirations.ts has entries -->
   <InspiredBy lang={lang} />
-  <div class="ribbon-seam">
-    <ValuesRibbon label={page.values.label} words={page.values.words} />
-  </div>
 
   <section class="section section--sage section--tight">
     <div class="container cta">
@@ -97,81 +113,167 @@ const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
 </BaseLayout>
 
 <style>
-  /* The ribbon sits on the seam between the page and the closing band */
-  .ribbon-seam {
-    --ribbon-to: var(--sage-100);
+  /* Photographs: soft corners on a quiet placeholder */
+  section :global(.figure) {
+    --figure-radius: 1.5rem;
+    --figure-placeholder-bg: var(--cream-200);
+    --figure-placeholder-ink: var(--line-strong);
   }
 
-  .essay {
+  /* Childhood happens in the real world */
+  .why__top {
     display: grid;
-    gap: var(--space-7);
+    gap: var(--space-8);
   }
-  .essay__toc {
-    padding-bottom: var(--space-5);
-    border-bottom: 1px solid var(--line);
-  }
-  .essay__toc-label {
-    margin-bottom: var(--space-3);
-    color: var(--muted);
-    font-size: var(--step--2);
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .essay__toc li + li {
-    margin-top: var(--space-2);
-  }
-  .essay__toc a {
-    color: var(--ink-soft);
-    font-size: var(--step--1);
-    text-decoration: none;
-  }
-  .essay__toc a:hover {
-    color: var(--green-700);
-  }
-  .essay__toc span {
-    display: inline-block;
-    width: 1.8rem;
-    font-family: var(--font-serif);
-    color: var(--terracotta-700);
-  }
-
-  .essay__body {
-    max-width: 42rem;
-  }
-  .essay__section + .essay__section {
-    margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
-  }
-  .essay__num {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    color: var(--terracotta-700);
-  }
-  .essay__section h2 {
-    margin-top: var(--space-2);
-    font-size: var(--step-3);
-  }
-  .essay__text {
+  .why__text {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    margin-top: var(--space-5);
-    font-size: 1.125rem;
-    line-height: 1.75;
-  }
-  :lang(zh) .essay__text {
-    line-height: 1.95;
-  }
-  .essay__text p:first-child {
-    color: var(--ink);
-  }
-  .essay__text p + p {
+    max-width: 36rem;
     color: var(--ink-soft);
   }
+  .why__title {
+    max-width: 14ch;
+    margin-bottom: var(--space-2);
+    font-size: var(--step-4);
+  }
+  :lang(zh) .why__title {
+    max-width: 12em;
+  }
+  .why__title + p {
+    color: var(--ink);
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+  /* A larger photograph with a small detail tucked over its corner */
+  .why__collage {
+    position: relative;
+    padding-right: 5%;
+  }
+  section :global(.why__photo) {
+    --figure-radius: 1.5rem 6rem 1.5rem 1.5rem;
+  }
+  :global(.why__photo figcaption) {
+    max-width: 30rem;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--green-700);
+  }
+  :global(:lang(zh) .why__photo figcaption) {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+  }
+  section :global(.why__detail) {
+    position: absolute;
+    top: -2.25rem;
+    right: 0;
+    width: 32%;
+    padding: 0.4rem;
+    border-radius: 1.4rem;
+    background: var(--paper);
+    transform: rotate(4deg);
+    --figure-radius: 1.1rem;
+    --figure-placeholder-bg: var(--gold-100);
+  }
+  :global(.why__detail .figure__label code) {
+    display: none;
+  }
+  @media (min-width: 56em) {
+    .why__top {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--space-5);
+      align-items: center;
+    }
+    .why__text {
+      grid-column: 1 / 7;
+    }
+    .why__collage {
+      grid-column: 8 / -1;
+      padding-right: 0;
+    }
+  }
+
+  /* What RootMap cares about: a plain list, a word and a sentence on each line */
+  .cares {
+    margin-top: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  }
+  .cares__title {
+    max-width: 46rem;
+    margin-inline: auto;
+    padding-bottom: var(--space-4);
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  :lang(zh) .cares__title {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .cares__list {
+    max-width: 46rem;
+    margin-inline: auto;
+  }
+  .cares__item {
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .cares__item dt {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--green-700);
+  }
+  :lang(zh) .cares__item dt {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .cares__item dd {
+    color: var(--ink-soft);
+  }
+  @media (min-width: 40em) {
+    .cares__item {
+      grid-template-columns: 12rem 1fr;
+      gap: var(--space-5);
+      align-items: baseline;
+    }
+    :lang(zh) .cares__item {
+      grid-template-columns: 8rem 1fr;
+    }
+  }
+
+  /* The essay: one readable column, sections following on from one another */
+  .essay {
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+  .essay__section + .essay__section {
+    margin-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+  }
+  .essay__section h2 {
+    margin-bottom: var(--space-5);
+    font-size: var(--step-3);
+  }
+  .essay__section p {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+  :lang(zh) .essay__section p {
+    line-height: 1.95;
+  }
+  .essay__section p + p {
+    margin-top: var(--space-4);
+  }
   .essay__note {
-    margin-top: var(--space-5);
+    margin: var(--space-6) 0 0;
     padding-left: var(--space-5);
     border-left: 2px solid var(--terracotta-500);
+  }
+  .essay__section .essay__note p {
     font-family: var(--font-serif);
     font-size: var(--step-1);
     color: var(--green-700);
@@ -181,23 +283,25 @@ const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
     flex-direction: column;
     gap: var(--space-1);
   }
-  .essay__figure {
+  .essay__section :global(.essay__figure) {
+    max-width: 26rem;
     margin-top: var(--space-6);
-    max-width: 30rem;
   }
 
+  /* A note on evidence: a quiet closing paragraph under a rule */
   .evidence {
-    margin-top: var(--space-8);
-    padding: var(--space-6);
-    border-radius: var(--radius-lg);
-    background: var(--cream-100);
+    margin-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line-strong);
   }
   .evidence h2 {
-    font-size: var(--step-2);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
+    font-size: var(--step-1);
   }
   .evidence p {
     color: var(--ink-soft);
+    font-size: var(--step--1);
+    line-height: 1.7;
   }
 
   .cta {
@@ -209,18 +313,7 @@ const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
   .cta h2 {
     font-size: var(--step-3);
   }
-
   @media (min-width: 64em) {
-    .essay {
-      grid-template-columns: 15rem minmax(0, 1fr);
-      gap: var(--space-9);
-    }
-    .essay__toc {
-      position: sticky;
-      top: calc(var(--header-h) + 2rem);
-      align-self: start;
-      border-bottom: 0;
-    }
     .cta {
       flex-direction: row;
       align-items: center;

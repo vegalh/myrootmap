@@ -7,6 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Botanical from '../components/Botanical.astro';
 import Figure from '../components/Figure.astro';
 import Screenshot from '../components/Screenshot.astro';
+import ValuesRibbon from '../components/ValuesRibbon.astro';
 import { localePath, t, type Lang } from '../i18n';
 import { INVITE_FORM_URLS, SHOW_DESIGN_PLACEHOLDERS } from '../config/site';
 import { IMAGES, SCREENSHOTS } from '../config/images';
@@ -118,6 +119,11 @@ const formUrl = INVITE_FORM_URLS[lang];
       <a class="btn btn--go examples__cta" href="#invite">{copy.common.cta}<span aria-hidden="true">→</span></a>
     </div>
   </section>
+
+  <!-- The slow ribbon of words, on the seam between the examples and "Who it's for" -->
+  <div class="ribbon-seam">
+    <ValuesRibbon label={home.values.label} words={home.values.words} />
+  </div>
 
   <!-- 4. Who it's for -->
   <section class="section section--cream who" id="who" aria-labelledby="who-title">
@@ -579,6 +585,11 @@ const formUrl = INVITE_FORM_URLS[lang];
       width: 100%;
       min-height: 3.25rem;
     }
+  }
+
+  /* The ribbon: paper above it, the cream of "Who it's for" below */
+  .ribbon-seam {
+    --ribbon-to: var(--cream-100);
   }
 
   /* Who it's for */
