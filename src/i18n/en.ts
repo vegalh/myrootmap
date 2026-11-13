@@ -58,9 +58,9 @@ export const en = {
   home: {
     title: 'RootMap: Grow with your child',
     hero: {
-      eyebrow: 'For parents, caregivers, and teachers of children ages 2–6',
       titleLines: ['Grow with', 'your child.'],
-      body: 'A web app that gives you one simple, screen-free activity to do with your child today, and a place to keep what you notice.',
+      // No small label above the title: who it is for is said here, in the sentence itself.
+      body: 'A web app for parents, caregivers, and teachers of children ages 2–6. It gives you one simple, screen-free activity to do together today, and a place to keep what you notice.',
       access: 'Early access, by invitation. Free during early access.',
       secondary: 'See how it works',
       imageAlt: 'An adult and a child preparing cucumber together',

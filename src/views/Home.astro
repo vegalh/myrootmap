@@ -25,7 +25,6 @@ const formUrl = INVITE_FORM_URLS[lang];
   <section class="hero" aria-labelledby="hero-title">
     <div class="container hero__grid">
       <div class="hero__text">
-        <p class="kicker"><Botanical name="sprig" />{home.hero.eyebrow}</p>
         <h1 class="hero__title" id="hero-title">
           {
             home.hero.titleLines.map((line) => (
@@ -149,7 +148,7 @@ const formUrl = INVITE_FORM_URLS[lang];
         <Figure class="founder__photo" image={IMAGES.founderPortrait} alt={home.founder.imageAlt} placeholder={copy.common.imagePlaceholder} />
       </div>
       <div class="founder__text">
-        <h2 class="kicker" id="founder-title"><Botanical name="sprig" />{home.founder.title}</h2>
+        <h2 class="visually-hidden" id="founder-title">{home.founder.title}</h2>
         <p class="founder__body">{home.founder.body}</p>
         <a class="text-link" href={localePath(lang, '/about')}>{home.founder.link}</a>
       </div>
@@ -178,46 +177,6 @@ const formUrl = INVITE_FORM_URLS[lang];
 </BaseLayout>
 
 <style>
-  /* Shared pieces */
-  .kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    color: var(--green-600);
-    font-size: var(--step--1);
-    font-weight: 700;
-  }
-  .kicker :global(.botanical) {
-    width: 1.75rem;
-    flex-shrink: 0;
-    transition: transform 0.5s var(--ease);
-    transform-origin: 10% 90%;
-  }
-  section:hover .kicker :global(.botanical) {
-    transform: rotate(-8deg);
-  }
-
-  /* Section headings: a label, a title and a line or two of introduction */
-  .head {
-    display: grid;
-    gap: var(--space-4);
-    justify-items: start;
-    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
-  }
-  .head__title {
-    font-size: var(--step-4);
-  }
-  .head__intro {
-    max-width: 36rem;
-    color: var(--ink-soft);
-    font-size: var(--step-1);
-    line-height: 1.6;
-  }
-  .head--center {
-    justify-items: center;
-    text-align: center;
-  }
-
   /* Photographs: soft shapes on a quiet placeholder */
   section :global(.figure) {
     --figure-radius: 1.5rem;
@@ -698,12 +657,6 @@ const formUrl = INVITE_FORM_URLS[lang];
     display: grid;
     gap: var(--space-3);
     justify-items: start;
-  }
-  .founder__text .kicker {
-    font-family: var(--font-sans);
-  }
-  :lang(zh) .founder__text .kicker {
-    font-family: var(--font-sans-zh);
   }
   .founder__body {
     font-family: var(--font-serif);
