@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Figure from '../components/Figure.astro';
+import GrowWithUs from '../components/sections/GrowWithUs.astro';
+import ExploreMore from '../components/sections/ExploreMore.astro';
 import { t, type Lang } from '../i18n';
 import { SURVEY_URLS } from '../config/site';
 import { IMAGES } from '../config/images';
@@ -12,11 +14,11 @@ const { lang } = Astro.props;
 const copy = t(lang);
 const page = copy.community;
 
-// The two surveys. An empty URL (src/config/site.ts) shows "Coming soon" instead of a button that goes nowhere.
+// The two surveys. One with an empty URL (src/config/site.ts) is not shown; with neither, the whole section waits.
 const options = [
   { key: 'china', lang: 'zh-CN', url: SURVEY_URLS.china, ...page.survey.china },
   { key: 'international', lang: 'en', url: SURVEY_URLS.international, ...page.survey.international },
-];
+].filter((option) => option.url);
 ---
 
 <BaseLayout lang={lang} title={page.title} description={page.description}>
@@ -34,7 +36,11 @@ const options = [
     </div>
   </section>
 
-  <section class="section section--sage survey" aria-labelledby="survey-title">
+  <!-- Moved here from the homepage -->
+  <GrowWithUs lang={lang} />
+
+  {options.length > 0 && (
+  <section class="section survey" aria-labelledby="survey-title">
     <div class="container">
       <h2 id="survey-title">{page.survey.title}</h2>
       <p class="survey__intro">{page.survey.intro}</p>
@@ -44,18 +50,11 @@ const options = [
             <li class="option" lang={option.key === 'china' ? 'zh-CN' : 'en'}>
               <h3>{option.region}</h3>
               <p>{option.body}</p>
-              {option.url ? (
-                <a class="btn" href={option.url} target="_blank" rel="noopener">
-                  {option.button}
-                  <span aria-hidden="true">↗</span>
-                  <span class="visually-hidden"> ({copy.common.newWindow})</span>
-                </a>
-              ) : (
-                <span class="btn" data-disabled>
-                  <span class="visually-hidden">{option.button}: </span>
-                  {page.survey.comingSoon}
-                </span>
-              )}
+              <a class="btn" href={option.url} target="_blank" rel="noopener">
+                {option.button}
+                <span aria-hidden="true">↗</span>
+                <span class="visually-hidden"> ({copy.common.newWindow})</span>
+              </a>
             </li>
           ))
         }
@@ -67,6 +66,10 @@ const options = [
       </aside>
     </div>
   </section>
+  )}
+
+  <!-- Moved here from the homepage -->
+  <ExploreMore lang={lang} />
 </BaseLayout>
 
 <style>
@@ -112,6 +115,7 @@ const options = [
 
   .survey h2 {
     font-size: var(--step-4);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
   }
   .survey__intro {
     margin-top: var(--space-3);

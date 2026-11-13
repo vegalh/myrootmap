@@ -1,15 +1,20 @@
 ---
-// About, Privacy and Contact: short pages whose real content has not been written yet.
+// Privacy and Contact: short pages whose real content has not been written yet. (About has its own view.)
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import { t, type Lang } from '../i18n';
+import { CONTACT_EMAIL, WECHAT_ID, XIAOHONGSHU_URL } from '../config/site';
 
 interface Props {
   lang: Lang;
-  page: 'about' | 'privacy' | 'contact';
+  page: 'privacy' | 'contact';
 }
 const { lang, page } = Astro.props;
 const copy = t(lang).pages[page];
+// Contact: WeChat, Rednotes and email, moved here from the homepage. Each appears once it has a value in
+// src/config/site.ts; an empty one is simply left out.
+const channels = t(lang).pages.contact.channels;
+const showChannels = page === 'contact' && Boolean(WECHAT_ID || XIAOHONGSHU_URL || CONTACT_EMAIL);
 ---
 
 <BaseLayout lang={lang} title={copy.title}>
@@ -24,6 +29,35 @@ const copy = t(lang).pages[page];
           </div>
         )
       }
+      {
+        showChannels && (
+          <ul class="channels" role="list" aria-label={channels.label}>
+            {WECHAT_ID && (
+              <li>
+                <span class="channel">
+                  {channels.wechat}: <strong>{WECHAT_ID}</strong>
+                </span>
+              </li>
+            )}
+            {XIAOHONGSHU_URL && (
+              <li>
+                <a class="channel" href={XIAOHONGSHU_URL} target="_blank" rel="noopener">
+                  {channels.xiaohongshu}
+                  <span aria-hidden="true">↗</span>
+                  <span class="visually-hidden"> ({t(lang).common.newWindow})</span>
+                </a>
+              </li>
+            )}
+            {CONTACT_EMAIL && (
+              <li>
+                <a class="channel" href={`mailto:${CONTACT_EMAIL}`}>
+                  {channels.email}: <strong>{CONTACT_EMAIL}</strong>
+                </a>
+              </li>
+            )}
+          </ul>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
@@ -31,5 +65,30 @@ const copy = t(lang).pages[page];
 <style>
   .prose {
     margin-top: var(--space-6);
+  }
+  .prose p + p {
+    margin-top: var(--space-4);
+  }
+  .channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+  }
+  .channel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--sage-300);
+    border-radius: 999px;
+    background: var(--sage-100);
+    color: var(--green-700);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  a.channel:hover {
+    border-color: var(--green-500);
   }
 </style>

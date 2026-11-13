@@ -1,0 +1,476 @@
+---
+// "Explore more with us": the places where the thinking behind RootMap keeps growing. Moved here from the homepage;
+// shown on Community. Copy: community.explore in src/i18n.
+import Botanical from '../Botanical.astro';
+import Figure from '../Figure.astro';
+import { localePath, t, type Lang } from '../../i18n';
+import { XIAOHONGSHU_URL } from '../../config/site';
+import { IMAGES } from '../../config/images';
+import { getPublishedPosts, postUrl } from '../../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const explore = copy.community.explore;
+const [latestPost] = await getPublishedPosts(lang, 1);
+const otherLang = lang === 'zh' ? 'en' : 'zh-CN';
+---
+
+  <section class="section explore" id="explore" aria-labelledby="explore-title">
+    <div class="container">
+      <div class="head">
+        <p class="kicker"><Botanical name="sprig" />{explore.chapter}</p>
+        <h2 class="head__title" id="explore-title">{explore.title}</h2>
+        <p class="head__intro">{explore.intro}</p>
+      </div>
+
+      <div class="explore__mosaic">
+        <!-- Blog: longer writing -->
+        <article class="dest dest--blog">
+          <div class="dest__body">
+            <h3 class="dest__name">{explore.blog.name}</h3>
+            <p class="dest__tagline">{explore.blog.tagline}</p>
+            <ul class="dest__topics dest__topics--lines" role="list">
+              {explore.blog.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+            {
+              latestPost && (
+                <p class="dest__latest">
+                  <span>{explore.blog.latest}</span>
+                  <a href={postUrl(latestPost)}>{latestPost.data.title}</a>
+                </p>
+              )
+            }
+            <a class="dest__cta" href={localePath(lang, '/blog')}>{explore.blog.cta}<span aria-hidden="true">→</span></a>
+          </div>
+          <div class="dest__media">
+            <span class="dest__sheet" aria-hidden="true"></span>
+            <Figure image={IMAGES.exploreBlog} alt={explore.blog.imageAlt} placeholder={copy.common.imagePlaceholder} />
+          </div>
+        </article>
+
+        <!-- Resources: materials to use -->
+        <article class="dest dest--resources">
+          <div class="dest__media">
+            <Figure image={IMAGES.exploreResources} alt={explore.resources.imageAlt} placeholder={copy.common.imagePlaceholder} />
+            <span class="dest__specimen dest__specimen--a" aria-hidden="true"><Botanical name="catFern" /></span>
+            <span class="dest__specimen dest__specimen--b" aria-hidden="true"><Botanical name="catBerries" /></span>
+            <span class="dest__specimen dest__specimen--c" aria-hidden="true"><Botanical name="catFlower" /></span>
+          </div>
+          <div class="dest__body">
+            <h3 class="dest__name">{explore.resources.name}</h3>
+            <p class="dest__tagline">{explore.resources.tagline}</p>
+            <ul class="dest__topics dest__topics--tags" role="list">
+              {explore.resources.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+            <a class="dest__cta" href={localePath(lang, '/resources')}>{explore.resources.cta}<span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <!-- Xiaohongshu: photographs and small notes. Shown once its link is set in src/config/site.ts. -->
+        {XIAOHONGSHU_URL && (
+        <article class="dest dest--xhs">
+          <div class="dest__media">
+            <span class="dest__snap dest__snap--back" aria-hidden="true"></span>
+            <div class="dest__snap">
+              <Figure image={IMAGES.exploreXiaohongshu} alt={explore.xiaohongshu.imageAlt} placeholder={copy.common.imagePlaceholder} />
+            </div>
+          </div>
+          <div class="dest__body">
+            <h3 class="dest__name">
+              {explore.xiaohongshu.name}
+              <span class="dest__native" lang={otherLang}>{explore.xiaohongshu.nativeName}</span>
+            </h3>
+            <p class="dest__tagline">{explore.xiaohongshu.tagline}</p>
+            <ul class="dest__topics dest__topics--dots" role="list">
+              {explore.xiaohongshu.topics.map((topic) => <li>{topic}</li>)}
+            </ul>
+            <a class="dest__cta" href={XIAOHONGSHU_URL} target="_blank" rel="noopener">
+              {explore.xiaohongshu.cta}
+              <span aria-hidden="true">→</span>
+              <span class="visually-hidden"> ({copy.common.newWindow})</span>
+            </a>
+          </div>
+        </article>
+        )}
+      </div>
+    </div>
+  </section>
+
+<style>
+  /* Shared pieces */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--green-600);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .kicker :global(.botanical) {
+    width: 1.75rem;
+    flex-shrink: 0;
+    transition: transform 0.5s var(--ease);
+    transform-origin: 10% 90%;
+  }
+  section:hover .kicker :global(.botanical) {
+    transform: rotate(-8deg);
+  }
+
+  /* Section headings: a label, a title and a line or two of introduction */
+  .head {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .head__title {
+    font-size: var(--step-4);
+  }
+  .head__intro {
+    max-width: 36rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .head--center {
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* Photographs: soft shapes on a quiet placeholder */
+  section :global(.figure) {
+    --figure-radius: 1.5rem;
+    --figure-placeholder-bg: var(--cream-200);
+    --figure-placeholder-ink: var(--line-strong);
+  }
+  section :global(.figure img) {
+    transition: transform 0.9s var(--ease);
+  }
+
+  /* A button with an arrow that moves a little on hover */
+  .btn--go span {
+    transition: transform 0.25s var(--ease);
+  }
+  .btn--go:hover span {
+    transform: translateX(3px);
+  }
+  .btn--down:hover span {
+    transform: translateY(3px);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Explore more with us: three destinations, each with its own character */
+  .explore__mosaic {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .dest {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+    align-content: start;
+    padding: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
+    border-radius: 2rem;
+    transition: transform 0.4s var(--ease);
+  }
+  .dest:has(a.dest__cta):hover {
+    transform: translateY(-4px);
+  }
+  .dest__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  .dest__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  :lang(zh) .dest__name {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .dest__native {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    opacity: 0.75;
+  }
+  .dest__tagline {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  :lang(zh) .dest__tagline {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+  }
+  .dest__topics {
+    margin-block: var(--space-2);
+    font-size: var(--step--1);
+  }
+  /* The link covers its whole panel, so the panel is one large target */
+  .dest__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    margin-top: auto;
+    padding-top: var(--space-2);
+    font-size: var(--step-0);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+  }
+  a.dest__cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .dest__cta span[aria-hidden] {
+    transition: transform 0.25s var(--ease);
+  }
+  .dest:hover a.dest__cta span[aria-hidden] {
+    transform: translateX(4px);
+  }
+  .dest__cta--missing {
+    padding: 0.45rem 0.9rem;
+    border: 1px dashed currentColor;
+    border-radius: 999px;
+    font-size: var(--step--1);
+    text-decoration: none;
+    opacity: 0.8;
+  }
+  .dest__media {
+    position: relative;
+  }
+
+  /* Xiaohongshu: a snapshot, like a post */
+  .dest--xhs {
+    border-top-left-radius: 5rem;
+    background: color-mix(in srgb, var(--terracotta-500) 24%, var(--paper));
+  }
+  .dest--xhs .dest__name,
+  .dest--xhs .dest__cta {
+    color: var(--terracotta-700);
+  }
+  .dest--xhs .dest__media {
+    width: min(70%, 19rem);
+    margin: var(--space-3) auto var(--space-2);
+  }
+  .dest__snap {
+    position: relative;
+    padding: 0.55rem 0.55rem 1.9rem;
+    border-radius: 0.5rem;
+    background: var(--white);
+    box-shadow: 0 18px 36px -22px rgba(43, 37, 32, 0.5);
+    transform: rotate(2.5deg);
+    transition: transform 0.5s var(--ease);
+  }
+  .dest__snap :global(.figure) {
+    --figure-radius: 0.3rem;
+  }
+  .dest__snap--back {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    background: var(--cream-100);
+    transform: rotate(-6deg) translate(-7%, 2%);
+  }
+  .dest--xhs:hover .dest__snap:not(.dest__snap--back) {
+    transform: rotate(0.5deg) translateY(-3px);
+  }
+  .dest--xhs:hover .dest__snap--back {
+    transform: rotate(-9deg) translate(-10%, 2%);
+  }
+  .dest__topics--dots {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .dest__topics--dots li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .dest__topics--dots li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--terracotta-500);
+    transform: translateY(-0.1em);
+  }
+
+  /* Blog: a written page */
+  .dest--blog {
+    border-top-right-radius: 5rem;
+    background: var(--green-700);
+    color: rgba(250, 238, 220, 0.9);
+  }
+  .dest--blog .dest__name {
+    color: var(--white);
+  }
+  .dest--blog .dest__tagline,
+  .dest--blog .dest__cta {
+    color: var(--gold-400);
+  }
+  .dest--blog :focus-visible {
+    outline-color: var(--gold-400);
+  }
+  .dest__topics--lines {
+    width: 100%;
+    max-width: 24rem;
+  }
+  .dest__topics--lines li {
+    padding-block: 0.4rem;
+    border-bottom: 1px solid rgba(248, 241, 230, 0.2);
+  }
+  .dest__latest {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.6rem;
+    font-size: var(--step--1);
+  }
+  .dest__latest span {
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+  .dest--blog .dest__media {
+    width: min(86%, 22rem);
+    margin-inline: auto;
+  }
+  .dest__sheet {
+    position: absolute;
+    inset: -5% 4% 5% -6%;
+    border-radius: 0.4rem;
+    background: repeating-linear-gradient(to bottom, transparent 0 1.05rem, var(--line) 1.05rem calc(1.05rem + 1px)), var(--cream-100);
+    transform: rotate(-5deg);
+    transition: transform 0.5s var(--ease);
+  }
+  .dest--blog .dest__media :global(.figure) {
+    position: relative;
+    transform: rotate(2deg);
+    transition: transform 0.5s var(--ease);
+    --figure-radius: 0.4rem;
+    --figure-placeholder-bg: var(--white);
+  }
+  .dest--blog:hover .dest__sheet {
+    transform: rotate(-8deg);
+  }
+  .dest--blog:hover .dest__media :global(.figure) {
+    transform: rotate(0.5deg);
+  }
+
+  /* Resources: a table of specimens */
+  .dest--resources {
+    border-bottom-right-radius: 5rem;
+    background: var(--sage-200);
+  }
+  .dest__topics--tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .dest__topics--tags li {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--green-700);
+    font-weight: 600;
+  }
+  .dest--resources .dest__cta {
+    color: var(--green-700);
+  }
+  .dest--resources .dest__media {
+    width: min(86%, 22rem);
+    margin: var(--space-3) auto;
+  }
+  .dest--resources .dest__media :global(.figure) {
+    --figure-radius: 42% 58% 46% 54% / 52% 44% 56% 48%;
+    --figure-placeholder-bg: var(--white);
+  }
+  :global(.dest--resources .figure__label) {
+    left: 22%;
+    bottom: 16%;
+  }
+  .dest__specimen {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 26%;
+    aspect-ratio: 1;
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--gold-100);
+    transition: transform 0.5s var(--ease);
+  }
+  .dest__specimen :global(.botanical) {
+    width: 74%;
+  }
+  .dest__specimen--a {
+    top: -8%;
+    left: -6%;
+  }
+  .dest__specimen--b {
+    right: -8%;
+    top: 30%;
+    background: var(--cream-100);
+  }
+  .dest__specimen--c {
+    left: 10%;
+    bottom: -10%;
+    width: 22%;
+    background: var(--white);
+  }
+  .dest--resources:hover .dest__specimen--a {
+    transform: rotate(-10deg);
+  }
+  .dest--resources:hover .dest__specimen--b {
+    transform: rotate(8deg) translateX(3px);
+  }
+  .dest--resources:hover .dest__specimen--c {
+    transform: rotate(-6deg) translateY(3px);
+  }
+  @media (min-width: 40em) {
+    .dest--blog,
+    .dest--resources {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+    }
+    .dest--resources {
+      grid-template-columns: 1fr 1.1fr;
+    }
+    .dest--blog .dest__media,
+    .dest--resources .dest__media {
+      width: 86%;
+    }
+    .dest__body {
+      height: 100%;
+    }
+  }
+  @media (min-width: 62em) {
+    .explore__mosaic {
+      grid-template-columns: 5fr 7fr;
+    }
+    .dest--xhs {
+      grid-column: 2;
+      grid-row: 1 / 3;
+      grid-template-rows: auto 1fr;
+    }
+  }
+</style>

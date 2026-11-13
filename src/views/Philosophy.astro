@@ -3,7 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Figure from '../components/Figure.astro';
 import { localePath, t, type Lang } from '../i18n';
-import { APP_URL } from '../config/site';
+import WhyRootMap from '../components/sections/WhyRootMap.astro';
+import InspiredBy from '../components/sections/InspiredBy.astro';
+import ValuesRibbon from '../components/ValuesRibbon.astro';
 import { IMAGES } from '../config/images';
 
 interface Props {
@@ -75,11 +77,19 @@ const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
     </div>
   </section>
 
+  <!-- Moved here from the homepage: why RootMap exists and the six things it cares about, the collection of
+       influences (shown once it has entries) and the ribbon of values. -->
+  <WhyRootMap lang={lang} />
+  <InspiredBy lang={lang} />
+  <div class="ribbon-seam">
+    <ValuesRibbon label={page.values.label} words={page.values.words} />
+  </div>
+
   <section class="section section--sage section--tight">
     <div class="container cta">
       <h2>{page.cta.title}</h2>
       <div class="btn-row">
-        <a class="btn" href={APP_URL}>{page.cta.app}</a>
+        <a class="btn" href={`${localePath(lang)}#invite`}>{copy.common.cta}</a>
         <a class="btn btn--secondary" href={localePath(lang, '/features')}>{page.cta.features}</a>
       </div>
     </div>
@@ -87,6 +97,11 @@ const sectionImages: Record<string, typeof IMAGES.philosophyRealExperiences> = {
 </BaseLayout>
 
 <style>
+  /* The ribbon sits on the seam between the page and the closing band */
+  .ribbon-seam {
+    --ribbon-to: var(--sage-100);
+  }
+
   .essay {
     display: grid;
     gap: var(--space-7);

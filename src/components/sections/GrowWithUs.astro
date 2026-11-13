@@ -1,0 +1,217 @@
+---
+// "Grow with us": feedback about the app, and the community that is being explored. Moved here from the homepage;
+// shown on Community. Copy: community.grow in src/i18n.
+// Nothing here says "coming soon": the feedback invitation appears once FEEDBACK_URL is set (src/config/site.ts),
+// and until the community surveys have links, their questions are asked in the invite form on the homepage.
+import Botanical from '../Botanical.astro';
+import GrowOnScroll from './GrowOnScroll.astro';
+import { localePath, t, type Lang } from '../../i18n';
+import { FEEDBACK_URL, SURVEY_URLS } from '../../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const grow = copy.community.grow;
+const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
+const surveysOpen = Boolean(SURVEY_URLS.china || SURVEY_URLS.international);
+// The second paragraph speaks of two ways to take part, so it waits until both exist.
+const paragraphs = FEEDBACK_URL ? grow.paragraphs : grow.paragraphs.slice(0, 1);
+---
+
+<section class="section section--sage grow" id="grow-with-us" aria-labelledby="grow-title">
+  <div class="container">
+    <div class="head head--center">
+      <p class="kicker"><Botanical name="sprig" />{grow.chapter}</p>
+      <h2 class="head__title" id="grow-title">{grow.title}</h2>
+      {paragraphs.map((p) => <p class="head__intro">{p}</p>)}
+    </div>
+
+    <div class:list={['grow__paths', !FEEDBACK_URL && 'grow__paths--one']}>
+      {
+        FEEDBACK_URL && (
+          <div class="path path--feedback">
+            <p class="path__label">{grow.feedback.label}</p>
+            <h3>{grow.feedback.title}</h3>
+            <p>{grow.feedback.body}</p>
+            <a class="btn btn--go" href={FEEDBACK_URL} target={feedbackIsWeb ? '_blank' : undefined} rel={feedbackIsWeb ? 'noopener' : undefined}>
+              {grow.feedback.button}
+              <span aria-hidden="true">→</span>
+              {feedbackIsWeb && <span class="visually-hidden"> ({copy.common.newWindow})</span>}
+            </a>
+          </div>
+        )
+      }
+
+      <div class="grow__plant" aria-hidden="true">
+        <Botanical name="together" class="js-grow" />
+      </div>
+
+      <div class="path path--community">
+        <p class="path__label">{grow.community.label}</p>
+        <h3>{grow.community.title}</h3>
+        <p class="tag tag--gold">{grow.community.status}</p>
+        <p>{grow.community.body}</p>
+        {
+          surveysOpen ? (
+            <a class="btn btn--go" href="#survey-title">{copy.community.survey.title}<span aria-hidden="true">→</span></a>
+          ) : (
+            <>
+              <p>{grow.community.inForm}</p>
+              <a class="btn btn--go" href={`${localePath(lang)}#invite`}>{copy.common.cta}<span aria-hidden="true">→</span></a>
+            </>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<GrowOnScroll />
+
+<style>
+  /* Shared pieces */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--green-600);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .kicker :global(.botanical) {
+    width: 1.75rem;
+    flex-shrink: 0;
+    transition: transform 0.5s var(--ease);
+    transform-origin: 10% 90%;
+  }
+  section:hover .kicker :global(.botanical) {
+    transform: rotate(-8deg);
+  }
+
+  /* Section headings: a label, a title and a line or two of introduction */
+  .head {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .head__title {
+    font-size: var(--step-4);
+  }
+  .head__intro {
+    max-width: 36rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .head--center {
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* Photographs: soft shapes on a quiet placeholder */
+  section :global(.figure) {
+    --figure-radius: 1.5rem;
+    --figure-placeholder-bg: var(--cream-200);
+    --figure-placeholder-ink: var(--line-strong);
+  }
+  section :global(.figure img) {
+    transition: transform 0.9s var(--ease);
+  }
+
+  /* A button with an arrow that moves a little on hover */
+  .btn--go span {
+    transition: transform 0.25s var(--ease);
+  }
+  .btn--go:hover span {
+    transform: translateX(3px);
+  }
+  .btn--down:hover span {
+    transform: translateY(3px);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Grow with us */
+  .grow__paths {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .path {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
+    border-radius: 2rem 2rem 2rem 5rem;
+    background: var(--paper);
+  }
+  .path--community {
+    border-radius: 2rem 2rem 5rem 2rem;
+  }
+  .path__label {
+    color: var(--terracotta-700);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .path h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 500;
+    line-height: 1.15;
+  }
+  :lang(zh) .path h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .path > p:not([class]) {
+    max-width: 32rem;
+    color: var(--ink-soft);
+  }
+  .path > .btn {
+    margin-top: var(--space-3);
+  }
+  .grow__plant {
+    display: grid;
+    place-items: center;
+    margin-block: calc(-1 * var(--space-3));
+  }
+  .grow__plant :global(.botanical) {
+    width: 7rem;
+  }
+  @media (max-width: 35.99em) {
+    .path > .btn {
+      width: 100%;
+      min-height: 3.25rem;
+    }
+  }
+  @media (min-width: 56em) {
+    /* Two plants from separate roots grow beside the two invitations */
+    .grow__paths {
+      grid-template-columns: 5fr 6fr;
+      grid-template-rows: auto 1fr;
+      gap: var(--space-5) var(--space-6);
+    }
+    .path--community {
+      grid-area: 1 / 2 / 3 / 3;
+    }
+    .grow__plant {
+      align-items: end;
+      margin-block: 0;
+    }
+    .grow__plant :global(.botanical) {
+      width: min(60%, 15rem);
+    }
+  }  @media (min-width: 56em) {
+    .grow__paths--one {
+      grid-template-rows: auto;
+      align-items: center;
+    }
+    .grow__paths--one .path--community {
+      grid-area: auto;
+    }
+  }
+</style>

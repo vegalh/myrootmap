@@ -1,0 +1,407 @@
+---
+// "Inspired by": the people, books and ideas behind RootMap. Moved here from the homepage; shown on Our Philosophy.
+// While src/config/inspirations.ts is empty the published site shows nothing at all (while developing, sample slots
+// show the layout). Copy: philosophy.inspired in src/i18n.
+import Botanical from '../Botanical.astro';
+import { t, url, type Lang } from '../../i18n';
+import { SHOW_DESIGN_PLACEHOLDERS } from '../../config/site';
+import { INSPIRATIONS, localized, type InspirationKind } from '../../config/inspirations';
+import type { BotanicalName } from '../../illustrations/botanicals';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const inspired = copy.philosophy.inspired;
+
+// Inspired by: people are shown as round portraits, books and papers as upright covers, approaches as a leaf shape.
+const KIND_SHAPE: Record<InspirationKind, 'portrait' | 'cover' | 'idea' | 'logo'> = {
+  educator: 'portrait',
+  researcher: 'portrait',
+  author: 'portrait',
+  creator: 'portrait',
+  book: 'cover',
+  paper: 'cover',
+  philosophy: 'idea',
+  logo: 'logo',
+};
+const KIND_ART: Record<InspirationKind, BotanicalName> = {
+  educator: 'catFlower',
+  researcher: 'catFern',
+  author: 'catTwig',
+  creator: 'catBerries',
+  book: 'catBud',
+  paper: 'catFern',
+  philosophy: 'catSeedling',
+  logo: 'catSeedling',
+};
+const inspirations = INSPIRATIONS.map((item) => ({
+  kind: item.kind,
+  name: localized(item.name, lang),
+  by: localized(item.by, lang),
+  note: localized(item.note, lang),
+  quote: localized(item.quote, lang),
+  image: item.image ?? '',
+  imageAlt: localized(item.imageAlt, lang),
+  href: item.href ?? '',
+  placeholder: false,
+}));
+// With no entries yet: sample slots that show the layout while developing, and nothing on the published site.
+const PLACEHOLDER_KINDS: InspirationKind[] = ['logo', 'logo', 'logo', 'educator', 'book', 'philosophy'];
+const showPlaceholders = inspirations.length === 0 && SHOW_DESIGN_PLACEHOLDERS;
+const shelf = showPlaceholders
+  ? PLACEHOLDER_KINDS.map((kind) => ({ kind, name: kind === 'logo' ? (lang === 'zh' ? '标志待添加' : 'Your inspiration logo') : inspired.placeholder.name, by: '', note: inspired.placeholder.note, quote: '', image: '', imageAlt: '', href: '', placeholder: true }))
+  : inspirations;
+---
+
+{
+  shelf.length > 0 && (
+  <section class="section section--cream inspired" id="inspired-by" aria-labelledby="inspired-title">
+    <div class="container inspired__grid">
+      <div class="head inspired__head">
+        <p class="kicker"><Botanical name="sprig" />{inspired.chapter}</p>
+        <h2 class="head__title" id="inspired-title">{inspired.title}</h2>
+        <p class="head__intro">{inspired.intro}</p>
+      </div>
+
+            <div class="inspired__body">
+            <ul class="shelf" role="list">
+              {shelf.map((item) => (
+                <li class:list={['pin', `pin--${KIND_SHAPE[item.kind]}`, item.placeholder && 'pin--placeholder']}>
+                  <svg class="pin__vine" viewBox="0 0 200 24" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                    <path d="M0 12C35 4 65 4 100 12S165 20 200 12" />
+                  </svg>
+                  <span class="pin__string" aria-hidden="true" />
+                  <div class="pin__media">
+                    {item.image ? <img src={url(item.image)} alt={item.imageAlt} loading="lazy" decoding="async" /> : <Botanical name={KIND_ART[item.kind]} />}
+                  </div>
+                  <p class="pin__kind">{inspired.kinds[item.kind]}</p>
+                  <h3 class="pin__name">
+                    {item.href ? (
+                      <a href={item.href} target="_blank" rel="noopener">
+                        {item.name}
+                        <span class="visually-hidden"> ({copy.common.newWindow})</span>
+                      </a>
+                    ) : (
+                      item.name
+                    )}
+                  </h3>
+                  {item.by && (
+                    <p class="pin__by">
+                      {inspired.by} {item.by}
+                    </p>
+                  )}
+                  {item.quote && <blockquote class="pin__quote">“{item.quote}”</blockquote>}
+                  {item.note && <p class="pin__note">{item.note}</p>}
+                </li>
+              ))}
+            </ul>
+            {showPlaceholders ? (
+              <p class="draft-note inspired__after">
+                <span class="tag tag--draft">{copy.common.placeholder}</span>
+                <span>{inspired.placeholder.hint}</span>
+              </p>
+            ) : (
+              <p class="inspired__after inspired__disclaimer">{inspired.disclaimer}</p>
+            )}
+            </div>
+    </div>
+  </section>
+  )
+}
+
+<style>
+  /* Shared pieces */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--green-600);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .kicker :global(.botanical) {
+    width: 1.75rem;
+    flex-shrink: 0;
+    transition: transform 0.5s var(--ease);
+    transform-origin: 10% 90%;
+  }
+  section:hover .kicker :global(.botanical) {
+    transform: rotate(-8deg);
+  }
+
+  /* Section headings: a label, a title and a line or two of introduction */
+  .head {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .head__title {
+    font-size: var(--step-4);
+  }
+  .head__intro {
+    max-width: 36rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .head--center {
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* Photographs: soft shapes on a quiet placeholder */
+  section :global(.figure) {
+    --figure-radius: 1.5rem;
+    --figure-placeholder-bg: var(--cream-200);
+    --figure-placeholder-ink: var(--line-strong);
+  }
+  section :global(.figure img) {
+    transition: transform 0.9s var(--ease);
+  }
+
+  /* A button with an arrow that moves a little on hover */
+  .btn--go span {
+    transition: transform 0.25s var(--ease);
+  }
+  .btn--go:hover span {
+    transform: translateX(3px);
+  }
+  .btn--down:hover span {
+    transform: translateY(3px);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Inspired by: the label on one side, the collection clustered beside it */
+  .inspired__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .inspired__head {
+    justify-items: center;
+    text-align: center;
+  }
+  .shelf {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--space-7);
+  }
+  .pin {
+    position: relative;
+    display: flex;
+    flex: 0 0 50%;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-3);
+    text-align: center;
+    --string: 1.5rem;
+    --tilt: -2deg;
+  }
+  .pin:nth-child(even) {
+    --string: 2.75rem;
+    --tilt: 2.5deg;
+  }
+  .pin:nth-child(3n) {
+    --string: 2.1rem;
+    --tilt: -1deg;
+  }
+  /* Each piece carries its own length of vine; side by side they join into one */
+  .pin__vine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 24px;
+    color: var(--green-600);
+  }
+  .pin__vine path {
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .pin__string {
+    width: 1.5px;
+    height: var(--string);
+    margin-top: 12px;
+    background: var(--green-600);
+  }
+  .pin__media {
+    display: grid;
+    place-items: center;
+    width: 6.5rem;
+    aspect-ratio: 1;
+    margin-top: calc(-1 * var(--space-2));
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--sage-200);
+    box-shadow: var(--shadow-sm);
+    transform: rotate(var(--tilt));
+    transform-origin: 50% 0;
+    transition: transform 0.6s var(--ease);
+  }
+  .pin:hover .pin__media {
+    transform: rotate(calc(var(--tilt) * -1));
+  }
+  .pin__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pin__media :global(.botanical) {
+    width: 62%;
+  }
+  .pin--cover .pin__media {
+    width: 5.5rem;
+    aspect-ratio: 2 / 3;
+    border-radius: 0.3rem 0.6rem 0.6rem 0.3rem;
+    background: var(--gold-100);
+  }
+  .pin--logo .pin__media {
+    width: 9rem;
+    aspect-ratio: 2 / 1;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--white);
+  }
+  .pin--logo .pin__media img {
+    object-fit: contain;
+  }
+  .pin--idea .pin__media {
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--white);
+  }
+  .pin--placeholder .pin__media {
+    border: 1.5px dashed var(--line-strong);
+    background: var(--paper);
+    box-shadow: none;
+    --bot-stem: var(--line-strong);
+    --bot-leaf-a: var(--line-strong);
+    --bot-leaf-b: var(--line);
+    --bot-leaf-c: var(--line-strong);
+    --bot-terra: var(--line-strong);
+    --bot-gold: var(--line);
+  }
+  .pin__kind {
+    color: var(--muted);
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .pin__name {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  :lang(zh) .pin__name {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .pin__name a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .pin__by {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .pin__quote {
+    max-width: 16rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+  /* Your own words, like a note in the margin */
+  .pin__note {
+    max-width: 14rem;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--terracotta-700);
+    transform: rotate(-1.5deg);
+  }
+  :lang(zh) .pin__note {
+    font-family: var(--font-serif-zh);
+    font-style: normal;
+  }
+  .pin--placeholder :is(.pin__name, .pin__note) {
+    color: var(--muted);
+  }
+  .inspired__after {
+    max-width: 40rem;
+    margin: var(--space-7) auto 0;
+  }
+  .inspired__disclaimer {
+    color: var(--muted);
+    font-size: var(--step--1);
+    text-align: center;
+  }
+  .inspired__empty {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+    text-align: center;
+  }
+  .inspired__pot {
+    display: grid;
+    place-items: center;
+    width: 7rem;
+    height: 7rem;
+    margin-bottom: var(--space-2);
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    background: var(--sage-200);
+  }
+  .inspired__pot :global(.botanical) {
+    width: 5rem;
+  }
+  .inspired__empty h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  :lang(zh) .inspired__empty h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .inspired__empty p {
+    max-width: 30rem;
+    color: var(--ink-soft);
+  }
+  @media (min-width: 40em) {
+    .pin {
+      flex-basis: 33.333%;
+    }
+  }
+  @media (min-width: 62em) {
+    .inspired__grid {
+      grid-template-columns: 4fr 8fr;
+      column-gap: var(--space-7);
+      align-items: start;
+    }
+    .inspired__head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-6));
+      justify-items: start;
+      margin-bottom: 0;
+      text-align: left;
+    }
+    .pin {
+      flex-basis: 25%;
+    }
+    .shelf {
+      row-gap: var(--space-6);
+    }
+    .inspired__empty {
+      padding-block: var(--space-5);
+    }
+  }
+</style>

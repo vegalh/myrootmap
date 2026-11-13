@@ -1,0 +1,35 @@
+---
+// About: the page's opening lines, then the founder's full note (moved here from the homepage).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import FounderNote from '../components/sections/FounderNote.astro';
+import { t, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const page = copy.pages.about;
+---
+
+<BaseLayout lang={lang} title={page.title}>
+  <PageIntro eyebrow={copy.footer.about} title={page.heading} />
+  <section class="section section--tight">
+    <div class="container container--narrow">
+      <p class="draft-note"><span class="tag tag--draft">{copy.common.draft}</span> {page.draft}</p>
+      <div class="prose">
+        {page.body.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+  <FounderNote lang={lang} />
+</BaseLayout>
+
+<style>
+  .prose {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+</style>

@@ -1,9 +1,11 @@
 ---
 // A slow, looping ribbon of words: the values RootMap associates with early childhood. A brand element, not a list
 // of features. The words are written once for screen readers; the moving copies are hidden from them.
-// The loop is plain CSS: several identical groups sit in a row and the row slides left by exactly one group, so the
-// end of the animation looks the same as its start. It pauses on hover and keyboard focus.
-// With "reduce motion" switched on nothing moves: the words are set out once, wrapped and centred.
+// The words are in the page once. For the loop, a small script adds identical copies of the group beside it and the
+// row slides left by exactly one group, so the end of the animation looks the same as its start; it pauses on hover
+// and keyboard focus. (The copies used to be written into the page itself, so anything that reads the page as text,
+// such as a search engine or a reader view, saw the list four times.)
+// With "reduce motion" switched on, or without the script, nothing moves: the words are set out once, wrapped and centred.
 import Botanical from './Botanical.astro';
 
 interface Props {
@@ -14,35 +16,46 @@ interface Props {
 }
 const { label, words, duration = 60 } = Astro.props;
 
-// Enough copies to fill very wide screens even when the words are short (as in Chinese).
+// Enough copies to fill very wide screens even when the words are short (as in Chinese). Added by the script below.
 const COPIES = 4;
 ---
 
-<div class="ribbon" data-ribbon style={`--ribbon-copies: ${COPIES}; --ribbon-duration: ${duration}s`}>
+<div class="ribbon" data-ribbon data-copies={COPIES} style={`--ribbon-copies: ${COPIES}; --ribbon-duration: ${duration}s`}>
   <p class="visually-hidden">{label}: {words.map((word) => word.text).join(', ')}</p>
   <div class="ribbon__band" aria-hidden="true">
     <div class="ribbon__track">
-      {
-        Array.from({ length: COPIES }, () => (
-          <ul class="ribbon__group" role="list">
-            {words.map((word, i) => (
-              <li class:list={['ribbon__word', word.accent && 'ribbon__word--accent']}>
-                <span>{word.text}</span>
-                {i % 2 === 0 ? (
-                  <Botanical name="sprig" class="ribbon__mark" />
-                ) : (
-                  <svg class="ribbon__mark ribbon__mark--star" viewBox="0 0 24 24">
-                    <path d="M12 1C12.9 7.6 16.4 11.1 23 12C16.4 12.9 12.9 16.4 12 23C11.1 16.4 7.6 12.9 1 12C7.6 11.1 11.1 7.6 12 1Z" />
-                  </svg>
-                )}
-              </li>
-            ))}
-          </ul>
-        ))
-      }
+      <ul class="ribbon__group" role="list">
+        {words.map((word, i) => (
+          <li class:list={['ribbon__word', word.accent && 'ribbon__word--accent']}>
+            <span>{word.text}</span>
+            {i % 2 === 0 ? (
+              <Botanical name="sprig" class="ribbon__mark" />
+            ) : (
+              <svg class="ribbon__mark ribbon__mark--star" viewBox="0 0 24 24">
+                <path d="M12 1C12.9 7.6 16.4 11.1 23 12C16.4 12.9 12.9 16.4 12 23C11.1 16.4 7.6 12.9 1 12C7.6 11.1 11.1 7.6 12 1Z" />
+              </svg>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   </div>
 </div>
+
+<script>
+  // The moving ribbon needs the words several times over, end to end. They are copied here rather than written into
+  // the page, and only when motion is welcome.
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    for (const ribbon of document.querySelectorAll<HTMLElement>('[data-ribbon]')) {
+      const track = ribbon.querySelector('.ribbon__track');
+      const group = track?.querySelector('.ribbon__group');
+      if (!track || !group) continue;
+      const copies = Number(ribbon.dataset.copies) || 4;
+      for (let i = 1; i < copies; i++) track.append(group.cloneNode(true));
+      ribbon.dataset.running = '';
+    }
+  }
+</script>
 
 <style>
   .ribbon {
@@ -110,47 +123,40 @@ const COPIES = 4;
     fill: var(--terracotta-500);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .ribbon__track {
-      animation: ribbon-slide var(--ribbon-duration) linear infinite;
-    }
-    .ribbon:hover .ribbon__track,
-    .ribbon:focus-within .ribbon__track {
-      animation-play-state: paused;
-    }
+  /* Standing still (the default, and with "reduce motion"): the words set out once, wrapped and centred */
+  .ribbon:not([data-running]) {
+    padding-bottom: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+  }
+  .ribbon:not([data-running]) .ribbon__band {
+    width: 100%;
+    margin-left: 0;
+    padding-inline: var(--gutter);
+    transform: none;
+  }
+  .ribbon:not([data-running]) .ribbon__track {
+    width: auto;
+  }
+  .ribbon:not([data-running]) .ribbon__group {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    justify-content: center;
+    row-gap: 0.2em;
+  }
+  .ribbon:not([data-running]) .ribbon__word {
+    font-size: clamp(1.2rem, 0.9rem + 1.5vw, 2rem);
+  }
+
+  /* Moving: once the script has laid the copies end to end */
+  .ribbon[data-running] .ribbon__track {
+    animation: ribbon-slide var(--ribbon-duration) linear infinite;
+  }
+  .ribbon[data-running]:hover .ribbon__track,
+  .ribbon[data-running]:focus-within .ribbon__track {
+    animation-play-state: paused;
   }
   @keyframes ribbon-slide {
     to {
       transform: translateX(calc(-100% / var(--ribbon-copies)));
-    }
-  }
-
-  /* Reduce motion: one copy of the words, standing still */
-  @media (prefers-reduced-motion: reduce) {
-    .ribbon {
-      padding-bottom: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
-    }
-    .ribbon__band {
-      width: 100%;
-      margin-left: 0;
-      padding-inline: var(--gutter);
-      transform: none;
-    }
-    .ribbon__track {
-      width: auto;
-      animation: none;
-    }
-    .ribbon__group {
-      flex-wrap: wrap;
-      flex-shrink: 1;
-      justify-content: center;
-      row-gap: 0.2em;
-    }
-    .ribbon__group:not(:first-child) {
-      display: none;
-    }
-    .ribbon__word {
-      font-size: clamp(1.2rem, 0.9rem + 1.5vw, 2rem);
     }
   }
 </style>

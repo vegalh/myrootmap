@@ -1,18 +1,15 @@
 ---
-// Homepage layouts and shared copy for English and Chinese.
-// Image slots live in src/config/images.ts, inspiration entries in src/config/inspirations.ts.
+// The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder strip
+// with the invite form. Copy: `home` in src/i18n. Image slots: src/config/images.ts. Invite form links: src/config/site.ts.
+// The longer blocks that used to be here are in src/components/sections/ and shown on Our Philosophy, About and Community.
 import '@fontsource-variable/fraunces/wght-italic.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Botanical from '../components/Botanical.astro';
 import Figure from '../components/Figure.astro';
 import Screenshot from '../components/Screenshot.astro';
-import ValuesRibbon from '../components/ValuesRibbon.astro';
-import { localePath, t, url, type Lang } from '../i18n';
-import { APP_URL, APP_LOGIN_URL, CONTACT_EMAIL, FEEDBACK_URL, SHOW_DESIGN_PLACEHOLDERS, SURVEY_URLS, WECHAT_ID, XIAOHONGSHU_URL } from '../config/site';
+import { localePath, t, type Lang } from '../i18n';
+import { INVITE_FORM_URLS, SHOW_DESIGN_PLACEHOLDERS } from '../config/site';
 import { IMAGES, SCREENSHOTS } from '../config/images';
-import { INSPIRATIONS, localized, type InspirationKind } from '../config/inspirations';
-import { getPublishedPosts, postUrl } from '../lib/content';
-import type { BotanicalName } from '../illustrations/botanicals';
 
 interface Props {
   lang: Lang;
@@ -20,62 +17,11 @@ interface Props {
 const { lang } = Astro.props;
 const copy = t(lang);
 const home = copy.home;
-const explore = home.explore;
-const [latestPost] = await getPublishedPosts(lang, 1);
-const otherLang = lang === 'zh' ? 'en' : 'zh-CN';
-
-// The drawing beside each idea in "Why RootMap", in the order the ideas are written.
-const IDEA_ART: BotanicalName[] = ['catTwig', 'catBerries', 'catBud', 'catSeedling', 'catFern', 'catFlower'];
-
-// Inspired by: people are shown as round portraits, books and papers as upright covers, approaches as a leaf shape.
-const KIND_SHAPE: Record<InspirationKind, 'portrait' | 'cover' | 'idea' | 'logo'> = {
-  educator: 'portrait',
-  researcher: 'portrait',
-  author: 'portrait',
-  creator: 'portrait',
-  book: 'cover',
-  paper: 'cover',
-  philosophy: 'idea',
-  logo: 'logo',
-};
-const KIND_ART: Record<InspirationKind, BotanicalName> = {
-  educator: 'catFlower',
-  researcher: 'catFern',
-  author: 'catTwig',
-  creator: 'catBerries',
-  book: 'catBud',
-  paper: 'catFern',
-  philosophy: 'catSeedling',
-  logo: 'catSeedling',
-};
-const inspirations = INSPIRATIONS.map((item) => ({
-  kind: item.kind,
-  name: localized(item.name, lang),
-  by: localized(item.by, lang),
-  note: localized(item.note, lang),
-  quote: localized(item.quote, lang),
-  image: item.image ?? '',
-  imageAlt: localized(item.imageAlt, lang),
-  href: item.href ?? '',
-  placeholder: false,
-}));
-// With no entries yet: sample slots that show the layout while developing, and a short note on the published site.
-const PLACEHOLDER_KINDS: InspirationKind[] = ['logo', 'logo', 'logo', 'educator', 'book', 'philosophy'];
-const showPlaceholders = inspirations.length === 0 && SHOW_DESIGN_PLACEHOLDERS;
-const shelf = showPlaceholders
-  ? PLACEHOLDER_KINDS.map((kind) => ({ kind, name: kind === 'logo' ? (lang === 'zh' ? '标志待添加' : 'Your inspiration logo') : home.inspired.placeholder.name, by: '', note: home.inspired.placeholder.note, quote: '', image: '', imageAlt: '', href: '', placeholder: true }))
-  : inspirations;
-
-// The two community surveys. An empty link (src/config/site.ts) shows "Coming soon" instead of a button.
-const surveys = [
-  { key: 'china', lang: 'zh-CN', url: SURVEY_URLS.china, ...copy.community.survey.china },
-  { key: 'international', lang: 'en', url: SURVEY_URLS.international, ...copy.community.survey.international },
-];
-const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
+const formUrl = INVITE_FORM_URLS[lang];
 ---
 
 <BaseLayout lang={lang} title={home.title} fullTitle>
-  <!-- Hero: words on one side, a layered picture on the other (the photograph, with the app tucked over its corner) -->
+  <!-- 1. Hero: words on one side, a layered picture on the other (the photograph, with the app tucked over its corner) -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="container hero__grid">
       <div class="hero__text">
@@ -91,14 +37,10 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
         </h1>
         <p class="hero__lead">{home.hero.body}</p>
         <div class="hero__actions">
-          <a class="btn btn--go" href={APP_LOGIN_URL}>{copy.nav.login}<span aria-hidden="true">→</span></a>
-          <a class="btn btn--secondary" href="#experience">{home.hero.primary}<span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="#founder">{home.hero.secondary}</a>
+          <a class="btn btn--go" href="#invite">{copy.common.cta}<span aria-hidden="true">→</span></a>
+          <a class="text-link" href="#how">{home.hero.secondary}</a>
         </div>
-        <p class="hero__note">
-          <span class="hero__note-art" aria-hidden="true"><Botanical name="catSeedling" /></span>
-          <span>{home.hero.note}</span>
-        </p>
+        <p class="hero__access">{home.hero.access}</p>
       </div>
       <div class="hero__art">
         <span class="hero__patch" aria-hidden="true"></span>
@@ -112,124 +54,33 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     </div>
   </section>
 
-  <!-- A length of vine between the hero and the rest: decoration only, it does not move -->
-  <div class="container" aria-hidden="true">
-    <div class="vine-rule">
-      <svg class="vine-rule__line" viewBox="0 0 1200 28" preserveAspectRatio="none" fill="none">
-        <path d="M0 17C140 3 290 27 450 14S760 5 900 17S1110 25 1200 11"></path>
-      </svg>
-      <Botanical name="sprig" />
-      <Botanical name="sprig" />
-      <Botanical name="sprig" />
-    </div>
-  </div>
-
-  <!-- Why RootMap -->
-  <section class="section why" id="why" aria-labelledby="why-title">
-    <div class="container">
-      <div class="why__top">
-        <div class="why__text">
-          <p class="kicker"><Botanical name="sprig" />{home.why.eyebrow}</p>
-          <h2 class="why__title" id="why-title">{home.why.title}</h2>
-          {home.why.intro.map((p) => <p>{p}</p>)}
-          <a class="text-link" href={localePath(lang, '/philosophy')}>{home.why.link}</a>
-        </div>
-        <div class="why__collage">
-          <Figure class="why__photo" image={IMAGES.homeChildhoodMain} alt={home.why.imageAlt} caption={home.why.caption} placeholder={copy.common.imagePlaceholder} />
-          <Figure class="why__detail" image={IMAGES.homeChildhoodDetail} alt={home.why.detailAlt} placeholder={copy.common.imagePlaceholder} />
-        </div>
-      </div>
-
-      <h3 class="visually-hidden">{home.why.ideasLabel}</h3>
-      <div class="roots">
-        <!-- The vine the six ideas grow on: down the middle on wide screens, along the left edge on phones -->
-        <svg class="roots__stem" viewBox="0 0 24 800" preserveAspectRatio="none" fill="none" aria-hidden="true">
-          <path d="M12 0C5 90 19 180 12 270S6 450 13 540S18 720 11 800"></path>
-        </svg>
-        <ul class="roots__list" role="list">
-          {
-            home.why.ideas.map((idea, i) => (
-              <li class="idea">
-                <span class="idea__art" aria-hidden="true">
-                  <Botanical name={IDEA_ART[i]} class="js-grow" />
-                </span>
-                <div class="idea__text">
-                  <h4>{idea.title}</h4>
-                  <p>{idea.body}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Experience RootMap: the app as a journey -->
-  <section class="section section--forest product" id="experience" aria-labelledby="product-title">
+  <!-- 2. How it works: four steps in one row, stacked on phones -->
+  <section class="section section--forest how" id="how" aria-labelledby="how-title">
     <svg class="wave wave--top" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 48V24C190 2 380 42 640 27S1130 0 1440 21V48Z" fill="currentColor"></path>
     </svg>
-    <Botanical name="edgeVine" class="product__vine" />
-    <div class="container product__inner">
-      <div class="product__head">
-        <p class="kicker"><Botanical name="sprig" />{home.experience.chapter}</p>
-        <h2 class="product__title" id="product-title">{home.experience.title}</h2>
-        <p class="product__intro">{home.experience.intro}</p>
-      </div>
-
-      <!-- Four screens, each leading to the next: side by side on wide screens. On phones they are a carousel, one screen
-           at a time with its words underneath and a dot for each step (the script at the foot of this file keeps them in step). -->
-      <div class="stage">
-      <ol class="journey" role="list" aria-label={home.experience.journeyLabel} tabindex="0">
+    <Botanical name="edgeVine" class="how__vine" />
+    <div class="container how__inner">
+      <h2 class="how__title" id="how-title">{home.how.title}</h2>
+      <ol class="steps" role="list">
         {
-          home.experience.steps.map((step, i) => (
-            <li class="step" data-active={i === 0 ? '' : undefined}>
+          home.how.steps.map((step, i) => (
+            <li class="step">
               <div class="step__shot">
                 <Screenshot src={SCREENSHOTS[step.id]} alt={step.shotAlt} placeholder={copy.common.screenshotPlaceholder} />
-                {i < home.experience.steps.length - 1 && (
-                  <button class="step__arrow" type="button" aria-label={home.experience.steps[i + 1].title}>
-                    <span aria-hidden="true">→</span>
-                  </button>
-                )}
               </div>
               <div class="step__text">
-                <p class="product__kicker">{step.kicker}</p>
+                <span class="step__num" aria-hidden="true">{i + 1}</span>
                 <h3>{step.title}</h3>
-                <p class="product__lead">{step.lead}</p>
                 <p>{step.body}</p>
               </div>
             </li>
           ))
         }
       </ol>
-      <div class="captions" aria-live="polite">
-        {
-          home.experience.steps.map((step, i) => (
-            <div class="step__text caption" data-active={i === 0 ? '' : undefined}>
-              <p class="product__kicker">{step.kicker}</p>
-              <h3>{step.title}</h3>
-              <p class="product__lead">{step.lead}</p>
-              <p>{step.body}</p>
-            </div>
-          ))
-        }
-      </div>
-      <div class="dots" role="group" aria-label={home.experience.dotsLabel}>
-        {
-          home.experience.steps.map((step, i) => (
-            <button type="button" aria-current={i === 0 ? 'true' : undefined}>
-              <span class="visually-hidden">{step.title}</span>
-            </button>
-          ))
-        }
-      </div>
-      </div>
-
-      <div class="product__foot">
-        <a class="btn btn--light btn--go" href={APP_URL}>{home.experience.app}<span aria-hidden="true">→</span></a>
-        <a class="text-link" href={localePath(lang, '/features')}>{home.experience.link}</a>
-        <p class="product__note">{home.experience.demoNote}</p>
+      <div class="how__foot">
+        <a class="text-link" href={localePath(lang, '/features')}>{home.how.link}</a>
+        <p class="how__note">{home.how.demoNote}</p>
       </div>
     </div>
     <svg class="wave wave--bottom" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
@@ -237,423 +88,94 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     </svg>
   </section>
 
-  <!-- A little note from the founder. The arrow leads down into it from the app above. -->
-  <section class="section section--cream founder" id="founder" aria-labelledby="founder-title">
-    <svg class="founder__lead-in" viewBox="0 0 64 120" fill="none" aria-hidden="true">
-      <path d="M32 4C22 34 42 62 32 104" />
-      <path d="M15 84L32 110L49 84" />
-      <path class="founder__lead-leaf" d="M27 40C17 38 11 31 10 22C19 23 26 30 27 40Z" />
-      <path class="founder__lead-leaf" d="M36 60C46 59 53 53 55 44C46 44 38 50 36 60Z" />
-    </svg>
+  <!-- 3. Real examples: activity cards from the app's own library -->
+  <section class="section examples" id="example" aria-labelledby="examples-title">
     <div class="container">
-      <div class="founder__note">
-        <Botanical name="catTwig" class="founder__sprig js-grow" />
-        <div class="founder__head">
-          <p class="kicker"><Botanical name="sprig" />{home.founder.chapter}</p>
-          <h2 class="founder__title" id="founder-title">{home.founder.title}</h2>
-          {home.founder.draft && <p class="tag tag--draft">{home.founder.draftLabel}</p>}
-        </div>
-        <div class="founder__constellation" role="group" aria-label={home.founder.observationsTitle}>
-          <div class="founder__art">
-            <span class="founder__patch" aria-hidden="true"></span>
-            <Figure class="founder__photo" image={IMAGES.founderPortrait} alt={home.founder.imageAlt} placeholder={copy.common.imagePlaceholder} />
-            <Botanical name="heroVineSmall" class="founder__vine js-grow" />
-          </div>
-          <ul class="founder__thoughts" role="list">
-            {home.founder.observations.map((thought) => <li>{thought}</li>)}
-          </ul>
-        </div>
-        <div class="founder__words">
-          {home.founder.intro.map((paragraph) => <p class="founder__body">{paragraph}</p>)}
-          {home.founder.name && <p class="founder__sign">{home.founder.name}</p>}
-        </div>
-        <div class="founder__shaped">
-          <h3>{home.founder.shaped.title}</h3>
-          <p>{home.founder.shaped.experience}</p>
-          <p>{home.founder.shaped.influences}</p>
-          <a class="btn btn--secondary btn--small" href={`${localePath(lang, '/resources')}#bookshelf`}>{home.founder.shaped.bookshelf}<span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="founder__actions">
-          <a class="btn btn--go" href={localePath(lang, '/contact')}>{home.founder.connect}<span aria-hidden="true">→</span></a>
-          <ul class="founder__channels" role="list" aria-label={home.founder.channels.label}>
-            <li>
-              {
-                WECHAT_ID ? (
-                  <span class="channel">
-                    {home.founder.channels.wechat}: <strong>{WECHAT_ID}</strong>
-                  </span>
-                ) : (
-                  <span class="channel channel--soon">
-                    {home.founder.channels.wechat} · {home.founder.channels.soon}
-                  </span>
-                )
-              }
+      <h2 class="section-title" id="examples-title">{home.examples.title}</h2>
+      <ul class="cards" role="list">
+        {
+          home.examples.cards.map((card) => (
+            <li class="card">
+              <Figure class="card__photo" image={IMAGES[card.image as keyof typeof IMAGES]} alt={card.imageAlt} placeholder={copy.common.imagePlaceholder} />
+              <div class="card__body">
+                <h3>{card.title}</h3>
+                <p class="card__meta">
+                  <span>{card.age}</span>
+                  <span>{home.examples.minutes.replace('{n}', String(card.minutes))}</span>
+                </p>
+                <p class="card__label">{home.examples.materialsLabel}</p>
+                <ul class="card__materials" role="list">
+                  {card.materials.map((material) => <li>{material}</li>)}
+                </ul>
+                <p class="card__label">{home.examples.stepsLabel}</p>
+                <ol class="card__steps">
+                  {card.steps.map((step) => <li>{step}</li>)}
+                </ol>
+              </div>
             </li>
-            <li>
-              {
-                XIAOHONGSHU_URL ? (
-                  <a class="channel" href={XIAOHONGSHU_URL} target="_blank" rel="noopener">
-                    {home.founder.channels.xiaohongshu}
-                    <span aria-hidden="true">↗</span>
-                    <span class="visually-hidden"> ({copy.common.newWindow})</span>
-                  </a>
-                ) : (
-                  <span class="channel channel--soon">
-                    {home.founder.channels.xiaohongshu} · {home.founder.channels.soon}
-                  </span>
-                )
-              }
+          ))
+        }
+      </ul>
+      <a class="btn btn--go examples__cta" href="#invite">{copy.common.cta}<span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <!-- 4. Who it's for -->
+  <section class="section section--cream who" id="who" aria-labelledby="who-title">
+    <div class="container">
+      <h2 class="section-title" id="who-title">{home.who.title}</h2>
+      <ul class="who__cards" role="list">
+        {
+          home.who.cards.map((card) => (
+            <li class="who__card">
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
             </li>
-            <li>
-              {
-                CONTACT_EMAIL ? (
-                  <a class="channel" href={`mailto:${CONTACT_EMAIL}`}>
-                    {home.founder.channels.email}: <strong>{CONTACT_EMAIL}</strong>
-                  </a>
-                ) : (
-                  <span class="channel channel--soon">
-                    {home.founder.channels.email} · {home.founder.channels.soon}
-                  </span>
-                )
-              }
-            </li>
-          </ul>
-          <a class="text-link" href={localePath(lang, '/about')}>{home.founder.about}</a>
-        </div>
+          ))
+        }
+      </ul>
+      <p class="who__why">
+        {home.who.why}
+        <a class="text-link" href={localePath(lang, '/philosophy')}>{home.who.link}</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. The founder strip, then the invite form -->
+  <section class="section section--tight founder" id="founder" aria-labelledby="founder-title">
+    <div class="container founder__strip">
+      <div class="founder__art">
+        <span class="founder__patch" aria-hidden="true"></span>
+        <Figure class="founder__photo" image={IMAGES.founderPortrait} alt={home.founder.imageAlt} placeholder={copy.common.imagePlaceholder} />
+      </div>
+      <div class="founder__text">
+        <h2 class="kicker" id="founder-title"><Botanical name="sprig" />{home.founder.title}</h2>
+        <p class="founder__body">{home.founder.body}</p>
+        <a class="text-link" href={localePath(lang, '/about')}>{home.founder.link}</a>
       </div>
     </div>
   </section>
 
-  <!-- Explore more with us: three places to go next -->
-  <section class="section explore" id="explore" aria-labelledby="explore-title">
-    <div class="container">
-      <div class="head">
-        <p class="kicker"><Botanical name="sprig" />{explore.chapter}</p>
-        <h2 class="head__title" id="explore-title">{explore.title}</h2>
-        <p class="head__intro">{explore.intro}</p>
-      </div>
-
-      <div class="explore__mosaic">
-        <!-- Blog: longer writing -->
-        <article class="dest dest--blog">
-          <div class="dest__body">
-            <h3 class="dest__name">{explore.blog.name}</h3>
-            <p class="dest__tagline">{explore.blog.tagline}</p>
-            <ul class="dest__topics dest__topics--lines" role="list">
-              {explore.blog.topics.map((topic) => <li>{topic}</li>)}
-            </ul>
-            {
-              latestPost && (
-                <p class="dest__latest">
-                  <span>{explore.blog.latest}</span>
-                  <a href={postUrl(latestPost)}>{latestPost.data.title}</a>
-                </p>
-              )
-            }
-            <a class="dest__cta" href={localePath(lang, '/blog')}>{explore.blog.cta}<span aria-hidden="true">→</span></a>
-          </div>
-          <div class="dest__media">
-            <span class="dest__sheet" aria-hidden="true"></span>
-            <Figure image={IMAGES.exploreBlog} alt={explore.blog.imageAlt} placeholder={copy.common.imagePlaceholder} />
-          </div>
-        </article>
-
-        <!-- Resources: materials to use -->
-        <article class="dest dest--resources">
-          <div class="dest__media">
-            <Figure image={IMAGES.exploreResources} alt={explore.resources.imageAlt} placeholder={copy.common.imagePlaceholder} />
-            <span class="dest__specimen dest__specimen--a" aria-hidden="true"><Botanical name="catFern" /></span>
-            <span class="dest__specimen dest__specimen--b" aria-hidden="true"><Botanical name="catBerries" /></span>
-            <span class="dest__specimen dest__specimen--c" aria-hidden="true"><Botanical name="catFlower" /></span>
-          </div>
-          <div class="dest__body">
-            <h3 class="dest__name">{explore.resources.name}</h3>
-            <p class="dest__tagline">{explore.resources.tagline}</p>
-            <ul class="dest__topics dest__topics--tags" role="list">
-              {explore.resources.topics.map((topic) => <li>{topic}</li>)}
-            </ul>
-            <a class="dest__cta" href={localePath(lang, '/resources')}>{explore.resources.cta}<span aria-hidden="true">→</span></a>
-          </div>
-        </article>
-
-        <!-- Xiaohongshu: photographs and small notes -->
-        <article class="dest dest--xhs">
-          <div class="dest__media">
-            <span class="dest__snap dest__snap--back" aria-hidden="true"></span>
-            <div class="dest__snap">
-              <Figure image={IMAGES.exploreXiaohongshu} alt={explore.xiaohongshu.imageAlt} placeholder={copy.common.imagePlaceholder} />
-            </div>
-          </div>
-          <div class="dest__body">
-            <h3 class="dest__name">
-              {explore.xiaohongshu.name}
-              <span class="dest__native" lang={otherLang}>{explore.xiaohongshu.nativeName}</span>
-            </h3>
-            <p class="dest__tagline">{explore.xiaohongshu.tagline}</p>
-            <ul class="dest__topics dest__topics--dots" role="list">
-              {explore.xiaohongshu.topics.map((topic) => <li>{topic}</li>)}
-            </ul>
-            {
-              XIAOHONGSHU_URL ? (
-                <a class="dest__cta" href={XIAOHONGSHU_URL} target="_blank" rel="noopener">
-                  {explore.xiaohongshu.cta}
-                  <span aria-hidden="true">→</span>
-                  <span class="visually-hidden"> ({copy.common.newWindow})</span>
-                </a>
-              ) : (
-                <p class="dest__cta dest__cta--missing">
-                  <span class="visually-hidden">{explore.xiaohongshu.cta}: </span>
-                  {explore.linkMissing}
-                </p>
-              )
-            }
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Inspired by: a small collection, hung along a vine -->
-  <section class="section section--cream inspired" id="inspired-by" aria-labelledby="inspired-title">
-    <div class="container inspired__grid">
-      <div class="head inspired__head">
-        <p class="kicker"><Botanical name="sprig" />{home.inspired.chapter}</p>
-        <h2 class="head__title" id="inspired-title">{home.inspired.title}</h2>
-        <p class="head__intro">{home.inspired.intro}</p>
-      </div>
-
+  <section class="section section--sage invite" id="invite" aria-labelledby="invite-title">
+    <div class="container container--narrow invite__inner">
+      <h2 class="section-title" id="invite-title">{home.invite.title}</h2>
+      <p class="invite__body">{home.invite.body}</p>
       {
-        shelf.length > 0 ? (
-          <>
-            <div class="inspired__body">
-            <ul class="shelf" role="list">
-              {shelf.map((item) => (
-                <li class:list={['pin', `pin--${KIND_SHAPE[item.kind]}`, item.placeholder && 'pin--placeholder']}>
-                  <svg class="pin__vine" viewBox="0 0 200 24" preserveAspectRatio="none" fill="none" aria-hidden="true">
-                    <path d="M0 12C35 4 65 4 100 12S165 20 200 12" />
-                  </svg>
-                  <span class="pin__string" aria-hidden="true" />
-                  <div class="pin__media">
-                    {item.image ? <img src={url(item.image)} alt={item.imageAlt} loading="lazy" decoding="async" /> : <Botanical name={KIND_ART[item.kind]} />}
-                  </div>
-                  <p class="pin__kind">{home.inspired.kinds[item.kind]}</p>
-                  <h3 class="pin__name">
-                    {item.href ? (
-                      <a href={item.href} target="_blank" rel="noopener">
-                        {item.name}
-                        <span class="visually-hidden"> ({copy.common.newWindow})</span>
-                      </a>
-                    ) : (
-                      item.name
-                    )}
-                  </h3>
-                  {item.by && (
-                    <p class="pin__by">
-                      {home.inspired.by} {item.by}
-                    </p>
-                  )}
-                  {item.quote && <blockquote class="pin__quote">“{item.quote}”</blockquote>}
-                  {item.note && <p class="pin__note">{item.note}</p>}
-                </li>
-              ))}
-            </ul>
-            {showPlaceholders ? (
-              <p class="draft-note inspired__after">
-                <span class="tag tag--draft">{copy.common.placeholder}</span>
-                <span>{home.inspired.placeholder.hint}</span>
-              </p>
-            ) : (
-              <p class="inspired__after inspired__disclaimer">{home.inspired.disclaimer}</p>
-            )}
-            </div>
-          </>
+        formUrl ? (
+          <iframe class="invite__frame" src={formUrl} title={home.invite.formTitle} loading="lazy" />
         ) : (
-          <div class="inspired__empty">
-            <span class="inspired__pot" aria-hidden="true">
-              <Botanical name="catSeedling" class="js-grow" />
-            </span>
-            <h3>{home.inspired.empty.title}</h3>
-            <p>{home.inspired.empty.body}</p>
-          </div>
+          SHOW_DESIGN_PLACEHOLDERS && (
+            <p class="draft-note">
+              <span class="tag tag--draft">{copy.common.placeholder}</span>
+              <span>{home.invite.setup}</span>
+            </p>
+          )
         )
       }
-    </div>
-  </section>
-
-  <!-- The ribbon of values, between inspiration and invitation -->
-  <ValuesRibbon label={home.values.label} words={home.values.words} />
-
-  <!-- Grow with us: two separate invitations -->
-  <section class="section section--sage grow" id="grow-with-us" aria-labelledby="grow-title">
-    <div class="container">
-      <div class="head head--center">
-        <p class="kicker"><Botanical name="sprig" />{home.grow.chapter}</p>
-        <h2 class="head__title" id="grow-title">{home.grow.title}</h2>
-        {home.grow.paragraphs.map((p) => <p class="head__intro">{p}</p>)}
-      </div>
-
-      <div class="grow__paths">
-        <div class="path path--feedback">
-          <p class="path__label">{home.grow.feedback.label}</p>
-          <h3>{home.grow.feedback.title}</h3>
-          <p>{home.grow.feedback.body}</p>
-          {
-            FEEDBACK_URL ? (
-              <a class="btn btn--go" href={FEEDBACK_URL} target={feedbackIsWeb ? '_blank' : undefined} rel={feedbackIsWeb ? 'noopener' : undefined}>
-                {home.grow.feedback.button}
-                <span aria-hidden="true">→</span>
-                {feedbackIsWeb && <span class="visually-hidden"> ({copy.common.newWindow})</span>}
-              </a>
-            ) : (
-              <span class="btn" data-disabled>
-                <span class="visually-hidden">{home.grow.feedback.button}: </span>
-                {home.grow.feedback.missing}
-              </span>
-            )
-          }
-        </div>
-
-        <div class="grow__plant" aria-hidden="true">
-          <Botanical name="together" class="js-grow" />
-        </div>
-
-        <div class="path path--community">
-          <p class="path__label">{home.grow.community.label}</p>
-          <h3>{home.grow.community.title}</h3>
-          <p class="tag tag--gold">{home.grow.community.status}</p>
-          <p>{home.grow.community.body}</p>
-          <p class="path__choose">{home.grow.community.choose}</p>
-          <ul class="path__surveys" role="list">
-            {
-              surveys.map((survey) => (
-                <li lang={survey.lang}>
-                  <span class="path__region">{survey.region}</span>
-                  {survey.url ? (
-                    <a class="btn btn--small" href={survey.url} target="_blank" rel="noopener">
-                      {survey.button}
-                      <span aria-hidden="true">↗</span>
-                      <span class="visually-hidden"> ({copy.common.newWindow})</span>
-                    </a>
-                  ) : (
-                    <span class="btn btn--small" data-disabled>
-                      <span class="visually-hidden">{survey.button}: </span>
-                      {copy.community.survey.comingSoon}
-                    </span>
-                  )}
-                </li>
-              ))
-            }
-          </ul>
-          <a class="text-link" href={localePath(lang, '/community')}>{home.grow.community.more}</a>
-        </div>
-      </div>
-
-      <div class="grow__ps">
-        <span class="grow__ps-art" aria-hidden="true"><Botanical name="catSeedling" /></span>
-        <p><span class="grow__ps-label">{home.grow.ps.label}</span> {home.grow.ps.body}</p>
-        <a class="btn btn--secondary" href={APP_URL}>{home.grow.ps.button}</a>
-      </div>
+      <a class="text-link" href={localePath(lang, '/privacy')}>{home.invite.privacy}</a>
     </div>
   </section>
 </BaseLayout>
-
-<script>
-  // Drawings below the first screen grow when they scroll into view. Without this script they are simply there.
-  const drawings = document.querySelectorAll('.js-grow');
-  if (drawings.length && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          entry.target.classList.add('botanical--grow');
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.35 },
-    );
-    drawings.forEach((drawing) => observer.observe(drawing));
-  }
-
-  // Experience RootMap on phones: the four screens are a carousel. Swiping is the browser's own scroll snapping; this
-  // keeps the words and the dots in step with the screen in the middle, and lets the dots, the arrow keys and a tap
-  // on a neighbouring screen move it. Without this script each screen simply keeps its words beneath it.
-  const stage = document.querySelector<HTMLElement>('.stage');
-  const track = stage?.querySelector<HTMLElement>('.journey');
-  if (stage && track) {
-    const slides = [...track.querySelectorAll<HTMLElement>('.step')];
-    const captions = [...stage.querySelectorAll<HTMLElement>('.caption')];
-    const dots = [...stage.querySelectorAll<HTMLButtonElement>('.dots button')];
-    const phone = window.matchMedia('(max-width: 61.99em)');
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let active = 0;
-    // The screen a dot or key is heading for: the ones passed on the way there are not announced.
-    let heading: number | null = null;
-
-    const show = (index: number) => {
-      active = index;
-      slides.forEach((slide, i) => slide.toggleAttribute('data-active', i === index));
-      captions.forEach((caption, i) => caption.toggleAttribute('data-active', i === index));
-      dots.forEach((dot, i) => (i === index ? dot.setAttribute('aria-current', 'true') : dot.removeAttribute('aria-current')));
-    };
-    // How far a screen's middle is from the middle of the row.
-    const offset = (slide: HTMLElement) => {
-      const s = slide.getBoundingClientRect();
-      const t = track.getBoundingClientRect();
-      return s.left + s.width / 2 - (t.left + t.width / 2);
-    };
-    const nearest = () => slides.reduce((best, slide, i) => (Math.abs(offset(slide)) < Math.abs(offset(slides[best])) ? i : best), 0);
-    const goTo = (index: number) => {
-      const next = Math.max(0, Math.min(slides.length - 1, index));
-      heading = next;
-      show(next);
-      track.scrollTo({ left: track.scrollLeft + offset(slides[next]), behavior: calm.matches ? 'auto' : 'smooth' });
-    };
-
-    let queued = false;
-    track.addEventListener(
-      'scroll',
-      () => {
-        if (queued || !phone.matches) return;
-        queued = true;
-        requestAnimationFrame(() => {
-          queued = false;
-          const index = nearest();
-          if (heading !== null) {
-            if (index === heading) heading = null;
-            return;
-          }
-          if (index !== active) show(index);
-        });
-      },
-      { passive: true },
-    );
-    // A finger or the wheel takes over from wherever a dot was heading.
-    for (const type of ['touchstart', 'wheel', 'pointerdown']) {
-      track.addEventListener(type, () => (heading = null), { passive: true });
-    }
-    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
-    slides.forEach((slide, i) => {
-      slide.querySelector<HTMLButtonElement>('.step__arrow')?.addEventListener('click', (event) => {
-        event.stopPropagation();
-        if (phone.matches) goTo(i + 1);
-        else slides[i + 1].scrollIntoView({ behavior: calm.matches ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
-      });
-    });
-    slides.forEach((slide, i) =>
-      slide.addEventListener('click', () => {
-        if (phone.matches && i !== active) goTo(i);
-      }),
-    );
-    track.addEventListener('keydown', (event) => {
-      if (!phone.matches) return;
-      const to = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: slides.length - 1 }[event.key];
-      if (to === undefined) return;
-      event.preventDefault();
-      goTo(to);
-    });
-    stage.dataset.carousel = '';
-  }
-</script>
 
 <style>
   /* Shared pieces */
@@ -720,6 +242,11 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     transform: translateY(1px);
   }
 
+  /* A plain section title, as on the other pages */
+  .section-title {
+    font-size: var(--step-3);
+  }
+
   /* Hero */
   .hero {
     padding-block: clamp(2rem, 1rem + 4vw, 4.5rem) clamp(3rem, 2rem + 4vw, 6rem);
@@ -772,35 +299,14 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     align-items: center;
     gap: var(--space-3);
   }
-  /* A small aside under the buttons */
-  .hero__note {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--space-4);
-    align-items: center;
-    max-width: 27rem;
-    margin-top: var(--space-3);
-    font-family: var(--font-serif);
-    font-size: var(--step-0);
-    font-style: italic;
-    line-height: 1.5;
-    color: var(--green-700);
+  .hero__actions .text-link {
+    margin-left: var(--space-2);
   }
-  :lang(zh) .hero__note {
-    font-family: var(--font-serif-zh);
-    font-style: normal;
-    line-height: 1.75;
-  }
-  .hero__note-art {
-    display: grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--gold-100);
-  }
-  .hero__note-art :global(.botanical) {
-    width: 2.6rem;
+  /* The small line about early access, under the button */
+  .hero__access {
+    margin-top: calc(-1 * var(--space-2));
+    color: var(--muted);
+    font-size: var(--step--1);
   }
   /* The layered picture: the photograph at the back, the app leaning over its lower corner, a vine up the far side */
   .hero__art {
@@ -862,9 +368,16 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     transform: scaleX(-1);
   }
   @media (max-width: 35.99em) {
+    .hero__actions {
+      width: 100%;
+      gap: var(--space-4);
+    }
     .hero__actions .btn {
-      flex: 1 1 auto;
+      flex: 1 1 100%;
       min-height: 3.25rem;
+    }
+    .hero__actions .text-link {
+      margin-left: 0;
     }
   }
   @media (min-width: 56em) {
@@ -888,245 +401,8 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     }
   }
 
-  /* The vine between the hero and "Why RootMap" */
-  .vine-rule {
-    position: relative;
-    height: 28px;
-    color: var(--green-600);
-  }
-  .vine-rule__line {
-    width: 100%;
-    height: 100%;
-  }
-  .vine-rule__line path {
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-  .vine-rule :global(.botanical) {
-    position: absolute;
-    left: 16%;
-    bottom: 52%;
-    width: 2.4rem;
-  }
-  .vine-rule :global(.botanical ~ .botanical) {
-    left: 53%;
-    bottom: 40%;
-    width: 2rem;
-    transform: scaleX(-1) rotate(8deg);
-  }
-  .vine-rule :global(.botanical ~ .botanical ~ .botanical) {
-    left: 82%;
-    bottom: 34%;
-    width: 2.6rem;
-    transform: rotate(-6deg);
-  }
-
-  /* Why RootMap */
-  .why__top {
-    display: grid;
-    gap: var(--space-8);
-  }
-  .why__text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-4);
-    max-width: 36rem;
-    color: var(--ink-soft);
-  }
-  .why__title {
-    max-width: 14ch;
-    margin-bottom: var(--space-2);
-    font-size: var(--step-4);
-  }
-  :lang(zh) .why__title {
-    max-width: 12em;
-  }
-  .why__title + p {
-    color: var(--ink);
-    font-size: var(--step-1);
-    line-height: 1.55;
-  }
-  .why__text .text-link {
-    margin-top: var(--space-2);
-  }
-  /* A larger photograph with a small detail tucked over its corner */
-  .why__collage {
-    position: relative;
-    padding-right: 5%;
-  }
-  section :global(.why__photo) {
-    --figure-radius: 1.5rem 6rem 1.5rem 1.5rem;
-  }
-  :global(.why__photo figcaption) {
-    max-width: 30rem;
-    font-family: var(--font-serif);
-    font-size: var(--step-0);
-    font-style: italic;
-    line-height: 1.5;
-    color: var(--green-700);
-  }
-  :global(:lang(zh) .why__photo figcaption) {
-    font-family: var(--font-serif-zh);
-    font-style: normal;
-  }
-  section :global(.why__detail) {
-    position: absolute;
-    top: -2.25rem;
-    right: 0;
-    width: 32%;
-    padding: 0.4rem;
-    border-radius: 1.4rem;
-    background: var(--paper);
-    transform: rotate(4deg);
-    transition: transform 0.5s var(--ease);
-    --figure-radius: 1.1rem;
-    --figure-placeholder-bg: var(--gold-100);
-  }
-  .why__collage:hover :global(.why__detail) {
-    transform: rotate(1deg) translateY(-3px);
-  }
-  :global(.why__detail .figure__label) {
-    left: 0.6rem;
-    bottom: 0.5rem;
-  }
-  :global(.why__detail .figure__label code) {
-    display: none;
-  }
-
-  /* Six ideas on one vine */
-  .roots {
-    position: relative;
-    margin-top: clamp(3rem, 2rem + 4vw, 6rem);
-    --bead: 4.5rem;
-  }
-  .roots__stem {
-    position: absolute;
-    top: -1rem;
-    left: calc(var(--bead) / 2 - 12px);
-    width: 24px;
-    height: calc(100% + 2rem);
-    color: var(--green-600);
-  }
-  .roots__stem path {
-    stroke: currentColor;
-    stroke-width: 2.4;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-  .roots__list {
-    position: relative;
-    display: grid;
-    gap: var(--space-6);
-  }
-  .idea {
-    display: grid;
-    grid-template-columns: var(--bead) 1fr;
-    gap: var(--space-4);
-    align-items: center;
-  }
-  .idea__art {
-    display: grid;
-    place-items: center;
-    width: var(--bead);
-    height: var(--bead);
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--sage-100);
-    transition: border-radius 0.6s var(--ease);
-  }
-  .idea:nth-child(3n + 2) .idea__art {
-    border-radius: 45% 55% 42% 58% / 56% 44% 56% 44%;
-    background: var(--gold-100);
-  }
-  .idea:nth-child(3n) .idea__art {
-    border-radius: 52% 48% 60% 40% / 42% 58% 42% 58%;
-    background: var(--cream-200);
-  }
-  .idea:hover .idea__art {
-    border-radius: 50%;
-  }
-  .idea__art :global(.botanical) {
-    width: 72%;
-    transition: transform 0.5s var(--ease);
-    transform-origin: 50% 90%;
-  }
-  .idea:hover .idea__art :global(.botanical) {
-    transform: rotate(-9deg) scale(1.06);
-  }
-  .idea h4 {
-    font-family: var(--font-serif);
-    font-size: var(--step-2);
-    font-weight: 500;
-  }
-  :lang(zh) .idea h4 {
-    font-family: var(--font-serif-zh);
-    font-weight: 600;
-  }
-  .idea p {
-    margin-top: var(--space-1);
-    color: var(--ink-soft);
-  }
-  @media (min-width: 56em) {
-    .why__top {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--space-5);
-      align-items: center;
-    }
-    .why__text {
-      grid-column: 1 / 7;
-    }
-    .why__collage {
-      grid-column: 8 / -1;
-      padding-right: 0;
-    }
-    section :global(.why__detail) {
-      right: -1.5rem;
-      width: 34%;
-    }
-    /* Wide screens: the vine runs down the middle, with ideas to the left and right, each a step below the last */
-    .roots {
-      --bead: 5rem;
-      --step-down: 5.5rem;
-      max-width: 62rem;
-      margin-inline: auto;
-      padding-bottom: var(--step-down);
-    }
-    .roots__stem {
-      left: calc(50% - 12px);
-    }
-    .roots__list {
-      grid-template-columns: 1fr 1fr;
-      grid-auto-rows: minmax(calc(var(--step-down) * 2), auto);
-      gap: 0;
-    }
-    .idea {
-      gap: var(--space-5);
-    }
-    .idea:nth-child(odd) {
-      grid-template-columns: 1fr var(--bead);
-      margin-right: calc(var(--bead) / -2 + 0.9rem);
-      text-align: right;
-    }
-    .idea:nth-child(odd) .idea__art {
-      order: 1;
-    }
-    .idea:nth-child(odd) p {
-      margin-left: auto;
-    }
-    .idea:nth-child(even) {
-      position: relative;
-      top: var(--step-down);
-      margin-left: calc(var(--bead) / -2 + 0.9rem);
-    }
-    .idea p {
-      max-width: 22rem;
-    }
-  }
-
-  /* Experience RootMap */
-  .product {
+  /* How it works */
+  .how {
     position: relative;
   }
   .wave {
@@ -1146,10 +422,10 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     bottom: 1px;
     transform: translateY(100%) rotate(180deg);
   }
-  .product__inner {
+  .how__inner {
     position: relative;
   }
-  :global(.product__vine) {
+  :global(.how__vine) {
     position: absolute;
     top: 0;
     right: 0;
@@ -1160,375 +436,248 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     --bot-leaf-c: rgba(75, 124, 99, 0.6);
     --bot-terra: rgba(217, 139, 98, 0.65);
   }
-  .product .kicker {
-    color: var(--gold-400);
-    --bot-stem: var(--sage-300);
-    --bot-leaf-a: var(--sage-300);
-    --bot-leaf-b: var(--green-500);
-  }
-  .product__head {
-    display: grid;
-    gap: var(--space-5);
-    margin-bottom: clamp(2.5rem, 1.5rem + 4vw, 5rem);
-  }
-  .product__title {
-    max-width: 18ch;
+  .how__title {
     font-size: var(--step-4);
   }
-  :lang(zh) .product__title {
-    max-width: 14em;
-  }
-  .product__intro {
-    max-width: 32rem;
-    color: rgba(250, 238, 220, 0.86);
-    font-size: var(--step-1);
-  }
-
-  /* Phones: a carousel on its own stage. One screen sits in the middle with the edge of the next beside it, swiped
-     sideways one step at a time. The screen is as wide as the phone allows, but on a short display it gives up some
-     width so that its name still fits underneath, below the header. */
-  .stage {
-    --shot-w: clamp(min(58vw, 13rem), (100vh - var(--header-h) - 9.5rem) * 585 / 1266, min(68vw, 17rem));
-    --shot-w: clamp(min(58vw, 13rem), (100svh - var(--header-h) - 9.5rem) * 585 / 1266, min(68vw, 17rem));
-    margin-inline: calc(-1 * var(--gutter));
-    padding-block: var(--space-6) var(--space-5);
-    background: var(--green-700);
-  }
-  .journey {
-    display: flex;
-    gap: var(--space-4);
-    /* Room underneath for the screens' shadow, which the words then sit over */
-    margin-bottom: calc(var(--space-5) - var(--space-8));
-    padding: 1rem calc((100% - var(--shot-w)) / 2) var(--space-8);
-    overflow-x: auto;
-    list-style: none;
-    scroll-snap-type: x mandatory;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-  }
-  .journey::-webkit-scrollbar {
-    display: none;
-  }
-  .journey:focus-visible {
-    outline-color: var(--gold-400);
-    outline-offset: -4px;
+  /* Phones: one step under another, a slice of each screen beside its words */
+  .steps {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
   }
   .step {
-    --screen-angle: -2.5deg;
-    --screen-offset: 0rem;
     display: grid;
-    flex: 0 0 var(--shot-w);
+    grid-template-columns: 5.5rem 1fr;
     gap: var(--space-5);
-    align-content: start;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
+    align-items: center;
   }
-  .step:nth-child(even) {
-    --screen-angle: 2deg;
-    --screen-offset: 0.8rem;
-  }
-  /* The words for the screen in the middle, and a dot for each step: shown once the carousel is running (see below) */
-  .captions,
-  .dots {
-    display: none;
-  }
-  @media (max-width: 61.99em) {
-    @media (prefers-reduced-motion: no-preference) {
-      .journey {
-        scroll-behavior: smooth;
-      }
-    }
-    .stage[data-carousel] .step .step__text {
-      display: none;
-    }
-    .stage[data-carousel] .step {
-      opacity: 0.75;
-      transition: opacity 0.4s var(--ease);
-    }
-    .stage[data-carousel] .step[data-active] {
-      opacity: 1;
-    }
-    /* All four sets of words share one space, so it is as tall as the longest and nothing below it moves */
-    .stage[data-carousel] .captions {
-      position: relative;
-      display: grid;
-      max-width: 30rem;
-      margin-inline: auto;
-      padding-inline: var(--gutter);
-    }
-    .caption {
-      grid-area: 1 / 1;
-      opacity: 0;
-      visibility: hidden;
-      transition:
-        opacity 0.35s var(--ease),
-        visibility 0s 0.35s;
-    }
-    .caption[data-active] {
-      opacity: 1;
-      visibility: visible;
-      transition-delay: 0s;
-    }
-    .caption h3 {
-      margin-block: var(--space-1) var(--space-2);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .caption {
-        transition: none;
-      }
-    }
-    .stage[data-carousel] .dots {
-      display: flex;
-      justify-content: center;
-      margin-top: var(--space-3);
-    }
-    .dots button {
-      display: grid;
-      place-items: center;
-      width: 2.5rem;
-      height: 2.75rem;
-      padding: 0;
-      border: 0;
-      background: none;
-      cursor: pointer;
-    }
-    .dots button::before {
-      content: '';
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 999px;
-      background: rgba(248, 241, 230, 0.4);
-      transition:
-        width 0.3s var(--ease),
-        background-color 0.3s var(--ease);
-    }
-    .dots button[aria-current]::before {
-      width: 1.5rem;
-      background: var(--gold-400);
-    }
-    .dots button:focus-visible {
-      outline-color: var(--gold-400);
-      outline-offset: -6px;
-    }
-  }
-  .step__shot {
-    position: relative;
-    padding-block: 0.75rem 2rem;
-  }
-  .step__shot :global(.shot) {
-    max-width: none;
-    transform: translateY(var(--screen-offset)) rotate(var(--screen-angle));
-    transition: transform 0.5s var(--ease);
-  }
-  .product :global(.shot img) {
+  .step__shot :global(.shot img),
+  .step__shot :global(.shot__placeholder) {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 0;
+    border-radius: 0.9rem;
     border-color: rgba(248, 241, 230, 0.22);
-    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 18px 30px -18px rgba(0, 0, 0, 0.6);
   }
-  /* The arrow that leads from one screen to the next */
-  .step__arrow {
-    position: absolute;
-    top: 42%;
-    right: calc(var(--space-6) / -2);
-    z-index: 3;
+  .step__text {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-1) var(--space-3);
+    align-items: center;
+  }
+  .step__num {
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0;
-    border: 0;
-    cursor: pointer;
+    width: 1.6rem;
+    height: 1.6rem;
     border-radius: 50%;
     background: var(--gold-400);
     color: var(--green-800);
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1;
-    box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.6);
-    transform: translateX(50%);
-  }
-  .step__arrow:focus-visible {
-    outline: 2px solid var(--white);
-    outline-offset: 4px;
-  }
-  .step__text p:not(.product__kicker) {
-    color: rgba(250, 238, 220, 0.86);
-    font-size: var(--step--1);
-  }
-  .step__text .product__lead {
-    margin-bottom: var(--space-2);
-    color: #fbf2e4;
-    font-size: var(--step-0);
-    line-height: 1.5;
-  }
-  .product__kicker {
-    color: var(--gold-400);
-    font-size: var(--step--1);
+    font-size: var(--step--2);
     font-weight: 700;
   }
-  .product h3 {
-    margin-block: var(--space-2) var(--space-3);
+  .step h3 {
     font-family: var(--font-serif);
-    font-size: var(--step-3);
+    font-size: var(--step-2);
     font-weight: 500;
     color: var(--white);
   }
-  :lang(zh) .product h3 {
+  :lang(zh) .step h3 {
     font-family: var(--font-serif-zh);
     font-weight: 600;
   }
-  .product__foot {
+  .step p {
+    grid-column: 1 / -1;
+    color: rgba(250, 238, 220, 0.86);
+  }
+  .how__foot {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-4) var(--space-6);
-    margin-top: clamp(2.5rem, 2rem + 3vw, 4rem);
+    gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-6);
   }
-  .product__note {
-    flex-basis: 100%;
+  .how__note {
     color: rgba(250, 238, 220, 0.72);
-    font-size: var(--step--1);
+    font-size: var(--step--2);
   }
+  /* Wide screens: all four in one row, each with its whole screen above its words */
   @media (min-width: 56em) {
-    .product__head {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--space-5);
+    .steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-6);
+      margin-top: var(--space-7);
     }
-    .product__head .kicker {
-      grid-column: 1 / -1;
+    .step {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+      align-content: start;
+      justify-items: start;
     }
-    .product__title {
-      grid-column: 1 / 8;
+    .step__shot {
+      width: 100%;
+      max-width: 13rem;
     }
-    .product__intro {
-      grid-column: 9 / -1;
-      align-self: end;
+    .step__shot :global(.shot img),
+    .step__shot :global(.shot__placeholder) {
+      aspect-ratio: 585 / 1266;
+      border-radius: 1.6rem;
     }
-    .product__note {
-      flex-basis: auto;
+    .how__note {
       margin-left: auto;
     }
   }
-  /* Wide screens: all four stand side by side on one stage, overlapping a little, each a step up or down from the last */
-  @media (min-width: 62em) {
-    .stage {
-      display: contents;
-    }
-    .journey {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      grid-template-rows: auto auto;
-      gap: var(--space-6) var(--space-5);
-      margin: 0;
-      padding: 0;
-      overflow: visible;
-      background: none;
-    }
-    .journey::before {
-      content: '';
-      grid-area: 1 / 1 / 2 / -1;
-      margin-inline: calc(-1 * var(--space-6));
-      border-radius: 3rem;
-      background: var(--green-700);
-    }
-    .step {
-      --screen-offset: 0rem;
-      grid-row: 1 / 3;
-      grid-template-rows: subgrid;
-      gap: var(--space-6);
-    }
-    .step:nth-child(1) {
-      grid-column: 1;
-    }
-    .step:nth-child(2) {
-      grid-column: 2;
-    }
-    .step:nth-child(3) {
-      grid-column: 3;
-    }
-    .step:nth-child(4) {
-      grid-column: 4;
-    }
-    .step__shot {
-      display: grid;
-      justify-items: center;
-      padding-block: 2.5rem 5.5rem;
-    }
-    .step:nth-child(even) {
-      --screen-offset: 0rem;
-    }
-    .step:nth-child(even) .step__shot {
-      padding-block: 5.5rem 2.5rem;
-    }
-    .step__shot :global(.shot) {
-      width: 114%;
-    }
 
-    .step__arrow {
-      top: 50%;
-      right: calc(var(--space-5) / -2);
-    }
-  }
-
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .step:hover .step__shot :global(.shot) {
-      transform: translateY(calc(var(--screen-offset) - 0.4rem)) rotate(var(--screen-angle));
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .step__shot :global(.shot) { transition: none; }
-  }
-
-  /* A little note from the founder */
-  .founder {
-    position: relative;
-  }
-  /* The arrow that leads down from the app into the note */
-  .founder__lead-in {
-    position: absolute;
-    top: calc(-1 * clamp(1.5rem, 3vw, 3rem));
-    left: 50%;
-    z-index: 2;
-    width: clamp(2.75rem, 5vw, 4rem);
-    transform: translateX(-50%);
-  }
-  .founder__lead-in path {
-    stroke: var(--terracotta-500);
-    stroke-width: 3.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .founder__lead-in .founder__lead-leaf {
-    fill: var(--terracotta-500);
-    stroke: none;
-  }
-  /* The note: a sheet of paper held with a strip of tape */
-  .founder__note {
-    position: relative;
+  /* Real examples: activity cards */
+  .cards {
     display: grid;
-    gap: var(--space-6);
-    max-width: 72rem;
-    margin: var(--space-6) auto 0;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
   }
-  :global(.founder__sprig) {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 4rem;
+  .card {
+    display: grid;
+    align-content: start;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+    background: var(--white);
   }
-  .founder__head {
+  .card :global(.card__photo) {
+    --figure-radius: 0;
+  }
+  .card__body {
     display: grid;
     gap: var(--space-3);
-    justify-items: center;
-    text-align: center;
-    padding-inline: 2rem;
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
   }
-  .founder__title { font-size: var(--step-4); }
-  .founder__constellation { position: relative; }
+  .card h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  :lang(zh) .card h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .card__meta span {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: var(--gold-100);
+    color: var(--ink-soft);
+    font-size: var(--step--2);
+    font-weight: 700;
+  }
+  .card__label {
+    margin-top: var(--space-2);
+    color: var(--terracotta-700);
+    font-size: var(--step--2);
+    font-weight: 700;
+  }
+  .card__materials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .card__materials li {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--sage-300);
+    border-radius: 999px;
+    background: var(--sage-100);
+    color: var(--green-700);
+    font-size: var(--step--1);
+  }
+  .card__steps {
+    display: grid;
+    gap: var(--space-2);
+    padding-left: 1.25rem;
+    color: var(--ink-soft);
+  }
+  .card__steps li::marker {
+    color: var(--green-500);
+    font-weight: 700;
+  }
+  .examples__cta {
+    margin-top: var(--space-6);
+  }
+  @media (min-width: 48em) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+  @media (max-width: 35.99em) {
+    /* Phones: a wider, shorter crop keeps each card to about one screen */
+    .card :global(.card__photo) {
+      --figure-ratio: 16 / 9;
+    }
+    .examples__cta {
+      width: 100%;
+      min-height: 3.25rem;
+    }
+  }
+
+  /* Who it's for */
+  .who__cards {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+  .who__card {
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    border-radius: 1.5rem 1.5rem 1.5rem 3.5rem;
+    background: var(--paper);
+  }
+  .who__card:nth-child(2) {
+    border-radius: 1.5rem;
+  }
+  .who__card:nth-child(3) {
+    border-radius: 1.5rem 1.5rem 3.5rem 1.5rem;
+  }
+  .who__card h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  :lang(zh) .who__card h3 {
+    font-family: var(--font-serif-zh);
+    font-weight: 600;
+  }
+  .who__card p {
+    margin-top: var(--space-2);
+    color: var(--ink-soft);
+  }
+  .who__why {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
+    margin-top: var(--space-6);
+    color: var(--ink-soft);
+  }
+  @media (min-width: 48em) {
+    .who__cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+
+  /* The founder strip: a small portrait beside two sentences */
+  .founder__strip {
+    display: grid;
+    grid-template-columns: clamp(5.5rem, 22vw, 9rem) 1fr;
+    gap: var(--space-5) clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    align-items: center;
+    max-width: 52rem;
+  }
   .founder__art {
     position: relative;
     isolation: isolate;
-    width: clamp(12rem, 26vw, 19rem);
-    margin: var(--space-5) auto var(--space-7);
   }
   .founder__patch {
     position: absolute;
@@ -1542,821 +691,61 @@ const feedbackIsWeb = FEEDBACK_URL.startsWith('http');
     --figure-radius: 48% 52% 46% 54% / 55% 44% 56% 45%;
     --figure-placeholder-bg: var(--white);
   }
-  :global(.founder__photo .figure__label) {
-    left: 0;
-    right: 0;
-    bottom: 16%;
-    align-items: center;
+  :global(.founder__photo .figure__label code) {
+    display: none;
   }
-  :global(.founder__photo .figure__label code) { display: none; }
-  :global(.founder__vine) {
-    position: absolute;
-    right: -12%;
-    bottom: -10%;
-    width: 32%;
-    transform: scaleX(-1);
-  }
-  .founder__thoughts {
+  .founder__text {
     display: grid;
-    gap: var(--space-5);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: center;
+    gap: var(--space-3);
+    justify-items: start;
   }
-  .founder__thoughts li {
-    padding: var(--space-3) var(--space-4);
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    line-height: 1.45;
-    color: var(--green-700);
-    text-align: center;
-    text-wrap: balance;
-    transform: rotate(-3deg);
+  .founder__text .kicker {
+    font-family: var(--font-sans);
   }
-  .founder__thoughts li:nth-child(even) {
-    color: var(--terracotta-700);
-    transform: rotate(3deg);
-  }
-  .founder__thoughts li::after {
-    content: '';
-    display: block;
-    width: 2.5rem;
-    height: 1px;
-    margin: 0.85rem auto 0;
-    background: currentColor;
-    opacity: 0.4;
-    transform: rotate(-8deg);
-  }
-  :lang(zh) .founder__thoughts li { font-family: var(--font-serif-zh); }
-  .founder__words {
-    max-width: 44rem;
-    margin-inline: auto;
-    text-align: center;
+  :lang(zh) .founder__text .kicker {
+    font-family: var(--font-sans-zh);
   }
   .founder__body {
-    color: var(--ink-soft);
+    font-family: var(--font-serif);
     font-size: var(--step-1);
-    line-height: 1.75;
+    line-height: 1.55;
+    color: var(--green-700);
     text-wrap: pretty;
   }
-  .founder__sign { margin-top: var(--space-4); font-family: var(--font-serif); }
-  @media (min-width: 62em) {
-    .founder__constellation {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr 1fr;
-      grid-template-rows: repeat(3, minmax(6.5rem, auto));
-      gap: var(--space-5) var(--space-6);
-      align-items: center;
-      padding-block: var(--space-5);
-    }
-    .founder__art { grid-area: 1 / 2 / 4 / 3; width: 100%; margin: 0; }
-    .founder__thoughts { display: contents; }
-    .founder__thoughts li:nth-child(odd) { grid-column: 1; }
-    .founder__thoughts li:nth-child(even) { grid-column: 3; }
-    .founder__thoughts li:nth-child(-n + 2) { grid-row: 1; }
-    .founder__thoughts li:nth-child(n + 3):nth-child(-n + 4) { grid-row: 2; }
-    .founder__thoughts li:nth-child(n + 5) { grid-row: 3; }
-    .founder__thoughts li:nth-child(3) { transform: translateX(-1rem) rotate(2deg); }
-    .founder__thoughts li:nth-child(4) { transform: translateX(1rem) rotate(-2deg); }
-  }
-
-  .founder__shaped {
-    display: grid;
-    justify-items: center;
-    gap: var(--space-3);
-    max-width: 46rem;
-    margin-inline: auto;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    background: var(--sage-100);
-    border-radius: 2rem 0.75rem 2rem 0.75rem;
-    text-align: center;
-  }
-  .founder__shaped h3 {
-    font-family: var(--font-serif);
-    font-size: var(--step-2);
-    font-weight: 500;
-    color: var(--green-700);
-  }
-  :lang(zh) .founder__shaped h3 { font-family: var(--font-serif-zh); }
-  .founder__shaped p { color: var(--ink-soft); line-height: 1.65; }
-  .founder__shaped .btn { margin-top: var(--space-2); }
-
-  /* Connect, and the places it leads to */
-  .founder__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-4) var(--space-5);
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--line);
-  }
-  .founder__channels {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-  .channel {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35em;
-    padding: 0.4rem 0.9rem;
-    border: 1px solid var(--sage-300);
-    border-radius: 999px;
-    background: var(--sage-100);
-    color: var(--green-700);
-    font-size: var(--step--1);
-    font-weight: 600;
-    text-decoration: none;
-  }
-  a.channel:hover {
-    border-color: var(--green-500);
-  }
-  .channel--soon {
-    border-style: dashed;
-    border-color: var(--line-strong);
-    background: none;
-    color: var(--muted);
-  }
-  @media (min-width: 48em) {
-    .founder__actions .text-link {
-      margin-left: auto;
-    }
-    .founder__channels {
-      flex: 1;
-    }
-  }
-
-  /* Explore more with us: three destinations, each with its own character */
-  .explore__mosaic {
-    display: grid;
-    gap: var(--space-5);
-  }
-  .dest {
-    position: relative;
-    display: grid;
-    gap: var(--space-6);
-    align-content: start;
-    padding: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
-    border-radius: 2rem;
-    transition: transform 0.4s var(--ease);
-  }
-  .dest:has(a.dest__cta):hover {
-    transform: translateY(-4px);
-  }
-  .dest__body {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-  }
-  .dest__name {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-2) var(--space-3);
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
-    font-weight: 500;
-    line-height: 1.1;
-  }
-  :lang(zh) .dest__name {
+  :lang(zh) .founder__body {
     font-family: var(--font-serif-zh);
-    font-weight: 600;
-  }
-  .dest__native {
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    font-weight: 700;
-    opacity: 0.75;
-  }
-  .dest__tagline {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    font-style: italic;
-    line-height: 1.4;
-  }
-  :lang(zh) .dest__tagline {
-    font-family: var(--font-serif-zh);
-    font-style: normal;
-  }
-  .dest__topics {
-    margin-block: var(--space-2);
-    font-size: var(--step--1);
-  }
-  /* The link covers its whole panel, so the panel is one large target */
-  .dest__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45em;
-    margin-top: auto;
-    padding-top: var(--space-2);
-    font-size: var(--step-0);
-    font-weight: 700;
-    text-decoration: underline;
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 6px;
-  }
-  a.dest__cta::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-  .dest__cta span[aria-hidden] {
-    transition: transform 0.25s var(--ease);
-  }
-  .dest:hover a.dest__cta span[aria-hidden] {
-    transform: translateX(4px);
-  }
-  .dest__cta--missing {
-    padding: 0.45rem 0.9rem;
-    border: 1px dashed currentColor;
-    border-radius: 999px;
-    font-size: var(--step--1);
-    text-decoration: none;
-    opacity: 0.8;
-  }
-  .dest__media {
-    position: relative;
+    line-height: 1.8;
   }
 
-  /* Xiaohongshu: a snapshot, like a post */
-  .dest--xhs {
-    border-top-left-radius: 5rem;
-    background: color-mix(in srgb, var(--terracotta-500) 24%, var(--paper));
-  }
-  .dest--xhs .dest__name,
-  .dest--xhs .dest__cta {
-    color: var(--terracotta-700);
-  }
-  .dest--xhs .dest__media {
-    width: min(70%, 19rem);
-    margin: var(--space-3) auto var(--space-2);
-  }
-  .dest__snap {
-    position: relative;
-    padding: 0.55rem 0.55rem 1.9rem;
-    border-radius: 0.5rem;
-    background: var(--white);
-    box-shadow: 0 18px 36px -22px rgba(43, 37, 32, 0.5);
-    transform: rotate(2.5deg);
-    transition: transform 0.5s var(--ease);
-  }
-  .dest__snap :global(.figure) {
-    --figure-radius: 0.3rem;
-  }
-  .dest__snap--back {
-    position: absolute;
-    inset: 0;
-    padding: 0;
-    background: var(--cream-100);
-    transform: rotate(-6deg) translate(-7%, 2%);
-  }
-  .dest--xhs:hover .dest__snap:not(.dest__snap--back) {
-    transform: rotate(0.5deg) translateY(-3px);
-  }
-  .dest--xhs:hover .dest__snap--back {
-    transform: rotate(-9deg) translate(-10%, 2%);
-  }
-  .dest__topics--dots {
-    display: grid;
-    gap: 0.3rem;
-  }
-  .dest__topics--dots li {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-  }
-  .dest__topics--dots li::before {
-    content: '';
-    flex-shrink: 0;
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 50%;
-    background: var(--terracotta-500);
-    transform: translateY(-0.1em);
-  }
-
-  /* Blog: a written page */
-  .dest--blog {
-    border-top-right-radius: 5rem;
-    background: var(--green-700);
-    color: rgba(250, 238, 220, 0.9);
-  }
-  .dest--blog .dest__name {
-    color: var(--white);
-  }
-  .dest--blog .dest__tagline,
-  .dest--blog .dest__cta {
-    color: var(--gold-400);
-  }
-  .dest--blog :focus-visible {
-    outline-color: var(--gold-400);
-  }
-  .dest__topics--lines {
-    width: 100%;
-    max-width: 24rem;
-  }
-  .dest__topics--lines li {
-    padding-block: 0.4rem;
-    border-bottom: 1px solid rgba(248, 241, 230, 0.2);
-  }
-  .dest__latest {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.2rem 0.6rem;
-    font-size: var(--step--1);
-  }
-  .dest__latest span {
-    color: var(--gold-400);
-    font-weight: 700;
-  }
-  .dest--blog .dest__media {
-    width: min(86%, 22rem);
-    margin-inline: auto;
-  }
-  .dest__sheet {
-    position: absolute;
-    inset: -5% 4% 5% -6%;
-    border-radius: 0.4rem;
-    background: repeating-linear-gradient(to bottom, transparent 0 1.05rem, var(--line) 1.05rem calc(1.05rem + 1px)), var(--cream-100);
-    transform: rotate(-5deg);
-    transition: transform 0.5s var(--ease);
-  }
-  .dest--blog .dest__media :global(.figure) {
-    position: relative;
-    transform: rotate(2deg);
-    transition: transform 0.5s var(--ease);
-    --figure-radius: 0.4rem;
-    --figure-placeholder-bg: var(--white);
-  }
-  .dest--blog:hover .dest__sheet {
-    transform: rotate(-8deg);
-  }
-  .dest--blog:hover .dest__media :global(.figure) {
-    transform: rotate(0.5deg);
-  }
-
-  /* Resources: a table of specimens */
-  .dest--resources {
-    border-bottom-right-radius: 5rem;
-    background: var(--sage-200);
-  }
-  .dest__topics--tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-  .dest__topics--tags li {
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    background: var(--white);
-    color: var(--green-700);
-    font-weight: 600;
-  }
-  .dest--resources .dest__cta {
-    color: var(--green-700);
-  }
-  .dest--resources .dest__media {
-    width: min(86%, 22rem);
-    margin: var(--space-3) auto;
-  }
-  .dest--resources .dest__media :global(.figure) {
-    --figure-radius: 42% 58% 46% 54% / 52% 44% 56% 48%;
-    --figure-placeholder-bg: var(--white);
-  }
-  :global(.dest--resources .figure__label) {
-    left: 22%;
-    bottom: 16%;
-  }
-  .dest__specimen {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    width: 26%;
-    aspect-ratio: 1;
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--gold-100);
-    transition: transform 0.5s var(--ease);
-  }
-  .dest__specimen :global(.botanical) {
-    width: 74%;
-  }
-  .dest__specimen--a {
-    top: -8%;
-    left: -6%;
-  }
-  .dest__specimen--b {
-    right: -8%;
-    top: 30%;
-    background: var(--cream-100);
-  }
-  .dest__specimen--c {
-    left: 10%;
-    bottom: -10%;
-    width: 22%;
-    background: var(--white);
-  }
-  .dest--resources:hover .dest__specimen--a {
-    transform: rotate(-10deg);
-  }
-  .dest--resources:hover .dest__specimen--b {
-    transform: rotate(8deg) translateX(3px);
-  }
-  .dest--resources:hover .dest__specimen--c {
-    transform: rotate(-6deg) translateY(3px);
-  }
-  @media (min-width: 40em) {
-    .dest--blog,
-    .dest--resources {
-      grid-template-columns: 1.1fr 1fr;
-      align-items: center;
-    }
-    .dest--resources {
-      grid-template-columns: 1fr 1.1fr;
-    }
-    .dest--blog .dest__media,
-    .dest--resources .dest__media {
-      width: 86%;
-    }
-    .dest__body {
-      height: 100%;
-    }
-  }
-  @media (min-width: 62em) {
-    .explore__mosaic {
-      grid-template-columns: 5fr 7fr;
-    }
-    .dest--xhs {
-      grid-column: 2;
-      grid-row: 1 / 3;
-      grid-template-rows: auto 1fr;
-    }
-  }
-
-  /* Inspired by: the label on one side, the collection clustered beside it */
-  .inspired__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .inspired__head {
-    justify-items: center;
-    text-align: center;
-  }
-  .shelf {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: var(--space-7);
-  }
-  .pin {
-    position: relative;
-    display: flex;
-    flex: 0 0 50%;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-3);
-    text-align: center;
-    --string: 1.5rem;
-    --tilt: -2deg;
-  }
-  .pin:nth-child(even) {
-    --string: 2.75rem;
-    --tilt: 2.5deg;
-  }
-  .pin:nth-child(3n) {
-    --string: 2.1rem;
-    --tilt: -1deg;
-  }
-  /* Each piece carries its own length of vine; side by side they join into one */
-  .pin__vine {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 24px;
-    color: var(--green-600);
-  }
-  .pin__vine path {
-    stroke: currentColor;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-  .pin__string {
-    width: 1.5px;
-    height: var(--string);
-    margin-top: 12px;
-    background: var(--green-600);
-  }
-  .pin__media {
-    display: grid;
-    place-items: center;
-    width: 6.5rem;
-    aspect-ratio: 1;
-    margin-top: calc(-1 * var(--space-2));
-    margin-bottom: var(--space-2);
-    overflow: hidden;
-    border-radius: 50%;
-    background: var(--sage-200);
-    box-shadow: var(--shadow-sm);
-    transform: rotate(var(--tilt));
-    transform-origin: 50% 0;
-    transition: transform 0.6s var(--ease);
-  }
-  .pin:hover .pin__media {
-    transform: rotate(calc(var(--tilt) * -1));
-  }
-  .pin__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .pin__media :global(.botanical) {
-    width: 62%;
-  }
-  .pin--cover .pin__media {
-    width: 5.5rem;
-    aspect-ratio: 2 / 3;
-    border-radius: 0.3rem 0.6rem 0.6rem 0.3rem;
-    background: var(--gold-100);
-  }
-  .pin--logo .pin__media {
-    width: 9rem;
-    aspect-ratio: 2 / 1;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    background: var(--white);
-  }
-  .pin--logo .pin__media img {
-    object-fit: contain;
-  }
-  .pin--idea .pin__media {
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--white);
-  }
-  .pin--placeholder .pin__media {
-    border: 1.5px dashed var(--line-strong);
-    background: var(--paper);
-    box-shadow: none;
-    --bot-stem: var(--line-strong);
-    --bot-leaf-a: var(--line-strong);
-    --bot-leaf-b: var(--line);
-    --bot-leaf-c: var(--line-strong);
-    --bot-terra: var(--line-strong);
-    --bot-gold: var(--line);
-  }
-  .pin__kind {
-    color: var(--muted);
-    font-size: var(--step--2);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-  }
-  .pin__name {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    font-weight: 500;
-    line-height: 1.25;
-  }
-  :lang(zh) .pin__name {
-    font-family: var(--font-serif-zh);
-    font-weight: 600;
-  }
-  .pin__name a {
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-  }
-  .pin__by {
-    color: var(--ink-soft);
-    font-size: var(--step--1);
-  }
-  .pin__quote {
-    max-width: 16rem;
-    color: var(--ink-soft);
-    font-size: var(--step--1);
-    line-height: 1.5;
-  }
-  /* Your own words, like a note in the margin */
-  .pin__note {
-    max-width: 14rem;
-    font-family: var(--font-serif);
-    font-size: var(--step-0);
-    font-style: italic;
-    line-height: 1.4;
-    color: var(--terracotta-700);
-    transform: rotate(-1.5deg);
-  }
-  :lang(zh) .pin__note {
-    font-family: var(--font-serif-zh);
-    font-style: normal;
-  }
-  .pin--placeholder :is(.pin__name, .pin__note) {
-    color: var(--muted);
-  }
-  .inspired__after {
-    max-width: 40rem;
-    margin: var(--space-7) auto 0;
-  }
-  .inspired__disclaimer {
-    color: var(--muted);
-    font-size: var(--step--1);
-    text-align: center;
-  }
-  .inspired__empty {
-    display: grid;
-    gap: var(--space-3);
-    justify-items: center;
-    text-align: center;
-  }
-  .inspired__pot {
-    display: grid;
-    place-items: center;
-    width: 7rem;
-    height: 7rem;
-    margin-bottom: var(--space-2);
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--sage-200);
-  }
-  .inspired__pot :global(.botanical) {
-    width: 5rem;
-  }
-  .inspired__empty h3 {
-    font-family: var(--font-serif);
-    font-size: var(--step-2);
-    font-weight: 500;
-  }
-  :lang(zh) .inspired__empty h3 {
-    font-family: var(--font-serif-zh);
-    font-weight: 600;
-  }
-  .inspired__empty p {
-    max-width: 30rem;
-    color: var(--ink-soft);
-  }
-  @media (min-width: 40em) {
-    .pin {
-      flex-basis: 33.333%;
-    }
-  }
-  @media (min-width: 62em) {
-    .inspired__grid {
-      grid-template-columns: 4fr 8fr;
-      column-gap: var(--space-7);
-      align-items: start;
-    }
-    .inspired__head {
-      position: sticky;
-      top: calc(var(--header-h) + var(--space-6));
-      justify-items: start;
-      margin-bottom: 0;
-      text-align: left;
-    }
-    .pin {
-      flex-basis: 25%;
-    }
-    .shelf {
-      row-gap: var(--space-6);
-    }
-    .inspired__empty {
-      padding-block: var(--space-5);
-    }
-  }
-
-  /* The ribbon sits on the seam between "Inspired by" and "Grow with us" */
-  :global(.ribbon) {
-    --ribbon-from: var(--cream-100);
-    --ribbon-to: var(--sage-100);
-  }
-
-  /* Grow with us */
-  .grow__paths {
-    display: grid;
-    gap: var(--space-5);
-  }
-  .path {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-3);
-    padding: clamp(1.5rem, 1rem + 2.4vw, 2.75rem);
-    border-radius: 2rem 2rem 2rem 5rem;
-    background: var(--paper);
-  }
-  .path--community {
-    border-radius: 2rem 2rem 5rem 2rem;
-  }
-  .path__label {
-    color: var(--terracotta-700);
-    font-size: var(--step--1);
-    font-weight: 700;
-  }
-  .path h3 {
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
-    font-weight: 500;
-    line-height: 1.15;
-  }
-  :lang(zh) .path h3 {
-    font-family: var(--font-serif-zh);
-    font-weight: 600;
-  }
-  .path > p:not([class]) {
-    max-width: 32rem;
-    color: var(--ink-soft);
-  }
-  .path > .btn {
-    margin-top: var(--space-3);
-  }
-  .path__choose {
-    margin-top: var(--space-2);
-    font-size: var(--step--1);
-    font-weight: 700;
-    color: var(--green-700);
-  }
-  .path__surveys {
-    display: grid;
-    width: 100%;
-    margin-bottom: var(--space-3);
-  }
-  .path__surveys li {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2) var(--space-4);
-    padding-block: var(--space-3);
-    border-top: 1px solid var(--line);
-  }
-  .path__surveys li:last-child {
-    border-bottom: 1px solid var(--line);
-  }
-  .path__region {
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .grow__plant {
-    display: grid;
-    place-items: center;
-    margin-block: calc(-1 * var(--space-3));
-  }
-  .grow__plant :global(.botanical) {
-    width: 7rem;
-  }
-  .grow__ps {
+  /* The invite form: a hosted form in a frame */
+  .invite {
+    /* Clear of the sticky header when a "Request an invite" link jumps here */
+    scroll-margin-top: var(--header-h);
+  }
+  .invite__inner {
     display: grid;
     gap: var(--space-4);
     justify-items: start;
-    margin-top: var(--space-7);
-    padding-top: var(--space-6);
-    border-top: 1px solid var(--sage-300);
+  }
+  .invite__body {
     color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.6;
   }
-  .grow__ps-art {
-    display: grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
-    background: var(--paper);
+  /* Hosted forms do not report their height, so the frame is given room for four questions and scrolls beyond that.
+     Adjust --invite-frame-h once the real forms are in. */
+  .invite__frame {
+    width: 100%;
+    height: var(--invite-frame-h, 52rem);
+    margin-block: var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+    background: var(--white);
   }
-  .grow__ps-art :global(.botanical) {
-    width: 2.6rem;
+  .invite .draft-note {
+    margin-block: var(--space-3);
   }
-  .grow__ps-label {
-    font-family: var(--font-serif);
-    font-style: italic;
-    color: var(--terracotta-700);
-  }
-  @media (max-width: 35.99em) {
-    .path > .btn,
-    .grow__ps .btn {
-      width: 100%;
-      min-height: 3.25rem;
-    }
-  }
-  @media (min-width: 56em) {
-    /* Two plants from separate roots grow beside the two invitations */
-    .grow__paths {
-      grid-template-columns: 5fr 6fr;
-      grid-template-rows: auto 1fr;
-      gap: var(--space-5) var(--space-6);
-    }
-    .path--community {
-      grid-area: 1 / 2 / 3 / 3;
-    }
-    .grow__plant {
-      align-items: end;
-      margin-block: 0;
-    }
-    .grow__plant :global(.botanical) {
-      width: min(60%, 15rem);
-    }
-    .grow__ps {
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: var(--space-5);
-    }
+  #how {
+    scroll-margin-top: var(--header-h);
   }
 </style>

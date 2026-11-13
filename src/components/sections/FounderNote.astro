@@ -1,0 +1,273 @@
+---
+// The founder's full note: portrait, the perspectives behind RootMap, the mission paragraph, "What shaped RootMap"
+// and the bookshelf link. Moved here from the homepage; shown on About. Copy: about.founder in src/i18n.
+import Botanical from '../Botanical.astro';
+import Figure from '../Figure.astro';
+import GrowOnScroll from './GrowOnScroll.astro';
+import { localePath, t, type Lang } from '../../i18n';
+import { IMAGES } from '../../config/images';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const copy = t(lang);
+const founder = copy.about.founder;
+---
+
+  <section class="section section--cream founder" id="founder" aria-labelledby="founder-title">
+    <div class="container">
+      <div class="founder__note">
+        <Botanical name="catTwig" class="founder__sprig js-grow" />
+        <div class="founder__head">
+          <p class="kicker"><Botanical name="sprig" />{founder.chapter}</p>
+          <h2 class="founder__title" id="founder-title">{founder.title}</h2>
+          {founder.draft && <p class="tag tag--draft">{founder.draftLabel}</p>}
+        </div>
+        <div class="founder__constellation" role="group" aria-label={founder.observationsTitle}>
+          <div class="founder__art">
+            <span class="founder__patch" aria-hidden="true"></span>
+            <Figure class="founder__photo" image={IMAGES.founderPortrait} alt={founder.imageAlt} placeholder={copy.common.imagePlaceholder} />
+            <Botanical name="heroVineSmall" class="founder__vine js-grow" />
+          </div>
+          <ul class="founder__thoughts" role="list">
+            {founder.observations.map((thought) => <li>{thought}</li>)}
+          </ul>
+        </div>
+        <div class="founder__words">
+          {founder.intro.map((paragraph) => <p class="founder__body">{paragraph}</p>)}
+          {founder.name && <p class="founder__sign">{founder.name}</p>}
+        </div>
+        <div class="founder__shaped">
+          <h3>{founder.shaped.title}</h3>
+          <p>{founder.shaped.experience}</p>
+          <p>{founder.shaped.influences}</p>
+          <a class="btn btn--secondary btn--small" href={`${localePath(lang, '/resources')}#bookshelf`}>{founder.shaped.bookshelf}<span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="founder__actions">
+          <a class="btn btn--go" href={localePath(lang, '/contact')}>{founder.connect}<span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<GrowOnScroll />
+
+<style>
+  /* Shared pieces */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--green-600);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .kicker :global(.botanical) {
+    width: 1.75rem;
+    flex-shrink: 0;
+    transition: transform 0.5s var(--ease);
+    transform-origin: 10% 90%;
+  }
+  section:hover .kicker :global(.botanical) {
+    transform: rotate(-8deg);
+  }
+
+  /* Section headings: a label, a title and a line or two of introduction */
+  .head {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+  .head__title {
+    font-size: var(--step-4);
+  }
+  .head__intro {
+    max-width: 36rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+  .head--center {
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* Photographs: soft shapes on a quiet placeholder */
+  section :global(.figure) {
+    --figure-radius: 1.5rem;
+    --figure-placeholder-bg: var(--cream-200);
+    --figure-placeholder-ink: var(--line-strong);
+  }
+  section :global(.figure img) {
+    transition: transform 0.9s var(--ease);
+  }
+
+  /* A button with an arrow that moves a little on hover */
+  .btn--go span {
+    transition: transform 0.25s var(--ease);
+  }
+  .btn--go:hover span {
+    transform: translateX(3px);
+  }
+  .btn--down:hover span {
+    transform: translateY(3px);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* A little note from the founder */
+  .founder {
+    position: relative;
+  }
+  /* The note: a sheet of paper held with a strip of tape */
+  .founder__note {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+    max-width: 72rem;
+    margin: var(--space-6) auto 0;
+  }
+  :global(.founder__sprig) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4rem;
+  }
+  .founder__head {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+    text-align: center;
+    padding-inline: 2rem;
+  }
+  .founder__title { font-size: var(--step-4); }
+  .founder__constellation { position: relative; }
+  .founder__art {
+    position: relative;
+    isolation: isolate;
+    width: clamp(12rem, 26vw, 19rem);
+    margin: var(--space-5) auto var(--space-7);
+  }
+  .founder__patch {
+    position: absolute;
+    z-index: -1;
+    inset: -7% -9% -5%;
+    border-radius: 45% 55% 42% 58% / 56% 44% 56% 44%;
+    background: var(--sage-200);
+    transform: rotate(-9deg);
+  }
+  section :global(.founder__photo) {
+    --figure-radius: 48% 52% 46% 54% / 55% 44% 56% 45%;
+    --figure-placeholder-bg: var(--white);
+  }
+  :global(.founder__photo .figure__label) {
+    left: 0;
+    right: 0;
+    bottom: 16%;
+    align-items: center;
+  }
+  :global(.founder__photo .figure__label code) { display: none; }
+  :global(.founder__vine) {
+    position: absolute;
+    right: -12%;
+    bottom: -10%;
+    width: 32%;
+    transform: scaleX(-1);
+  }
+  .founder__thoughts {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+  }
+  .founder__thoughts li {
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--green-700);
+    text-align: center;
+    text-wrap: balance;
+    transform: rotate(-3deg);
+  }
+  .founder__thoughts li:nth-child(even) {
+    color: var(--terracotta-700);
+    transform: rotate(3deg);
+  }
+  .founder__thoughts li::after {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 1px;
+    margin: 0.85rem auto 0;
+    background: currentColor;
+    opacity: 0.4;
+    transform: rotate(-8deg);
+  }
+  :lang(zh) .founder__thoughts li { font-family: var(--font-serif-zh); }
+  .founder__words {
+    max-width: 44rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .founder__body {
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+  .founder__sign { margin-top: var(--space-4); font-family: var(--font-serif); }
+  @media (min-width: 62em) {
+    .founder__constellation {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr;
+      grid-template-rows: repeat(3, minmax(6.5rem, auto));
+      gap: var(--space-5) var(--space-6);
+      align-items: center;
+      padding-block: var(--space-5);
+    }
+    .founder__art { grid-area: 1 / 2 / 4 / 3; width: 100%; margin: 0; }
+    .founder__thoughts { display: contents; }
+    .founder__thoughts li:nth-child(odd) { grid-column: 1; }
+    .founder__thoughts li:nth-child(even) { grid-column: 3; }
+    .founder__thoughts li:nth-child(-n + 2) { grid-row: 1; }
+    .founder__thoughts li:nth-child(n + 3):nth-child(-n + 4) { grid-row: 2; }
+    .founder__thoughts li:nth-child(n + 5) { grid-row: 3; }
+    .founder__thoughts li:nth-child(3) { transform: translateX(-1rem) rotate(2deg); }
+    .founder__thoughts li:nth-child(4) { transform: translateX(1rem) rotate(-2deg); }
+  }
+
+  .founder__shaped {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    max-width: 46rem;
+    margin-inline: auto;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--sage-100);
+    border-radius: 2rem 0.75rem 2rem 0.75rem;
+    text-align: center;
+  }
+  .founder__shaped h3 {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--green-700);
+  }
+  :lang(zh) .founder__shaped h3 { font-family: var(--font-serif-zh); }
+  .founder__shaped p { color: var(--ink-soft); line-height: 1.65; }
+  .founder__shaped .btn { margin-top: var(--space-2); }
+
+  /* Connect: leads to the Contact page */
+  .founder__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+</style>

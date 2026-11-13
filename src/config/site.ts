@@ -10,8 +10,20 @@ export const SITE_NAME = 'RootMap';
 export const APP_URL = 'https://vegalh.github.io/rootmapmvp/';
 export const APP_LOGIN_URL = `${APP_URL}#/sign-in`;
 
-// Community interest surveys. Paste the real links here when they exist; an empty string shows a
-// "Coming soon / 即将开放" state on the Community page instead of a button.
+// The invite request form on the homepage (#invite): a hosted form shown in a frame, one per language.
+//   en: Google Forms. In the form, choose Send › "<>" (embed) and paste the address from its src="…" here; it ends
+//       in "/viewform?embedded=true".
+//   zh: Jinshuju (金数据), which loads in mainland China. Paste the form's embed address (发布 › 嵌入网页).
+// Both forms ask the same four questions: email (required); parent / caregiver / teacher; the child's age or the age
+// group taught; mainland China or elsewhere. Set each form to show a thank-you message rather than redirect.
+// While a link is empty the published homepage has no form, so fill both in before publishing.
+export const INVITE_FORM_URLS: Record<'en' | 'zh', string> = {
+  en: '',
+  zh: '',
+};
+
+// Community interest surveys. Paste the real links here when they exist; a survey with an empty link is not shown.
+// Until then their questions are part of the invite form above.
 //   china:         a survey service that works in mainland China (for example Tencent Survey / 腾讯问卷)
 //   international: a survey service for everywhere else (for example Tally)
 export const SURVEY_URLS = {
@@ -19,20 +31,18 @@ export const SURVEY_URLS = {
   international: '',
 };
 
-// Xiaohongshu (小红书) account page, linked from the homepage ("Explore more with us"). Paste the full profile link
-// here; while it is empty the homepage shows "Link coming soon" instead of a link.
+// Xiaohongshu (小红书) account page, linked from the Community page ("Explore more with us"). Paste the full profile link
+// here; the Rednotes card on the Community page and the link on the Contact page appear once it is set.
 export const XIAOHONGSHU_URL = '';
 
-// WeChat ID, shown beside the Connect button in the founder's note. While it is empty the page shows
-// "WeChat · coming soon".
+// WeChat ID, shown on the Contact page once it is set.
 export const WECHAT_ID = '';
 
-// Contact email, shown beside the Connect button as a mail link. While it is empty the page shows
-// "Email · coming soon".
+// Contact email, shown on the Contact page as a mail link once it is set.
 export const CONTACT_EMAIL = '';
 
 // Where people share feedback about the RootMap app (a form or survey link, or 'mailto:you@example.com').
-// While it is empty the homepage shows "Feedback form coming soon" instead of a button.
+// The feedback invitation on the Community page appears once it is set.
 export const FEEDBACK_URL = '';
 
 // Blog drafts (`draft: true`) are shown while developing (`npm run dev`) and left out of production builds.

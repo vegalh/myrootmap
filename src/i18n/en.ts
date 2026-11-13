@@ -16,8 +16,7 @@ export const en = {
     blog: 'Blog',
     resources: 'Resources',
     community: 'Community',
-    login: 'Log In',
-    getStarted: 'Get Started',
+    haveInvite: 'I have an invite',
     menu: 'Menu',
     closeMenu: 'Close menu',
     primary: 'Main',
@@ -30,7 +29,6 @@ export const en = {
     tagline: 'A calm companion for everyday learning with young children.',
     explore: 'Explore',
     rootmap: 'RootMap',
-    openApp: 'Open the app',
     about: 'About',
     privacy: 'Privacy',
     contact: 'Contact',
@@ -45,252 +43,95 @@ export const en = {
     placeholder: 'Placeholder',
     imagePlaceholder: 'Image to come',
     screenshotPlaceholder: 'Screenshot to come',
-    comingSoon: 'Coming soon',
+    // The one call to action, used everywhere. It leads to the invite form on the homepage (#invite).
+    cta: 'Request an invite',
     opensApp: 'Opens the RootMap app',
     newWindow: 'opens in a new tab',
     authorNote: 'Your reflection',
     authorNoteHint: 'A place for your own reflection, classroom experience or story. Add it in src/i18n.',
   },
 
-  // The homepage: hero, why RootMap, the app as a journey, a note from the founder, three places to explore,
-  // "Inspired by", the values ribbon and the invitation to grow with us.
-  // Photograph slots are listed in src/config/images.ts; outside links in src/config/site.ts.
+  // The homepage, in five short sections: hero, how it works, two real activities, who it is for, and the founder
+  // strip with the invite form. What used to sit here now lives on its own page: "Why RootMap", "Inspired by" and the
+  // values ribbon under `philosophy`, the founder's full note under `about`, "Explore more" and "Grow with us" under
+  // `community`. Photograph slots are listed in src/config/images.ts; the invite form links in src/config/site.ts.
   home: {
     title: 'RootMap: Grow with your child',
     hero: {
-      eyebrow: 'RootMap · for parents and caregivers of young children',
+      eyebrow: 'For parents, caregivers, and teachers of children ages 2–6',
       titleLines: ['Grow with', 'your child.'],
-      body: 'RootMap helps parents turn everyday experiences into meaningful opportunities for exploration, connection, and learning.',
-      note: 'A few minutes of inspiration. Meaningful moments to share with your child.',
-      primary: 'Explore RootMap',
-      secondary: 'Our Story',
+      body: 'A web app that gives you one simple, screen-free activity to do with your child today, and a place to keep what you notice.',
+      access: 'Early access, by invitation. Free during early access.',
+      secondary: 'See how it works',
       imageAlt: 'An adult and a child preparing cucumber together',
       shotAlt: 'The Today screen in RootMap',
     },
-    why: {
-      eyebrow: 'Why RootMap',
-      title: 'Childhood happens in the real world.',
-      intro: [
-        'Meaningful learning happens in everyday moments. At the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
-        'RootMap was made to help adults notice these moments and respond thoughtfully: not by adding more to the day, but by seeing more of what is already there. And as children grow, a door opens for the adults beside them to grow too.',
-      ],
-      imageAlt: 'A child carefully pouring water from a jug into a glass',
-      detailAlt: 'A child’s hands planting a seedling in a terracotta pot',
-      caption: 'A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
-      link: 'Read our philosophy',
-      ideasLabel: 'What RootMap cares about',
-      ideas: [
-        {
-          title: 'Real experiences',
-          body: 'Pouring, sorting, washing, carrying. Real objects and real tasks give children something to hold, try and work out.',
-        },
-        {
-          title: 'Connection',
-          body: 'Doing something side by side matters more than doing it perfectly.',
-        },
-        {
-          title: 'Curiosity',
-          body: 'Children arrive wanting to understand the world. We start from their questions, not from a checklist.',
-        },
-        {
-          title: 'Independence',
-          body: 'Real tasks, child-sized tools and enough time let children do things for themselves.',
-        },
-        {
-          title: 'Observation',
-          body: 'Before stepping in, it helps to watch. What are they trying to do? What has caught their attention?',
-        },
-        {
-          title: 'Everyday moments',
-          body: 'The kitchen, the bath, the walk home. Ordinary routines are enough; no special equipment is needed.',
-        },
-      ],
-    },
-    experience: {
-      chapter: 'Experience RootMap',
-      title: 'One small idea for today. A place to keep what you notice.',
-      intro: 'RootMap fits around family life rather than asking it to change.',
-      journeyLabel: 'The RootMap journey: discover, experience, remember, reflect',
-      // The row of dots under the screens on phones.
-      dotsLabel: 'Choose a step of the journey',
-      // The four stages, in order. `id` picks the screenshot (SCREENSHOTS in src/config/images.ts).
+    how: {
+      title: 'How it works',
+      // The four steps, in order. `id` picks the screenshot (SCREENSHOTS in src/config/images.ts). Keep each `body`
+      // to eight words or fewer; the longer descriptions are on the Features page.
       steps: [
-        {
-          id: 'discover',
-          kicker: 'When you’re looking',
-          title: 'Discover',
-          lead: 'Find one small idea that suits today.',
-          body: 'A library of hands-on activities drawn from everyday home life, alongside picture books and themed collections, filtered by age, setting and materials.',
-          shotAlt: 'The Discover screen in RootMap, showing the activity library',
-        },
-        {
-          id: 'experience',
-          kicker: 'Each day',
-          title: 'Experience',
-          lead: 'Turn ordinary routines and everyday moments into opportunities for discovery.',
-          body: 'Each day RootMap suggests one idea for each child, fitted to the times you are usually together, with clear steps and a simple list of materials.',
-          shotAlt: 'The Today screen in RootMap, showing today’s inspiration for a child',
-        },
-        {
-          id: 'remember',
-          kicker: 'In the moment',
-          title: 'Remember',
-          lead: 'Keep what you notice.',
-          body: 'Save a photo and a few words when something is worth remembering. Moments are grouped by month and easy to search.',
-          shotAlt: 'The My Moments screen in RootMap, showing a timeline of saved moments',
-        },
-        {
-          id: 'reflect',
-          kicker: 'Over time',
-          title: 'Reflect',
-          lead: 'Look back, and see each child’s own path take shape.',
-          body: 'A week-by-week look back and a journal for each child show what they keep returning to. There are no scores and no streaks.',
-          shotAlt: 'A child’s profile in RootMap, showing their journal',
-        },
+        { id: 'discover', title: 'Discover', body: 'Find one small idea that suits today.', shotAlt: 'The Discover screen in RootMap, showing the activity library' },
+        { id: 'experience', title: 'Experience', body: 'Do it together with things already at home.', shotAlt: 'The Today screen in RootMap, showing today’s inspiration for a child' },
+        { id: 'remember', title: 'Remember', body: 'Save a photo and a few words.', shotAlt: 'The My Moments screen in RootMap, showing a timeline of saved moments' },
+        { id: 'reflect', title: 'Reflect', body: 'Look back and see each child’s path.', shotAlt: 'A child’s profile in RootMap, showing their journal' },
       ],
       link: 'See all features',
-      app: 'Open RootMap',
       demoNote: 'Screenshots show the current app with a demo family.',
     },
-    // The founder's note. `intro` and `observations` are a first draft developed from your handwritten notes, for you to
-    // review and rewrite: while `draft` is true the note carries a "Draft" label. Set it to false once the words are
-    // yours. `name` is still empty and shows a labelled placeholder (as `intro` or `observations` would if emptied).
+    // Real activity cards, copied from the app's own library (RootMapMVP src/data/activities.ts): title, age, minutes,
+    // materials and the first two steps. `image` names a slot in src/config/images.ts.
+    examples: {
+      title: 'Today’s idea, for example',
+      minutes: '{n} min',
+      materialsLabel: 'You’ll need',
+      stepsLabel: 'First two steps',
+      cards: [
+        {
+          image: 'exampleOrangePeeling',
+          title: 'Orange Peeling',
+          age: 'Ages 2–6',
+          minutes: 10,
+          materials: ['Mandarin orange', 'Bowl', 'Basket for the peel', 'Tray'],
+          steps: ['Invite your child to try peeling an orange, and name the materials together.', 'Show how to press a thumb into the top of the orange to start the peel.'],
+          imageAlt: 'A child peeling a mandarin orange over a tray, with a basket for the peel',
+        },
+        {
+          image: 'exampleWashingGreens',
+          title: 'Washing Leafy Greens',
+          age: 'Ages 2–6',
+          minutes: 10,
+          materials: ['Leafy greens (bok choy, spinach)', 'Colander', 'Towel'],
+          steps: ['Invite your child to wash their hands, and help them stand safely at the sink.', 'Separate the leaves together, and look for soil near the stems.'],
+          imageAlt: 'A child rinsing leafy greens under a running tap',
+        },
+      ],
+    },
+    // Three short cards, fifteen words or fewer each.
+    who: {
+      title: 'Who it’s for',
+      cards: [
+        { title: 'Parents', body: 'Get one idea a day that fits your routine, and keep the moments worth remembering.' },
+        { title: 'Caregivers', body: 'Clear steps and a short materials list, so grandparents and nannies can join in.' },
+        { title: 'Teachers', body: 'Find hands-on activities by age and materials, and suggest ones families can continue at home.' },
+      ],
+      why: 'Why we built it this way',
+      link: 'Our Philosophy',
+    },
+    // The founder strip: a photograph and two sentences. The full note is on the About page (`about.founder`).
     founder: {
-      chapter: 'Meet the founder',
-      title: 'Growing curious minds, together',
-      name: '',
-      draft: false,
-      draftLabel: 'Draft · for the founder’s review',
-      intro: [
-        'RootMap begins with a simple belief. Grow with your child. Practical, real-life activities bring parents and children together, away from screens and worksheets. Cooking, planting, making and exploring become chances to build confidence, understand one another and deepen your connection as you both grow.',
-      ] as string[],
-      shaped: {
-        title: 'What shaped RootMap',
-        experience: '20+ preschool and kindergarten classroom visits across the U.S. and China. Insights from 15+ school leaders and curriculum designers.',
-        influences: 'Inspired by Montessori, Reggio Emilia, Harvard’s CEEL program, Free to Learn, and children’s book authors including Julia Cook.',
-        bookshelf: 'View my bookshelf',
-      },
-      observationsTitle: 'The perspectives behind RootMap',
-      observations: [
-        "I work with young children in a Montessori preschool",
-        "Bringing Julia Cook’s ideas on children’s feelings and relationships to families in China",
-        "Living and working alongside AI startup founders, and working with AI",
-        "Trained through Harvard’s CEEL program",
-        "Worked in the children’s book rights team at Penguin Random House",
-        "I co-founded Truvit to help companies find practical ways to use AI in their daily work",
-      ] as string[],
-      placeholders: {
-        name: 'Your name',
-        intro: 'A short personal introduction, in your own words: who you are and how RootMap began. Add it in src/i18n (home.founder.intro).',
-        observations: 'Space for the points that, in your experience, help children: a few short thoughts. Add them in src/i18n (home.founder.observations).',
-      },
+      title: 'Meet the founder',
+      body: 'I work with young children in a Montessori preschool. I built RootMap so the real, hands-on learning I see there can happen at home too.',
+      link: 'Read my story',
       imageAlt: 'A portrait of RootMap’s founder',
-      about: 'More on the About page',
-      connect: 'Let’s talk about your child',
-      // The places Connect leads to. The WeChat ID, Rednotes link and email address are set in src/config/site.ts.
-      channels: { label: 'Other ways to connect', wechat: 'WeChat', xiaohongshu: 'Rednotes', email: 'Email', soon: 'coming soon' },
     },
-    // Three places to go next. This is a signpost, not a list of posts: nothing here is invented content.
-    explore: {
-      chapter: 'Explore & connect',
-      title: 'Explore more with us',
-      intro: 'Three places where the thinking behind RootMap keeps growing. Pick whichever suits the moment.',
-      linkMissing: 'Link coming soon',
-      xiaohongshu: {
-        name: 'Rednotes',
-        nativeName: '小红书',
-        tagline: 'Small notes from everyday life',
-        topics: ['Personal reflections', 'Everyday experiences', 'Educational observations', 'Creative ideas', 'Behind the scenes'],
-        cta: 'Explore on Rednotes',
-        imageAlt: 'A child arranging flowers in a small vase',
-      },
-      blog: {
-        name: 'Blog',
-        tagline: 'Longer thoughts, written slowly',
-        topics: ['Longer educational reflections', 'Classroom observations', 'Discussions of child development', 'Personal essays', 'Research-informed articles'],
-        cta: 'Read the Blog',
-        latest: 'Latest',
-        imageAlt: 'A child reading a photo book at home',
-      },
-      resources: {
-        name: 'Resources',
-        tagline: 'A growing library for home and classroom',
-        topics: ['Educational materials', 'Practical activities', 'Observation guides', 'Research and reading', 'For parents and educators'],
-        cta: 'Explore Resources',
-        imageAlt: 'A child collecting natural objects in an egg carton',
-      },
-    },
-    // Entries live in src/config/inspirations.ts.
-    inspired: {
-      chapter: 'A small collection',
-      title: 'Inspired by',
-      intro: 'The people, books and ideas that have shaped how I think about childhood and learning.',
-      disclaimer: 'A personal collection of influences. Being listed here does not imply any endorsement of, or relationship with, RootMap.',
-      kinds: {
-        educator: 'Educator',
-        researcher: 'Researcher',
-        author: 'Author',
-        creator: 'Creator',
-        book: 'Book',
-        paper: 'Research paper',
-        philosophy: 'Educational approach',
-        logo: 'Organization',
-      },
-      by: 'by',
-      empty: {
-        title: 'This collection is still being gathered',
-        body: 'The people, books and ideas behind RootMap will be shared here soon.',
-      },
-      placeholder: {
-        name: 'Name to come',
-        note: 'A short reflection in your own words',
-        hint: 'Design placeholders, shown only while developing. Add real entries in src/config/inspirations.ts.',
-      },
-    },
-    // The moving ribbon of values. `accent` words are shown in terracotta.
-    values: {
-      label: 'What childhood makes room for',
-      pause: 'Pause the moving words',
-      play: 'Resume the moving words',
-      words: [
-        { text: 'Focus', accent: false },
-        { text: 'Independence', accent: false },
-        { text: 'Creativity', accent: true },
-        { text: 'Curiosity', accent: false },
-        { text: 'Resilience', accent: false },
-        { text: 'Imagination', accent: true },
-        { text: 'Logical Thinking', accent: false },
-        { text: 'Exploration', accent: false },
-        { text: 'Growth', accent: true },
-      ],
-    },
-    grow: {
-      chapter: 'Grow with us',
-      title: 'RootMap is still growing. So are we.',
-      paragraphs: [
-        'RootMap is an evolving educational project, not a finished product. In human years, it is still a baby.',
-        'Every piece of feedback helps it grow. There are two ways to take part, and you’re welcome to do either or both.',
-      ],
-      feedback: {
-        label: 'About the app',
-        title: 'Share feedback about RootMap',
-        body: 'Have you tried the app? Tell me what worked, what didn’t, and what you wish it did.',
-        button: 'Share Feedback',
-        missing: 'Feedback form coming soon',
-      },
-      community: {
-        label: 'About the community',
-        title: 'Help shape our community',
-        status: 'In exploration · not yet open',
-        body: 'I’m exploring a thoughtful private community for parents, educators, researchers and anyone who cares about childhood and learning. Nothing has been built yet; a short survey will help me learn what kind of space would be valuable to you.',
-        choose: 'Choose the survey for where you live:',
-        more: 'More about the community',
-      },
-      ps: {
-        label: 'P.S.',
-        body: 'RootMap itself is ready today. Open it in your browser; no account is needed to begin.',
-        button: 'Start with RootMap',
-      },
+    // The invite form itself is a hosted form, embedded from the links in src/config/site.ts (INVITE_FORM_URLS).
+    invite: {
+      title: 'Request an invite',
+      body: 'We’re inviting families and teachers in small groups. You’ll hear from us by email.',
+      formTitle: 'Invite request form',
+      privacy: 'How we use your details',
+      setup: 'The form will appear here once its link is added in src/config/site.ts (INVITE_FORM_URLS). Shown only while developing.',
     },
   },
 
@@ -365,7 +206,85 @@ export const en = {
     cta: {
       title: 'See how these ideas shape the app',
       features: 'Explore the features',
-      app: 'Get Started',
+    },
+    // Moved here from the homepage.
+    why: {
+      eyebrow: 'Why RootMap',
+      title: 'Childhood happens in the real world.',
+      intro: [
+        'Meaningful learning happens in everyday moments. At the kitchen sink, on the walk home, beside a basket of laundry waiting to be sorted.',
+        'RootMap was made to help adults notice these moments and respond thoughtfully: not by adding more to the day, but by seeing more of what is already there. And as children grow, a door opens for the adults beside them to grow too.',
+      ],
+      imageAlt: 'A child carefully pouring water from a jug into a glass',
+      detailAlt: 'A child’s hands planting a seedling in a terracotta pot',
+      caption: 'A toddler pouring water from one cup to another, again and again, is not wasting time. They are working something out.',
+      ideasLabel: 'What RootMap cares about',
+      ideas: [
+        {
+          title: 'Real experiences',
+          body: 'Pouring, sorting, washing, carrying. Real objects and real tasks give children something to hold, try and work out.',
+        },
+        {
+          title: 'Connection',
+          body: 'Doing something side by side matters more than doing it perfectly.',
+        },
+        {
+          title: 'Curiosity',
+          body: 'Children arrive wanting to understand the world. We start from their questions, not from a checklist.',
+        },
+        {
+          title: 'Independence',
+          body: 'Real tasks, child-sized tools and enough time let children do things for themselves.',
+        },
+        {
+          title: 'Observation',
+          body: 'Before stepping in, it helps to watch. What are they trying to do? What has caught their attention?',
+        },
+        {
+          title: 'Everyday moments',
+          body: 'The kitchen, the bath, the walk home. Ordinary routines are enough; no special equipment is needed.',
+        },
+      ],
+    },
+    // Entries live in src/config/inspirations.ts.
+    inspired: {
+      chapter: 'A small collection',
+      title: 'Inspired by',
+      intro: 'The people, books and ideas that have shaped how I think about childhood and learning.',
+      disclaimer: 'A personal collection of influences. Being listed here does not imply any endorsement of, or relationship with, RootMap.',
+      kinds: {
+        educator: 'Educator',
+        researcher: 'Researcher',
+        author: 'Author',
+        creator: 'Creator',
+        book: 'Book',
+        paper: 'Research paper',
+        philosophy: 'Educational approach',
+        logo: 'Organization',
+      },
+      by: 'by',
+      placeholder: {
+        name: 'Name to come',
+        note: 'A short reflection in your own words',
+        hint: 'Design placeholders, shown only while developing. Add real entries in src/config/inspirations.ts.',
+      },
+    },
+    // The moving ribbon of values. `accent` words are shown in terracotta.
+    values: {
+      label: 'What childhood makes room for',
+      pause: 'Pause the moving words',
+      play: 'Resume the moving words',
+      words: [
+        { text: 'Focus', accent: false },
+        { text: 'Independence', accent: false },
+        { text: 'Creativity', accent: true },
+        { text: 'Curiosity', accent: false },
+        { text: 'Resilience', accent: false },
+        { text: 'Imagination', accent: true },
+        { text: 'Logical Thinking', accent: false },
+        { text: 'Exploration', accent: false },
+        { text: 'Growth', accent: true },
+      ],
     },
   },
 
@@ -374,7 +293,7 @@ export const en = {
     description: 'What the RootMap app offers today: daily activity ideas, an activity library, Moments, weekly plans and child profiles.',
     eyebrow: 'Features',
     heading: 'What RootMap does',
-    lead: 'RootMap is a calm companion for parents and caregivers of children roughly one to five years old. Here is what the app offers today.',
+    lead: 'RootMap is a calm companion for parents, caregivers and teachers of children ages two to six. It fits around family life rather than asking it to change. Here is what the app offers today.',
     demoNote: 'Screenshots show the current app with a demo family.',
     whatLabel: 'What it does',
     whyLabel: 'Why it helps',
@@ -434,14 +353,13 @@ export const en = {
       items: [
         { title: 'English & 简体中文', body: 'The whole app is available in English and Simplified Chinese.' },
         { title: 'Light and dark', body: 'Choose the appearance that suits you.' },
-        { title: 'Private by default', body: 'Everything is stored on your device, with no account needed. You can export and restore a backup at any time.' },
+        { title: 'Private by default', body: 'Everything is stored on your device by default. You can export and restore a backup at any time.' },
         { title: 'Account & sync (beta)', body: 'An optional account backs up and syncs your family’s data across devices. It is currently in beta.' },
       ],
     },
     cta: {
       title: 'See it for yourself',
-      body: 'Open RootMap in your browser and try today’s idea.',
-      button: 'Get Started',
+      body: 'RootMap is in early access, by invitation, and free during early access.',
     },
   },
 
@@ -511,11 +429,101 @@ export const en = {
         body: 'For everyone outside mainland China, in English.',
         button: 'Take the Survey',
       },
-      comingSoon: 'Coming soon / 即将开放',
     },
     privacy: {
       title: 'About your answers',
       body: 'The surveys are optional and hosted by an external survey service, which will be named on the survey itself. Answers will be used only to understand interest in the community and to shape what it becomes. Contact details will always be optional.',
+    },
+    // Moved here from the homepage.
+    // Three places to go next. This is a signpost, not a list of posts: nothing here is invented content.
+    explore: {
+      chapter: 'Explore & connect',
+      title: 'Explore more with us',
+      intro: 'Three places where the thinking behind RootMap keeps growing. Pick whichever suits the moment.',
+      xiaohongshu: {
+        name: 'Rednotes',
+        nativeName: '小红书',
+        tagline: 'Small notes from everyday life',
+        topics: ['Personal reflections', 'Everyday experiences', 'Educational observations', 'Creative ideas', 'Behind the scenes'],
+        cta: 'Explore on Rednotes',
+        imageAlt: 'A child arranging flowers in a small vase',
+      },
+      blog: {
+        name: 'Blog',
+        tagline: 'Longer thoughts, written slowly',
+        topics: ['Longer educational reflections', 'Classroom observations', 'Discussions of child development', 'Personal essays', 'Research-informed articles'],
+        cta: 'Read the Blog',
+        latest: 'Latest',
+        imageAlt: 'A child reading a photo book at home',
+      },
+      resources: {
+        name: 'Resources',
+        tagline: 'A growing library for home and classroom',
+        topics: ['Educational materials', 'Practical activities', 'Observation guides', 'Research and reading', 'For parents and educators'],
+        cta: 'Explore Resources',
+        imageAlt: 'A child collecting natural objects in an egg carton',
+      },
+    },
+    grow: {
+      chapter: 'Grow with us',
+      title: 'RootMap is still growing. So are we.',
+      paragraphs: [
+        'RootMap is an evolving educational project, not a finished product. In human years, it is still a baby.',
+        'Every piece of feedback helps it grow. There are two ways to take part, and you’re welcome to do either or both.',
+      ],
+      feedback: {
+        label: 'About the app',
+        title: 'Share feedback about RootMap',
+        body: 'Have you tried the app? Tell me what worked, what didn’t, and what you wish it did.',
+        button: 'Share Feedback',
+      },
+      community: {
+        label: 'About the community',
+        title: 'Help shape our community',
+        status: 'In exploration · not yet open',
+        body: 'I’m exploring a thoughtful private community for parents, educators, researchers and anyone who cares about childhood and learning. Nothing has been built yet; a short survey will help me learn what kind of space would be valuable to you.',
+        inForm: 'The community questions are now part of the invite request, so there is one short form instead of three.',
+      },
+    },
+  },
+
+  // The About page: the founder's full note, moved here from the homepage. The page's own title and opening lines are
+  // under `pages.about`.
+  about: {
+    // The founder's note. `intro` and `observations` are a first draft developed from your handwritten notes, for you to
+    // review and rewrite: while `draft` is true the note carries a "Draft" label. Set it to false once the words are
+    // yours. `name` is still empty and shows a labelled placeholder (as `intro` or `observations` would if emptied).
+    founder: {
+      chapter: 'Meet the founder',
+      title: 'Growing curious minds, together',
+      name: '',
+      draft: false,
+      draftLabel: 'Draft · for the founder’s review',
+      intro: [
+        'RootMap begins with a simple belief. Grow with your child. Practical, real-life activities bring parents and children together, away from screens and worksheets. Cooking, planting, making and exploring become chances to build confidence, understand one another and deepen your connection as you both grow.',
+      ] as string[],
+      shaped: {
+        title: 'What shaped RootMap',
+        experience: '20+ preschool and kindergarten classroom visits across the U.S. and China. Insights from 15+ school leaders and curriculum designers.',
+        influences: 'Inspired by Montessori, Reggio Emilia, Harvard’s CEEL program, Free to Learn, and children’s book authors including Julia Cook.',
+        bookshelf: 'View my bookshelf',
+      },
+      observationsTitle: 'The perspectives behind RootMap',
+      observations: [
+        "I work with young children in a Montessori preschool",
+        "Bringing Julia Cook’s ideas on children’s feelings and relationships to families in China",
+        "Living and working alongside AI startup founders, and working with AI",
+        "Trained through Harvard’s CEEL program",
+        "Worked in the children’s book rights team at Penguin Random House",
+        "I co-founded Truvit to help companies find practical ways to use AI in their daily work",
+      ] as string[],
+      placeholders: {
+        name: 'Your name',
+        intro: 'A short personal introduction, in your own words: who you are and how RootMap began. Add it in src/i18n (home.founder.intro).',
+        observations: 'Space for the points that, in your experience, help children: a few short thoughts. Add them in src/i18n (home.founder.observations).',
+      },
+      imageAlt: 'A portrait of RootMap’s founder',
+      connect: 'Let’s talk about your child',
     },
   },
 
@@ -525,6 +533,7 @@ export const en = {
       heading: 'About RootMap',
       body: [
         'RootMap is an early childhood education app that helps parents and caregivers support children’s curiosity, independence and development through meaningful everyday experiences.',
+        'RootMap helps parents turn everyday experiences into meaningful opportunities for exploration, connection, and learning. A few minutes of inspiration. Meaningful moments to share with your child.',
       ],
       draft: 'Draft: this page will introduce the people behind RootMap and how it began.',
     },
@@ -532,12 +541,15 @@ export const en = {
       title: 'Privacy',
       heading: 'Privacy',
       body: [
-        'This website does not use cookies, analytics or advertising trackers, and it does not ask for personal information.',
+        'This website does not use cookies, analytics or advertising trackers.',
+        'The invite form on the homepage is the one place this website asks for personal information: your email address, whether you are a parent, caregiver or teacher, your child’s age or the age group you teach, and whether you live in mainland China. The form is hosted by Google Forms on the English site and by Jinshuju (金数据) on the Chinese site, and your answers are stored by that service. They are used only to send invitations and to understand who RootMap is for.',
         'The RootMap app is a separate product. It stores data on your device by default; its optional account (beta) syncs data across devices.',
       ],
       draft: 'Draft: this is not a privacy policy. A full privacy policy for the website and the app has not been published yet.',
     },
     contact: {
+      // Shown only for the channels that have a value in src/config/site.ts.
+      channels: { label: 'Other ways to connect', wechat: 'WeChat', xiaohongshu: 'Rednotes', email: 'Email' },
       title: 'Contact',
       heading: 'Contact',
       body: [] as string[],

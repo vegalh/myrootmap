@@ -1,0 +1,20 @@
+---
+// Drawings marked "js-grow" grow when they scroll into view. Without this script they are simply there.
+---
+
+<script>
+  const drawings = document.querySelectorAll('.js-grow');
+  if (drawings.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('botanical--grow');
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.35 },
+    );
+    drawings.forEach((drawing) => observer.observe(drawing));
+  }
+</script>

@@ -18,13 +18,16 @@ export const IMAGES = {
   // Home, hero: the main photograph or illustration, portrait (about 1600 × 2000 px or larger). It is shown in an
   // arch, so the top corners are rounded away: keep faces and hands away from the top corners.
   homeHero: { src: '/images/hero/cooking-together.jpg', ratio: '4 / 5', position: '50% 65%', folder: 'hero' },
-  // Home, "Why RootMap": real-world learning. A larger photograph of a child absorbed in something everyday
+  // Home, the example activity cards: the activity's own photograph from the app (landscape, about 1400 × 1050 px).
+  exampleOrangePeeling: { src: '/images/activities/orange-peeling.jpg', ratio: '4 / 3', position: '50% 40%', folder: 'activities' },
+  exampleWashingGreens: { src: '/images/philosophy/washing-greens.jpg', ratio: '4 / 3', folder: 'philosophy' },
+  // Our Philosophy, "Why RootMap" (moved from the homepage): real-world learning. A larger photograph of a child absorbed in something everyday
   // (about 1800 × 1440 px) and a small square detail that overlaps its corner (hands, materials; about 800 × 800 px).
   homeChildhoodMain: { src: '/images/philosophy/pouring-water.jpg', ratio: '5 / 4', folder: 'philosophy' },
   homeChildhoodDetail: { src: '/images/philosophy/planting.jpg', ratio: '1 / 1', folder: 'philosophy' },
-  // Home, the founder's note: a portrait photograph or illustration, square, shown in a circle (about 1000 × 1000 px).
+  // Home (founder strip) and About (the founder's note): a portrait photograph or illustration, square, shown in a circle (about 1000 × 1000 px).
   founderPortrait: { src: '/images/founder/portrait.jpg', ratio: '1 / 1', position: '50% 30%', folder: 'founder' },
-  // Home, "Explore more with us": one preview for each destination.
+  // Community, "Explore more with us" (moved from the homepage): one preview for each destination.
   //   Xiaohongshu: a personal photograph, portrait like a post (about 1200 × 1600 px)
   //   Blog: writing, notes or a desk (about 1600 × 1200 px)
   //   Resources: educational materials or an illustration (about 1600 × 1200 px)
@@ -50,7 +53,7 @@ export const SCREENSHOTS: Record<string, string> = {
   week: '/images/features/app/my-week.jpg',
   children: '/images/features/app/child-profile.jpg',
   routine: '',
-  // Home page, "Experience RootMap": Discover → Experience → Remember → Reflect
+  // Home page, "How it works": Discover → Experience → Remember → Reflect
   experience: '/images/features/app/today.jpg',
   remember: '/images/features/app/moments.jpg',
   reflect: '/images/features/app/child-profile.jpg',
