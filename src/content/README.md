@@ -14,6 +14,7 @@ category: reflections   # reflections · development · research · classroom ·
 date: 2026-12-01        # required once published
 cover: /images/blog/article-name.jpg   # optional, a file in public/images/blog/
 coverAlt: "What the cover image shows"
+coverPosition: center 25%              # optional: which part stays in view when the cover is cropped
 translationKey: article-name           # optional: the same key on the English and Chinese versions links them
 draft: false            # true keeps it out of the published site (it still shows in `npm run dev`)
 ---

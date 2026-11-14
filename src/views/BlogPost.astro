@@ -12,7 +12,7 @@ const { post } = Astro.props;
 const lang = post.data.lang as Lang;
 const other: Lang = lang === 'en' ? 'zh' : 'en';
 const copy = t(lang);
-const { title, description, category, date, cover, coverAlt, draft } = post.data;
+const { title, description, category, date, cover, coverAlt, coverPosition, draft } = post.data;
 const { Content } = await render(post);
 const translation = await getTranslation(post);
 const readingTime = copy.blog.readingTime.replace('{n}', String(readingMinutes(post)));
@@ -55,7 +55,7 @@ const alternates = { [lang]: postUrl(post), [other]: translation ? postUrl(trans
     {
       cover && (
         <div class="container post__cover">
-          <Figure image={{ src: cover, ratio: '16 / 9', folder: 'blog' }} alt={coverAlt} placeholder={copy.common.imagePlaceholder} eager />
+          <Figure image={{ src: cover, ratio: '16 / 9', folder: 'blog', position: coverPosition }} alt={coverAlt} placeholder={copy.common.imagePlaceholder} eager />
         </div>
       )
     }

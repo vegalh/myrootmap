@@ -10,7 +10,7 @@ interface Props {
 }
 const { post, lang, headingLevel = 'h3' } = Astro.props;
 const copy = t(lang);
-const { title, description, category, date, cover, coverAlt, draft } = post.data;
+const { title, description, category, date, cover, coverAlt, coverPosition, draft } = post.data;
 const href = postUrl(post);
 const readingTime = copy.blog.readingTime.replace('{n}', String(readingMinutes(post)));
 const Heading = headingLevel;
@@ -18,7 +18,7 @@ const Heading = headingLevel;
 
 <article class="article-card">
   <a href={href} class="article-card__media" tabindex="-1" aria-hidden="true">
-    <Figure image={{ src: cover ?? '', ratio: '3 / 2', folder: 'blog' }} alt={coverAlt} placeholder={copy.common.imagePlaceholder} />
+    <Figure image={{ src: cover ?? '', ratio: '3 / 2', folder: 'blog', position: coverPosition }} alt={coverAlt} placeholder={copy.common.imagePlaceholder} />
   </a>
   <div class="article-card__body">
     <p class="article-card__meta">

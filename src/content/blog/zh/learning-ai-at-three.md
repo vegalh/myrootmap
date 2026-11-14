@@ -4,7 +4,9 @@ description: "这是家长问得最多的 AI 问题之一。这篇文章整理�
 lang: zh
 category: research
 date: 2026-11-14
-coverAlt: ""
+cover: /images/blog/learning-ai-at-three.jpg
+coverPosition: center 25%
+coverAlt: "妈妈和年幼的女儿坐在家里的木桌旁，一起看着笔记本电脑"
 translationKey: learning-ai-at-three
 draft: false
 ---

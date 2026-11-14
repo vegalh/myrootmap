@@ -23,6 +23,9 @@ const blog = defineCollection({
       // A path under public/, such as /images/blog/my-article.jpg. Leave out to show a quiet placeholder.
       cover: z.string().optional(),
       coverAlt: z.string().default(''),
+      // Which part of the cover stays in view when it is cropped, as CSS object-position (such as "center 25%").
+      // Leave out to keep the middle.
+      coverPosition: z.string().optional(),
       // Articles in different languages that share a translationKey link to each other.
       translationKey: z.string().optional(),
       draft: z.boolean().default(false),

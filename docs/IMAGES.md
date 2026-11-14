@@ -64,8 +64,15 @@ Still missing: a screenshot of "Our Routine" for the Features page (it shows a p
 | `card-resources-nature-activity.jpg` | A child collecting natural objects in an egg carton | Same section, Resources card |
 | `card-rednotes-flower-arranging.jpg` | A child arranging flowers in a small vase | Same section, Rednotes card. Not shown until the Rednotes link is set in `src/config/site.ts` |
 
+## blog/
+
+Cover pictures and pictures inside articles. A cover is set with `cover:` at the top of the article file.
+
+| File | Shows | Appears |
+|---|---|---|
+| `learning-ai-at-three.jpg` | A mother and her young daughter looking at a laptop at a wooden table | Cover of "Will my child fall behind without learning AI early?" in both languages: wide under the article title, and on its card on the Blog page |
+
 ## Empty for now
 
-- `blog/`: cover pictures and pictures inside articles.
 - `resources/`: pictures for resources.
 - `inspired/`: portraits, covers and logos for "Inspired by" (`src/config/inspirations.ts`).

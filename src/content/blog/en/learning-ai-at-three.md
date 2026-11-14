@@ -4,7 +4,9 @@ description: "It is one of the questions parents ask most about AI. This article
 lang: en
 category: research
 date: 2026-11-14
-coverAlt: ""
+cover: /images/blog/learning-ai-at-three.jpg
+coverPosition: center 25%
+coverAlt: "A mother and her young daughter sitting at a wooden table at home, looking at a laptop together"
 translationKey: learning-ai-at-three
 draft: false
 ---
