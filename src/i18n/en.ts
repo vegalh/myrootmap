@@ -382,6 +382,7 @@ export const en = {
     back: 'All articles',
     otherLanguage: '阅读中文版',
     filterLabel: 'Filter by category',
+    readingTime: '{n} min read',
   },
 
   bookshelf: {

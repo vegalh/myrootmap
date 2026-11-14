@@ -1,7 +1,7 @@
 ---
 import Figure from './Figure.astro';
 import { formatDate, t, type Lang } from '../i18n';
-import { postUrl, type Post } from '../lib/content';
+import { postUrl, readingMinutes, type Post } from '../lib/content';
 
 interface Props {
   post: Post;
@@ -12,6 +12,7 @@ const { post, lang, headingLevel = 'h3' } = Astro.props;
 const copy = t(lang);
 const { title, description, category, date, cover, coverAlt, draft } = post.data;
 const href = postUrl(post);
+const readingTime = copy.blog.readingTime.replace('{n}', String(readingMinutes(post)));
 const Heading = headingLevel;
 ---
 
@@ -27,7 +28,10 @@ const Heading = headingLevel;
     <Heading class="article-card__title"><a href={href}>{title}</a></Heading>
     <p class="article-card__desc">{description}</p>
     <p class="article-card__foot">
-      {date ? <time datetime={date.toISOString()}>{formatDate(date, lang)}</time> : <span>{copy.blog.undated}</span>}
+      <span>
+        {date ? <time datetime={date.toISOString()}>{formatDate(date, lang)}</time> : copy.blog.undated}
+        <span aria-hidden="true"> · </span>{readingTime}
+      </span>
       <a href={href} class="text-link" aria-label={`${copy.common.readArticle}: ${title}`}>{copy.common.readArticle}</a>
     </p>
   </div>

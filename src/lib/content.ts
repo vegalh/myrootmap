@@ -9,6 +9,18 @@ export type Resource = CollectionEntry<'resources'>;
 export const postSlug = (post: Post) => post.id.replace(/^(en|zh)\//, '');
 export const postUrl = (post: Post) => localePath(post.data.lang, `/blog/${postSlug(post)}`);
 
+// Minutes to read an article: about 400 Chinese characters or 220 English words a minute, never less than one.
+// The reference list (<ol class="refs">), other markup and link addresses are not counted.
+export function readingMinutes(post: Post): number {
+  const text = (post.body ?? '')
+    .replace(/<ol class="refs">[\s\S]*?<\/ol>/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\]\([^)]*\)/g, ']');
+  const cjk = text.match(/[\u4e00-\u9fff]/g)?.length ?? 0;
+  const words = text.replace(/[\u4e00-\u9fff]/g, ' ').match(/[A-Za-z0-9]+/g)?.length ?? 0;
+  return Math.max(1, Math.round(cjk / 400 + words / 220));
+}
+
 const visible = (entry: { data: { draft: boolean } }) => SHOW_DRAFTS || !entry.data.draft;
 
 // Articles in one language, newest first; drafts (undated) last.

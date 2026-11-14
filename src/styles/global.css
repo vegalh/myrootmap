@@ -448,6 +448,45 @@ body:lang(zh) {
   border-top: 1px solid var(--line);
 }
 
+/* Research articles: a summary box, a "who did the study" line under a heading, citation marks and the reference list */
+.prose .summary {
+  padding: 1.1em 1.4em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--cream-100);
+}
+.prose .summary > * + * {
+  margin-top: 0.6em;
+}
+.prose .study {
+  padding-left: 1em;
+  border-left: 2px solid var(--green-500);
+  color: var(--muted);
+  font-size: var(--step--1);
+  line-height: 1.7;
+}
+.prose .study strong {
+  color: var(--green-700);
+}
+.prose sup {
+  font-size: 0.72em;
+  line-height: 0;
+}
+.prose sup a {
+  padding-inline: 0.1em;
+  font-weight: 700;
+  text-decoration: none;
+}
+.prose .refs {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.prose .refs li:target {
+  background: var(--cream-100);
+}
+
 /* A labelled note that marks unfinished content, so drafts are never mistaken for published text */
 .draft-note {
   display: flex;

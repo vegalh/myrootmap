@@ -3,7 +3,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Figure from '../components/Figure.astro';
 import { formatDate, localePath, t, type Lang } from '../i18n';
-import { getTranslation, postUrl, type Post } from '../lib/content';
+import { getTranslation, postUrl, readingMinutes, type Post } from '../lib/content';
 
 interface Props {
   post: Post;
@@ -15,6 +15,7 @@ const copy = t(lang);
 const { title, description, category, date, cover, coverAlt, draft } = post.data;
 const { Content } = await render(post);
 const translation = await getTranslation(post);
+const readingTime = copy.blog.readingTime.replace('{n}', String(readingMinutes(post)));
 const alternates = { [lang]: postUrl(post), [other]: translation ? postUrl(translation) : localePath(other, '/blog') };
 ---
 
@@ -39,6 +40,8 @@ const alternates = { [lang]: postUrl(post), [other]: translation ? postUrl(trans
         <p class="lead">{description}</p>
         <p class="post__date">
           {date ? <time datetime={date.toISOString()}>{formatDate(date, lang)}</time> : copy.blog.undated}
+          <span aria-hidden="true"> · </span>
+          <span>{readingTime}</span>
           {translation && (
             <>
               <span aria-hidden="true"> · </span>

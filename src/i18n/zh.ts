@@ -376,6 +376,7 @@ export const zh: Dict = {
     back: '全部文章',
     otherLanguage: 'Read in English',
     filterLabel: '按类别筛选',
+    readingTime: '阅读约 {n} 分钟',
   },
 
   bookshelf: {
