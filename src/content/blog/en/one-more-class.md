@@ -4,7 +4,9 @@ description: "Fewer children are being born, and more investment and expectation
 lang: en
 category: parenting
 date: 2026-11-14T12:00:00Z
-coverAlt: ""
+cover: /images/blog/one-more-class.jpg
+coverPosition: center 10%
+coverAlt: "A young child in an apron painting with watercolours at a wooden table, absorbed in her work"
 translationKey: one-more-class
 draft: false
 ---

@@ -4,7 +4,9 @@ description: "出生的孩子少了，落在每个孩子身上的投入和期待
 lang: zh
 category: parenting
 date: 2026-11-14T12:00:00Z
-coverAlt: ""
+cover: /images/blog/one-more-class.jpg
+coverPosition: center 10%
+coverAlt: "一个系着围裙的小孩坐在木桌前，专心地用水彩画画"
 translationKey: one-more-class
 draft: false
 ---

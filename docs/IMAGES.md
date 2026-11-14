@@ -71,6 +71,7 @@ Cover pictures and pictures inside articles. A cover is set with `cover:` at the
 | File | Shows | Appears |
 |---|---|---|
 | `learning-ai-at-three.jpg` | A mother and her young daughter looking at a laptop at a wooden table | Cover of "Will my child fall behind without learning AI early?" in both languages: wide under the article title, and on its card on the Blog page |
+| `one-more-class.jpg` | A young child in an apron painting with watercolours at a wooden table | Cover of "Fewer children, more classes: does my three-year-old need one more?" in both languages, in the same two places |
 
 ## Empty for now
 
