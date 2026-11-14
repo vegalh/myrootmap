@@ -22,7 +22,7 @@ export const APP_LOGIN_URL = `${APP_URL}#/sign-in`;
 // If the questions change, update the Privacy page text (pages.privacy in src/i18n) to match.
 // While a link is empty the published page has no form, so fill both in before publishing.
 export const INVITE_FORM_URLS: Record<'en' | 'zh', string> = {
-  en: '',
+  en: 'https://docs.google.com/forms/d/e/1FAIpQLScZQxXvemvt_VQ9b4jnMbm3lKVeSK2Oc4-aXHlfCxMy6AF2HQ/viewform?embedded=true',
   zh: '',
 };
 
