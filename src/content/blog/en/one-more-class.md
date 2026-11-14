@@ -3,7 +3,7 @@ title: "Fewer children, more classes: does my three-year-old need one more?"
 description: "Fewer children are being born, and more investment and expectation rests on each one. This article gathers official birth figures, what economists say about it, and two studies of children, to help you see what a class gives your child when everyone else seems to be signing up."
 lang: en
 category: parenting
-date: 2026-11-14
+date: 2026-11-14T12:00:00Z
 coverAlt: ""
 translationKey: one-more-class
 draft: false
@@ -31,7 +31,7 @@ Like the previous article, this one does not answer with my own opinion. It take
 
 <p class="study"><strong>Research</strong>　National Bureau of Statistics of China, <em>Statistical Communiqué on the 2025 National Economic and Social Development</em>, 2026; Li, Zhang and Zhu (Chinese University of Hong Kong and others), <em>Demography</em>, 2008; Doepke (Northwestern University) and Zilibotti (Yale University), <em>Love, Money, and Parenting</em> (Princeton University Press, 2019) and <em>Econometrica</em>, 2017.</p>
 
-**What they saw.** China’s National Bureau of Statistics reported 7.92 million births in 2025, a birth rate of 5.63 per thousand.<sup><a href="#ref-1">[1]</a></sup> The year before, the figure was 9.54 million.
+**What they saw.** China’s National Bureau of Statistics reported 7.92 million births in 2025, a birth rate of 5.63 per thousand.<sup><a href="#ref-1">[1]</a></sup> The year before, the figure was 9.54 million.<sup><a href="#ref-7">[7]</a></sup>
 
 When there are fewer children, does each one get more? Economists have studied this with Chinese census data. They compared families who had twins, and so one more child than they would otherwise have had, and found that the more children in a family, the fewer years of schooling each child received. The effect was stronger in rural areas, where public education was weaker.<sup><a href="#ref-2">[2]</a></sup> Read the other way, a family with fewer children has more to put into each one.
 
@@ -69,9 +69,9 @@ The children who tried first also pressed the buttons differently. They more oft
 
 **What they saw.** Researchers use the term “autonomy support”. At home it means the adult is clear about what has to happen and where the limits are, and some of the deciding is still in the child’s hands. Going out today means wearing a coat; the adult decides that. Which coat, and whether to try putting it on alone first, can be the child’s decision.
 
-Vasquez and colleagues brought together 36 studies. Where parents more often offered suitable choices, listened to what their children thought and explained the reasons for what they asked, children tended to do better at school, to put more of themselves into learning, and to do better on measures such as psychological health.<sup><a href="#ref-6">[6]</a></sup>
+Vasquez and colleagues brought together 36 studies. Where parents more often offered suitable choices, listened to what their children thought and explained the reasons for what they asked, children tended to do better at school, to put more of themselves into learning, and to have a better view of their own ability, a better attitude to school and better psychological health. The link with psychological health was the strongest.<sup><a href="#ref-6">[6]</a></sup>
 
-**What this cannot tell us.** The 36 studies cover children of many ages, and most were not three or four. What they found is mainly a link. They do not prove that what the parents did produced these results.
+**What this cannot tell us.** The 36 studies cover children from preschool to university and are not specifically about three- and four-year-olds. The authors state that every one of them was correlational, so they cannot show that what the parents did produced these results.
 
 **How to use it at home.** It can be turned into one question you can see the answer to: in this job, which step can my child already take over? The three practices below follow from that question. No study has tested them. The first two list matching activities from the RootMap library, which give the materials, the steps and a safety note.
 
@@ -102,4 +102,5 @@ When children do come to use AI, they will meet a similar question: there are se
 <li id="ref-4">Doepke, M., &amp; Zilibotti, F. (2017). Parenting with style: Altruism and paternalism in intergenerational preference transmission. <em>Econometrica, 85</em>(5), 1331–1371. <a href="https://doi.org/10.3982/ECTA14634">doi.org/10.3982/ECTA14634</a></li>
 <li id="ref-5">Sobel, D. M., &amp; Sommerville, J. A. (2010). The importance of discovery in children’s causal learning from interventions. <em>Frontiers in Psychology, 1</em>, 176. <a href="https://doi.org/10.3389/fpsyg.2010.00176">doi.org/10.3389/fpsyg.2010.00176</a></li>
 <li id="ref-6">Vasquez, A. C., Patall, E. A., Fong, C. J., Corrigan, A. S., &amp; Pine, L. (2016). Parent autonomy support, academic achievement, and psychosocial functioning: A meta-analysis of research. <em>Educational Psychology Review, 28</em>(3), 605–644. <a href="https://doi.org/10.1007/s10648-015-9329-z">doi.org/10.1007/s10648-015-9329-z</a></li>
+<li id="ref-7">National Bureau of Statistics of China (2025). Statistical Communiqué of the People’s Republic of China on the 2024 National Economic and Social Development (in Chinese). <a href="https://www.stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html">stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html</a></li>
 </ol>

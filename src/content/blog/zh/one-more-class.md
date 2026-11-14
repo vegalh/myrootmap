@@ -3,7 +3,7 @@ title: "孩子越来越少，课越报越多：三四岁还要再加一门吗？
 description: "出生的孩子少了，落在每个孩子身上的投入和期待却多了。这篇文章整理了国家统计局的数据、经济学家的解释和两项儿童研究，帮你在“别人都在学”的时候，看清一门课给了孩子什么。"
 lang: zh
 category: parenting
-date: 2026-11-14
+date: 2026-11-14T12:00:00Z
 coverAlt: ""
 translationKey: one-more-class
 draft: false
@@ -31,7 +31,7 @@ draft: false
 
 <p class="study"><strong>研究来源</strong>　国家统计局，《2025 年国民经济和社会发展统计公报》，2026 年；Li、Zhang 与 Zhu（香港中文大学等），《Demography》，2008 年；美国西北大学 Doepke 与耶鲁大学 Zilibotti，《爱、金钱和孩子》（普林斯顿大学出版社，2019 年）及《Econometrica》，2017 年。</p>
 
-**他们看到了什么。** 国家统计局公布，2025 年全国出生人口是 792 万，出生率 5.63‰。<sup><a href="#ref-1">[1]</a></sup> 上一年是 954 万。
+**他们看到了什么。** 国家统计局公布，2025 年全国出生人口是 792 万，出生率 5.63‰。<sup><a href="#ref-1">[1]</a></sup> 上一年是 954 万。<sup><a href="#ref-7">[7]</a></sup>
 
 孩子少了，每个孩子得到的会不会变多？经济学家用中国人口普查的数据研究过这个问题。他们比较了生了双胞胎、因此多了一个孩子的家庭，发现家里孩子越多，每个孩子受教育的年数越少，在公共教育较弱的农村更明显。<sup><a href="#ref-2">[2]</a></sup> 反过来看，孩子少的家庭，能放在每个孩子身上的也就更多。
 
@@ -69,9 +69,9 @@ Doepke 和 Zilibotti 解释的是另一半：家长为什么愿意投入。他�
 
 **他们看到了什么。** 研究里有个词叫“支持自主”。放在家里，就是大人把事情和边界说清楚，孩子手里还有一部分能自己决定。今天出门要穿外套，这由大人定。穿哪件、要不要先自己试着套上，可以让孩子决定。
 
-Vasquez 等人汇总了 36 项研究。家长更常给孩子合适的选择、听他们怎么想、解释要求的理由时，孩子的学业成绩总体更好，也更愿意主动投入学习，心理健康等方面的指标也更好。<sup><a href="#ref-6">[6]</a></sup>
+Vasquez 等人汇总了 36 项研究。家长更常给孩子合适的选择、听他们怎么想、解释要求的理由时，孩子的学业成绩总体更好，也更愿意主动投入学习，对自己能力的看法、对学校的态度和心理健康也更好。其中和心理健康的关联最强。<sup><a href="#ref-6">[6]</a></sup>
 
-**这不能说明什么。** 这 36 项研究涵盖不同年龄的孩子，多数不是三四岁。它们发现的主要是关联，不能证明是家长的做法带来了这些结果。
+**这不能说明什么。** 这 36 项研究涵盖从学前到大学的孩子，不专门针对三四岁。作者自己写明，这些研究全部是相关性研究，不能说明是家长的做法带来了这些结果。
 
 **家里可以怎么用。** 可以把它落到一个看得见的问题上：这件事里，孩子已经能接手哪一步？下面三件事是照这个问题整理的做法。没有研究专门检验过它们。前两件后面列了 RootMap 活动库里对应的活动，里面有材料、分步做法和安全提示。
 
@@ -102,4 +102,5 @@ Vasquez 等人汇总了 36 项研究。家长更常给孩子合适的选择、�
 <li id="ref-4">Doepke, M., &amp; Zilibotti, F. (2017). Parenting with style: Altruism and paternalism in intergenerational preference transmission. <em>Econometrica, 85</em>(5), 1331–1371. <a href="https://doi.org/10.3982/ECTA14634">doi.org/10.3982/ECTA14634</a></li>
 <li id="ref-5">Sobel, D. M., &amp; Sommerville, J. A. (2010). The importance of discovery in children’s causal learning from interventions. <em>Frontiers in Psychology, 1</em>, 176. <a href="https://doi.org/10.3389/fpsyg.2010.00176">doi.org/10.3389/fpsyg.2010.00176</a></li>
 <li id="ref-6">Vasquez, A. C., Patall, E. A., Fong, C. J., Corrigan, A. S., &amp; Pine, L. (2016). Parent autonomy support, academic achievement, and psychosocial functioning: A meta-analysis of research. <em>Educational Psychology Review, 28</em>(3), 605–644. <a href="https://doi.org/10.1007/s10648-015-9329-z">doi.org/10.1007/s10648-015-9329-z</a></li>
+<li id="ref-7">国家统计局 (2025). 中华人民共和国 2024 年国民经济和社会发展统计公报. <a href="https://www.stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html">stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html</a></li>
 </ol>
