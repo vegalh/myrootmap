@@ -12,7 +12,8 @@ interface Props {
 const { lang, page } = Astro.props;
 const copy = t(lang).pages[page];
 // Contact: WeChat, Rednotes and email, moved here from the homepage. Each appears once it has a value in
-// src/config/site.ts; an empty one is simply left out.
+// src/config/site.ts; an empty one is simply left out. The draft note shows only while a page has no real content:
+// always on Privacy for now, and on Contact until at least one channel is set.
 const channels = t(lang).pages.contact.channels;
 const showChannels = page === 'contact' && Boolean(WECHAT_ID || XIAOHONGSHU_URL || CONTACT_EMAIL);
 ---
@@ -21,7 +22,9 @@ const showChannels = page === 'contact' && Boolean(WECHAT_ID || XIAOHONGSHU_URL 
   <PageIntro eyebrow={t(lang).footer[page]} title={copy.heading} />
   <section class="section section--tight">
     <div class="container container--narrow">
-      <p class="draft-note"><span class="tag tag--draft">{t(lang).common.draft}</span> {copy.draft}</p>
+      {!showChannels && (
+        <p class="draft-note"><span class="tag tag--draft">{t(lang).common.draft}</span> {copy.draft}</p>
+      )}
       {
         copy.body.length > 0 && (
           <div class="prose">

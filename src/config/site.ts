@@ -43,7 +43,7 @@ export const XIAOHONGSHU_URL = '';
 export const WECHAT_ID = '';
 
 // Contact email, shown on the Contact page as a mail link once it is set.
-export const CONTACT_EMAIL = '';
+export const CONTACT_EMAIL = 'rootmapfeedbacks@gmail.com';
 
 // Where people share feedback about the RootMap app (a form or survey link, or 'mailto:you@example.com').
 // The feedback invitation on the Community page appears once it is set.

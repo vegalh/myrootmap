@@ -558,7 +558,7 @@ export const en = {
       channels: { label: 'Other ways to connect', wechat: 'WeChat', xiaohongshu: 'Rednotes', email: 'Email' },
       title: 'Contact',
       heading: 'Contact',
-      body: [] as string[],
+      body: ['Questions, ideas, or something on this website that looks wrong? Write to us. We read every message.'] as string[],
       draft: 'Draft: contact details have not been added yet.',
     },
     notFound: {

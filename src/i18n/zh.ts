@@ -550,7 +550,7 @@ export const zh: Dict = {
       channels: { label: '其他联系方式', wechat: '微信', xiaohongshu: '小红书', email: '邮箱' },
       title: '联系',
       heading: '联系',
-      body: [],
+      body: ['有问题、有想法，或者发现网站上哪里写得不对？欢迎写信给我们，每一封我们都会看。'],
       draft: '草稿：联系方式尚未添加。',
     },
     notFound: {
