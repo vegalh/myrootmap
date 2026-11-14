@@ -17,6 +17,8 @@ The worry makes sense. There is more to learn every year, and a three- or four-y
 
 This article does not answer with my own opinion. I split the question into five smaller ones and, for each, looked for research teams that have run experiments or followed children over many years. Every section goes in the same order: who did the research, what they saw, what the result cannot tell us, and how to use it at home. The numbers in the text point to the papers listed at the end, and each one can be opened and checked.
 
+Short on time? Read the short answer below and the four practices in section 6.
+
 <div class="summary">
 <p><strong>The short answer</strong></p>
 <ul>
@@ -47,7 +49,7 @@ Change the medium and the same job gets harder. A third study showed children ag
 
 **What they saw.** Developmental psychologists often use a card game. Each card has both a colour and a shape. In the first round the child sorts by colour; in the second the rule changes to shape. Many three-year-olds can say the new rule correctly when asked, and then, card in hand, go on sorting by colour.<sup><a href="#ref-4">[4]</a></sup> By five, most children switch without trouble.<sup><a href="#ref-5">[5]</a></sup>
 
-A team in Japan gave this game to the same children twice, at about three and a half and again a year later, while measuring activity in the lower part of the prefrontal cortex with near-infrared light. After a year the children switched rules better, and activity in that area was clearly stronger. The final analysis included 13 children, which is a small sample.<sup><a href="#ref-6">[6]</a></sup>
+A team in Japan gave this game to the same children twice, at about three and a half and again a year later, while a light-based sensor worn on the head measured activity in a part of the brain behind the forehead. This area is involved in holding oneself back and switching between rules. After a year the children switched rules better, and activity in that area was clearly stronger. The final analysis included only 13 children, which is very few.<sup><a href="#ref-6">[6]</a></sup>
 
 **What this cannot tell us.** These studies measured switching between rules. They did not measure how complicated an idea a child can understand, and they give no single age at which a child is “ready”. Children differ a great deal.
 
@@ -57,11 +59,11 @@ A team in Japan gave this game to the same children twice, at about three and a 
 
 <p class="study"><strong>Research</strong>　McClelland and colleagues, Oregon State University, <em>Early Childhood Research Quarterly</em>, 2013; Moffitt and colleagues, Duke University (the Dunedin study in New Zealand), <em>Proceedings of the National Academy of Sciences</em>, 2011.</p>
 
-**What they saw.** McClelland’s team used data from a long-running study of 430 children. When the children were four, their mothers rated how well they could usually keep their attention on something and stay with a task. More than twenty years later the researchers looked at who had finished university by twenty-five; that information was available for 286 of them. Children rated higher on attention and persistence at four were more likely to have finished: a rating one standard deviation higher went with about 49% greater odds. The analysis took into account the child’s sex, vocabulary at four and the mother’s education. The researchers also checked whether the link ran through reading and maths scores at seven or twenty-one. It did not.<sup><a href="#ref-7">[7]</a></sup>
+**What they saw.** McClelland’s team used data from a long-running study of 430 children. When the children were four, their mothers rated how well they could usually keep their attention on something and stay with a task. More than twenty years later the researchers looked at who had finished university by twenty-five; that information was available for 286 of them. Children rated higher on attention and persistence at four were more likely to have finished. By the study’s estimate, for a child rated well above average, the odds of finishing were about one and a half times as high. In making the comparison the researchers had already allowed for the child’s sex, vocabulary at four and the mother’s education. They also checked one more thing: was it because these children went on to read and do maths better that they were more likely to finish? It was not.<sup><a href="#ref-7">[7]</a></sup>
 
 The Dunedin study in New Zealand followed about 1,000 people from birth to thirty-two. Researchers combined many observations and ratings made between the ages of three and eleven, covering impulsiveness, attention and persistence. People with more self-control as children tended to have better health and finances as adults. The link remained after intelligence and the family’s social class were taken into account.<sup><a href="#ref-8">[8]</a></sup>
 
-**What this cannot tell us.** Both are observational studies that follow people over time, and what they show is a link. They do not prove that attention caused the later results, and they do not tell us which activities would improve attention or self-control. That takes separate experiments.
+**What this cannot tell us.** Both studies watched and recorded people over many years without changing anything in their lives, so what they show is a link. They do not prove that attention caused the later results, and they do not tell us which activities would improve attention or self-control. That takes separate experiments.
 
 **How to use it at home.** It is easy to count how many letters a child knows or how many sums they can do. It is worth noticing something else as well: when there is something they want to do, do they start, do they try again when they get stuck, and what kind of help lets them keep going? A family sees this every day.
 
@@ -69,14 +71,14 @@ The Dunedin study in New Zealand followed about 1,000 people from birth to thirt
 
 <p class="study"><strong>Research</strong>　Bergman Nutley, Klingberg and colleagues, Karolinska Institutet, Sweden, <em>Developmental Science</em>, 2011.</p>
 
-**What they saw.** This was a randomised controlled trial with four-year-olds. The plan was 25 sessions of about 15 minutes each on a computer. 101 children completed at least 20 sessions and took the tests afterwards. The children were assigned at random to four groups:
+**What they saw.** This was an experiment with four-year-olds. The children were put into groups at random, like drawing lots, so that the groups started out alike and the comparison was fair. The plan was 25 sessions of about 15 minutes each on a computer. 101 children completed at least 20 sessions and took the tests afterwards. The four groups were:
 
-- **Working memory:** remembering which things on the screen changed, and in what order.
+- **Memory:** remembering which things on the screen changed, and in what order. Researchers call this “working memory”: holding information in mind for a short time and using it.
 - **Non-verbal reasoning:** finding the pattern among shapes and filling in the missing one.
 - **Combined:** both kinds of task.
 - **Control:** the same two kinds of task, kept at the easiest level throughout. For the other groups the tasks got harder as the child improved.
 
-The reasoning group improved more than the control group when several reasoning tests were analysed together. The working memory group improved on memory tests but not on problem-solving tests. The combined group made smaller gains on problem solving.<sup><a href="#ref-9">[9]</a></sup>
+The reasoning group improved more than the control group when several reasoning tests were analysed together. The memory group improved on memory tests but not on problem-solving tests. The combined group made smaller gains on problem solving.<sup><a href="#ref-9">[9]</a></sup>
 
 **What this cannot tell us.** Four-year-olds can get better on tests through training, mostly on tests close to what they practised. The study did not look at whether the children solved everyday problems better at home, and it did not follow them in later years.
 
@@ -102,7 +104,7 @@ Three of them also list activities from the RootMap library that put the practic
 
 **Shrink “tidy your room” to one job with a visible end.** For example, ask them to put the picture books on the floor back on the low shelf. Do the first one together and let them choose which to pick up next. Dressing works the same way: they choose between two suitable tops and put one on, and if they get stuck at the cuff, you help with the cuff only. For teeth, let them brush first and then finish the job for them.<br>*Evidence:* The CDC milestones say that by three most children put on some loose clothes by themselves, and by four most can undo some buttons.<sup><a href="#ref-11">[11]</a></sup><sup><a href="#ref-12">[12]</a></sup> The American Academy of Pediatric Dentistry advises adults to do or help with brushing for children aged three to six, because young children cannot yet brush effectively.<sup><a href="#ref-13">[13]</a></sup> A University of Virginia study of nearly 10,000 American children found that those who did chores more often in kindergarten rated themselves higher in third grade on schoolwork, friendships and satisfaction with life.<sup><a href="#ref-14">[14]</a></sup> Those children were older than three or four, and the result is a link, not proof of cause.<br>*In RootMap:* [Matching Socks](https://vegalh.github.io/rootmapmvp/#/activity/matching-socks), [Folding Cloths](https://vegalh.github.io/rootmapmvp/#/activity/folding-cloths), [Hanging Clothes on Hangers](https://vegalh.github.io/rootmapmvp/#/activity/hanging-clothes).
 
-**Keep some outdoor time in which the child decides how to play.** At the park, let them choose where to stop, what to look at, and whether to lay out the leaves they picked up in their own way. Follow and watch, and talk about what they found when they are interested.<br>*Evidence:* A systematic review from the University of South Australia brought together 16 studies of play in nature. The consistent positive results were for physical activity and for imaginative play.<sup><a href="#ref-15">[15]</a></sup> The studies covered ages two to twelve, and the authors noted concerns about the quality of the evidence.<br>*In RootMap:* [Egg Carton Nature Hunt](https://vegalh.github.io/rootmapmvp/#/activity/egg-carton-nature-hunt), [Bark Rubbing](https://vegalh.github.io/rootmapmvp/#/activity/bark-rubbing), [Nature Bracelet](https://vegalh.github.io/rootmapmvp/#/activity/nature-bracelet). Each gives a reason to go out and look. Where to stop and what to pick up stay the child’s choice.
+**Keep some outdoor time in which the child decides how to play.** At the park, let them choose where to stop, what to look at, and whether to lay out the leaves they picked up in their own way. Follow and watch, and talk about what they found when they are interested.<br>*Evidence:* A review from the University of South Australia brought together 16 studies of play in nature. The consistent positive results were for physical activity and for imaginative play.<sup><a href="#ref-15">[15]</a></sup> The studies covered ages two to twelve, and the authors noted concerns about the quality of the evidence.<br>*In RootMap:* [Egg Carton Nature Hunt](https://vegalh.github.io/rootmapmvp/#/activity/egg-carton-nature-hunt), [Bark Rubbing](https://vegalh.github.io/rootmapmvp/#/activity/bark-rubbing), [Nature Bracelet](https://vegalh.github.io/rootmapmvp/#/activity/nature-bracelet). Each gives a reason to go out and look. Where to stop and what to pick up stay the child’s choice.
 
 **Give them materials to build something they want.** With blocks and a piece of stiff card, ask whether they would like to build a bridge a toy car can cross. If it falls, let them look first at what moved. If they ask, try moving the supports together.<br>*Evidence:* In an experiment led from Temple University, 70 children aged four to five were taught about geometric shapes. The group that explored with their hands while an adult guided them with questions learned more than the group that played freely and the group that was taught directly, and the difference was still there a week later.<sup><a href="#ref-16">[16]</a></sup> The experiment measured knowledge of shapes, not building. What is borrowed here is its method: the child’s hands go first, and the adult’s questions follow the difficulty the child is working on.<br>*In RootMap:* the library has no building activity yet, so there is nothing to link here.
 
@@ -112,11 +114,19 @@ Pick something you already do and your child likes to join in, and hand over one
 
 ## What research can answer today
 
-Back to the opening question. In 2023, researchers at the University of Hong Kong published a review of AI education in early childhood. They found 16 empirical studies in all, published between 2016 and 2022.<sup><a href="#ref-17">[17]</a></sup> The review concludes that young children can meet some AI ideas through activities. It also says the area is still little studied, that AI curricula for young children have only been designed in the last few years, and that teachers’ own knowledge, curricula and teaching guidelines are all still lacking. I found no study that followed children who learned AI at three or four to see how they were doing years later. So for now there is no evidence that a child who does not start early will fall behind.
+Back to the opening question. In 2023, researchers at the University of Hong Kong published a review of AI education in early childhood. They found only 16 studies that had actually been carried out, published between 2016 and 2022.<sup><a href="#ref-17">[17]</a></sup> The review concludes that young children can meet some AI ideas through activities. It also says the area is still little studied, that AI curricula for young children have only been designed in the last few years, and that teachers’ own knowledge, curricula and teaching guidelines are all still lacking. I found no study that followed children who learned AI at three or four to see how they were doing years later. So for now there is no evidence that a child who does not start early will fall behind.
 
 What does have evidence is this: three- and four-year-olds already learn about cause and effect by trying things with their own hands; between knowing and doing they still need an adult’s help; and attention, persistence and self-control before school are linked to how people are doing twenty and thirty years on. A child who today puts on a shirt alone, helps make the family’s breakfast, or rebuilds a bridge that has fallen several times is using exactly these.
 
-*This article was put together by RootMap, a web app for families with children aged two to six that suggests one screen-free activity a day. It is in beta and open by invitation: [request an invite](/invite). The author took no part in the studies described, and each description stays as close to the paper as possible. If you find a study described inaccurately, please [tell us](/contact).*
+## Carry on with RootMap
+
+The practices in this article have ready-made, step-by-step activities in [RootMap](/). RootMap is a web app for parents, caregivers and teachers of children aged two to six. Each day it suggests one screen-free activity that uses things you already have at home, and it gives you a place to keep what you notice about your child.
+
+- [See what RootMap does](/features)
+- [Read the thinking behind the activities](/philosophy)
+- [Request an invite](/invite): RootMap is in early access, by invitation, and free during early access
+
+*This article was put together by RootMap. The author took no part in the studies described, and each description stays as close to the source as possible. If you find one described inaccurately, please [tell us](/contact).*
 
 ## References
 

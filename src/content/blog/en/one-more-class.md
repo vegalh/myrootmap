@@ -17,6 +17,8 @@ It is hard not to wonder, especially when a class says your child can get an ear
 
 Like the previous article, this one does not answer with my own opinion. It takes three questions, and for each says who did the research, what they saw and what it cannot tell us, before turning to how to use it at home. Every source is listed at the end and can be opened and checked.
 
+Short on time? Read the short answer below and the three practices in section 3.
+
 <div class="summary">
 <p><strong>The short answer</strong></p>
 <ul>
@@ -31,7 +33,7 @@ Like the previous article, this one does not answer with my own opinion. It take
 
 <p class="study"><strong>Research</strong>　National Bureau of Statistics of China, <em>Statistical Communiqué on the 2025 National Economic and Social Development</em>, 2026; Li, Zhang and Zhu (Chinese University of Hong Kong and others), <em>Demography</em>, 2008; Doepke (Northwestern University) and Zilibotti (Yale University), <em>Love, Money, and Parenting</em> (Princeton University Press, 2019) and <em>Econometrica</em>, 2017.</p>
 
-**What they saw.** China’s National Bureau of Statistics reported 7.92 million births in 2025, a birth rate of 5.63 per thousand.<sup><a href="#ref-1">[1]</a></sup> The year before, the figure was 9.54 million.<sup><a href="#ref-7">[7]</a></sup>
+**What they saw.** China’s National Bureau of Statistics reported 7.92 million births in 2025.<sup><a href="#ref-1">[1]</a></sup> The year before, the figure was 9.54 million.<sup><a href="#ref-7">[7]</a></sup>
 
 When there are fewer children, does each one get more? Economists have studied this with Chinese census data. They compared families who had twins, and so one more child than they would otherwise have had, and found that the more children in a family, the fewer years of schooling each child received. The effect was stronger in rural areas, where public education was weaker.<sup><a href="#ref-2">[2]</a></sup> Read the other way, a family with fewer children has more to put into each one.
 
@@ -55,7 +57,7 @@ Put together, these make “everyone else is doing it, shall we try too?” very
 | Watched an adult first, then tried it | 71% | 66% |
 | Only watched an adult | 69% | 60% |
 
-The children who tried first did clearly better than those who only watched. Compared with those who watched and then tried, the difference sat right on the line of what counts as statistically significant. Between watching then trying and only watching, no difference was found.
+The children who tried first did clearly better than those who only watched. Compared with those who watched and then tried, there was a difference too, but not a large enough one to rule out chance completely. Between watching then trying and only watching, no difference was found.
 
 The children who tried first also pressed the buttons differently. They more often pressed one button at a time, and more often pressed the same button several times in a row. You can picture a child settling one very specific question: “Was it this button that lit that light? Let me press it again.”
 
@@ -71,7 +73,7 @@ The children who tried first also pressed the buttons differently. They more oft
 
 Vasquez and colleagues brought together 36 studies. Where parents more often offered suitable choices, listened to what their children thought and explained the reasons for what they asked, children tended to do better at school, to put more of themselves into learning, and to have a better view of their own ability, a better attitude to school and better psychological health. The link with psychological health was the strongest.<sup><a href="#ref-6">[6]</a></sup>
 
-**What this cannot tell us.** The 36 studies cover children from preschool to university and are not specifically about three- and four-year-olds. The authors state that every one of them was correlational, so they cannot show that what the parents did produced these results.
+**What this cannot tell us.** The 36 studies cover children from preschool to university and are not specifically about three- and four-year-olds. The authors state that every one of them only looked at whether two things go together, so they cannot show that what the parents did produced these results.
 
 **How to use it at home.** It can be turned into one question you can see the answer to: in this job, which step can my child already take over? The three practices below follow from that question. No study has tested them. The first two list matching activities from the RootMap library, which give the materials, the steps and a safety note.
 
@@ -91,7 +93,15 @@ What research can tell us is this: with fewer children and more riding on educat
 
 When children do come to use AI, they will meet a similar question: there are several ways to go, so which one shall I try, and how will I know whether it worked? At three and four, some time can be kept for them to make one decision about a small thing they care about, see what happens, and decide what to do next.
 
-*This article was put together by RootMap, a web app for families with children aged two to six that suggests one screen-free activity a day. It is in beta and open by invitation: [request an invite](/invite). The author took no part in the studies described, and each description stays as close to the source as possible. If you find one described inaccurately, please [tell us](/contact). Previous article: [Will my child fall behind without learning AI early?](/blog/learning-ai-at-three)*
+## Carry on with RootMap
+
+The practices in this article have ready-made, step-by-step activities in [RootMap](/). RootMap is a web app for parents, caregivers and teachers of children aged two to six. Each day it suggests one screen-free activity that uses things you already have at home, and it gives you a place to keep what you notice about your child.
+
+- [See what RootMap does](/features)
+- [Read the thinking behind the activities](/philosophy)
+- [Request an invite](/invite): RootMap is in early access, by invitation, and free during early access
+
+*This article was put together by RootMap. The author took no part in the studies described, and each description stays as close to the source as possible. If you find one described inaccurately, please [tell us](/contact). Previous article: [Will my child fall behind without learning AI early?](/blog/learning-ai-at-three)*
 
 ## References
 
