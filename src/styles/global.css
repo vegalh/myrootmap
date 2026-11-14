@@ -448,6 +448,24 @@ body:lang(zh) {
   border-top: 1px solid var(--line);
 }
 
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+.prose th,
+.prose td {
+  padding: 0.6em 0.75em;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.prose th {
+  color: var(--green-700);
+  border-bottom-color: var(--line-strong);
+}
+
 /* Research articles: a summary box, a "who did the study" line under a heading, citation marks and the reference list */
 .prose .summary {
   padding: 1.1em 1.4em;
